@@ -1,357 +1,113 @@
 $(function () {
-  // utility functions----------------------------------------
+  
+  // utitlity functions----------------------------------------------
+  
+  
+    d3.csv("mto-data.csv",function(error,rawData){
+    console.log(rawData);
+    
+      var data=rawData.map(function(d,i){
+                  d.treated = Math.round(Math.random());
+                  d.y_experiment = d.treated == 1 ? d.y1 : d.y0;
+                  return d;
+          });
+          
+          console.log(data);
+          
+      var plot = pictogramScroll();   
+          
+      // size variable    
+      var height= 500, width=450;
+      
+      var margin={
+        left:0,
+        bottom:0,
+        top:0,
+        right:10
+      };
+          
+    
+      var g = null;
+      
+      //horizontal and vertical spacing between the icons
+      var hBuffer = 15;
+      var wBuffer = 18;
+      
+      
+      //specify the number of columns and rows for pictogram layout
+      var numCols = 20;
+      var clfNumCols = 12;
+      
+      //tooltip for each icon
 
-  // utitlity function:data generation-----------------------------
-  function generateData(N, dprate) {
-    var data = [];
-    //var cutoff = Math.random()*(upper-lower)+lower;
-    for (var i = 0; i < N; i++) {
-      var X1, X2, X3, Y;
-
-      if (i < N * dprate) {
-        X1 = Math.random() * 0.9;
-        X2 = Math.random() * 0.9;
-        X3 = 1 - Math.random() * 0.5;
-        Y = 1;
-      } else if (i >= N * dprate) {
-        X1 = 1 - Math.random() * 0.9;
-        X2 = 1 - Math.random() * 0.9;
-        X3 = Math.random() * 0.5;
-        Y = 0;
+  var icon_tip = d3
+    .tip()
+    .attr('class', 'icon-tip')
+    .direction('e')
+    .offset([-35, 0])
+    .html(function (d) {
+      if ((d.wakefield==1) & (d.black==1)){
+        return(
+          'Community: Wakfield'+
+          '<br>'+
+          'Race: People of color');
+      }else if((d.wakefield==1)&(d.black===0)){
+        return(
+          'Community: Wakfield'+
+          '<br>'+
+          'Race: White');
+        
+      }else if ((d.wakefield===0)&(d.black===0)){
+        return(
+          'Community: Martin Luther King Jr. Towers'+
+          '<br>'+
+          'Race: White');
+        
+      }else{
+        return(
+          'Community: Martin Luther King Jr. Towers'+
+          '<br>'+
+          'Race: People of color');
       }
-
-      data.push({ x1: X1, x2: X2, x3: X3, y: Y });
-    }
-    var sumY = d3.sum(data, function (d) {
-      return d.y;
     });
-    return data;
-  }
 
-  // utitlity function:fit the model-------------------------------
-  function model(data, epochs, alpha, split) {
-    var sumY = d3.sum(data, function (d) {
-      return d.y;
+  // global variable for each categories data length;
+
+      var dt_wakefield_black_length=0;
+      var dt_wakefield_other_length=0;
+      var dt_martin_black_length=0;
+      var dt_martin_other_length=0;
+    
+    display(data);
+    
+    
+      function display(data) {
+          d3.select('#vis').datum(data).call(plot);
+      
+          // setup scroll functionality
+          var scroll = scroller().container(d3.select('#graphic'));
+      
+          // pass in .step selection as the steps
+          scroll(d3.selectAll('.step'));
+      
+          // setup event handling
+          scroll.on('active', function (index) {
+            // highlight current step text
+            d3.selectAll('.step').style('opacity', function (d, i) {
+              return i === index ? 1 : 0.1;
+            });
+      
+            // activate current section
+            plot.activate(index);
+          });
+        }
+    
     });
-    // console.log(sumY);
-
-    errors = [];
-    A = 0.0;
-    B = 0.0;
-    C = 0.0;
-    D = 0.0;
-
-    var predYs = [];
-    var yhats = [];
-    var ys = [];
-    var xs = [];
-
-    var count = 0;
-    for (var i = 0; i < epochs; i++) {
-      var error;
-      var predY;
-      var yhat;
-      var y;
-      var x;
-      var splitX;
-      var color;
-      predYs = [];
-      yhats = [];
-      ys = [];
-      dtviz = [];
-
-      tempA = A;
-      tempB = B;
-      tempC = C;
-      tempD = D;
-      accuracy = 0;
-      cost = 0;
-
-      data.forEach((d) => {
-        var func;
-        func = tempA * d.x1 + tempB * d.x2 + tempC * d.x3 + tempD;
-        x = func;
-        predY = 1 / (1 + Math.exp(-func));
-        yhat = predY > split ? 1 : 0;
-        splitX = Math.log(split / (1 - split));
-        error = predY - d.y;
-        y = d.y;
-        color = Math.abs(d.y - yhat);
-
-        A += (-alpha * error * d.x1) / sample;
-        B += (-alpha * error * d.x2) / sample;
-        C += (-alpha * error * d.x3) / sample;
-        D += (-alpha * error * 1.0) / sample;
-        cost +=
-          -(d.y * Math.log(predY) + (1 - d.y) * Math.log(1 - predY)) / sample;
-        accuracy += Math.abs(d.y - yhat) / sample;
-
-        // save the data-----------------------------------
-        // predYs.push(predY);
-        // yhats.push(yhat);
-        // ys.push(d.y);
-        // xs.push(x);
-
-        dtviz.push({
-          predY: predY,
-          yhat: yhat,
-          y: y,
-          x: x,
-          split: split,
-          splitX: splitX,
-          color: color,
-          category: color == 1 ? 'False' : 'True',
-          sepsis: y == 1 ? 'Sepsis' : 'Non-Sepsis',
-          postive: yhat == 1 ? 'Positive' : 'Negative',
-        });
-      });
-
-      accuracy = 1 - accuracy;
-      //console.log("cost:", cost, A, B, C, D);
-    }
-
-    // show the accuracy--------------------------------------------
-
-    output_accuracy.innerHTML = Math.round(accuracy * 100) + '%';
-
-    // check and validate the saved data for visulization-----------
-
-    var sumY2 = d3.sum(dtviz, function (d) {
-      return d.y;
-    });
-  }
-
-  //------------------------------------------------------------------
-
-  // set the seed-----------------------------------------
-
-  Math.seedrandom('decision-split');
-
-  // set the global variable-----------------------------------------
-
-  // real sick rate and sample size;
-  var dprate = 0.2;
-  var sample = 500;
-
-  // other global variables
-  // var MaxDelay = 3000;
-  // var DURATION = 2500;
-  var accuracy;
-  var dtviz = [];
-  var epochs = 500;
-  var alpha = 0.2;
-
-  var output_accuracy = document.getElementById('accuracy');
-
-  var plot = pictogramScroll();
-
-  // Get value from slider when it changes ---------------------------------
-
-  $('#threshold-slider').on('input change', function () {
-    $('.threshold-value').text('Threshold: ' + $(this).val() + '%');
-    split = $(this).val() / 100;
-    model(data, epochs, alpha, split);
-    plot.updateData(dtviz);
-  });
-
-  // Generating data and fitting the model--------------------------------------------------------
-  // should be placed after the size variable--------------------------------------
-  var data = generateData(sample, dprate);
-  var split = $('#threshold-slider').val()/100;
-  model(data, epochs, alpha, split);
-  display(dtviz);
-
-  // show step 1, hide step 2
-  function showStep1() {
-    // show step 1---------------------------------------
-    d3.select('.canvas-1').transition().duration(0).style('opacity', 1);
-
-    d3.select('.init-rect').transition().duration(0).style('opacity', 1);
-
-    d3.selectAll('.init-patient-tip')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    d3.select('.init-txtValue').transition().duration(0).style('opacity', 1);
-
-    d3.selectAll('.iconSelected Sepsis')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    d3.selectAll('.iconSelected NonSepsis')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    // hide step 2 ---------------------
-    d3.select('.canvas-2').transition().duration(0).style('opacity', 0);
-
-    d3.selectAll('.iconSepsis-Predicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconSepsis-NonPredicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconNonSepsis-NonPredicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconNonSepsis-Predicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.select('.predicted-patient-tip')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.select('.predicted-txtValue')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-  }
-  // show step 2, hide step 1 and step 3
-  function showStep2() {
-    // hide step 1---------------------------------------
-    d3.select('.canvas-1').transition().duration(0).style('opacity', 0);
-
-    d3.select('.init-rect').transition().duration(0).style('opacity', 0);
-
-    d3.selectAll('.iconSelected Sepsis')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconSelected NonSepsis')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.init-patient-tip')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.select('.init-txtValue').transition().duration(0).style('opacity', 0);
-
-    // show step 2-----------------------
-
-    d3.select('.canvas-2').transition().duration(0).style('opacity', 1);
-
-    d3.selectAll('.iconSepsis-Predicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    d3.selectAll('.iconSepsis-NonPredicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    d3.selectAll('.iconNonSepsis-NonPredicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    d3.selectAll('.iconNonSepsis-Predicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    d3.select('.predicted-patient-tip')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    d3.select('.predicted-txtValue')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-  }
-  // show step 3, hide step 1 and step 2
-  function showStep3() {
-    // hide step 1---------------------------------------
-    d3.select('.canvas-1').transition().duration(0).style('opacity', 0);
-
-    d3.select('.init-rect').transition().duration(0).style('opacity', 0);
-
-    d3.selectAll('.iconSelected Sepsis')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconSelected NonSepsis')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.init-patient-tip')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.select('.init-txtValue').transition().duration(0).style('opacity', 0);
-
-    // hide step 2 ---------------------
-    d3.select('.canvas-2').transition().duration(0).style('opacity', 0);
-
-    d3.selectAll('.iconSepsis-Predicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconSepsis-NonPredicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconNonSepsis-NonPredicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconNonSepsis-Predicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.select('.predicted-patient-tip')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.select('.predicted-txtValue')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-  }
-
-  function display(data) {
-    d3.select('#vis').datum(data).call(plot);
-
-    // setup scroll functionality
-    var scroll = scroller().container(d3.select('#graphic'));
-
-    // pass in .step selection as the steps
-    scroll(d3.selectAll('.step'));
-
-    // setup event handling
-    scroll.on('active', function (index) {
-      // highlight current step text
-      d3.selectAll('.step').style('opacity', function (d, i) {
-        return i === index ? 1 : 0.1;
-      });
-
-      // activate current section
-      plot.activate(index);
-    });
-  }
+    
+    
+    
+
+  
+    
+    
 });
