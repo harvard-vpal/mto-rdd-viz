@@ -28,11 +28,11 @@ var pictogramScroll = function () {
   var wBuffer = 18;
 
   //horizontal and vertical spacing between the icons for classified
-  var clfHBuffer = 8;
-  var clfWBuffer = 10;
+  var clfHBuffer = 15;
+  var clfWBuffer = 12;
 
   //specify the number of columns and rows for pictogram layout
-  var numCols = 20;
+  var numCols = 10;
   var clfNumCols = 12;
 
   //tooltip for each icon
@@ -140,8 +140,9 @@ var pictogramScroll = function () {
       console.log(data);
       
     var treatWakGrpIndx = 0;
-    var treatMarNegGrpIndx = 0;
     var treatMarGrpIndx = 0;
+    var obsWakGrpIndx = 0;
+    var obsMarGrpIndx = 0;
 
     dt_wakefield_black_length=data.filter(function(d){
             return (d.wakefield==1) & (d.black==1);
@@ -161,15 +162,19 @@ var pictogramScroll = function () {
           
           
       data = data.map(function (d, idx) {
-        if ((d.treated == 1)){
-          d.groupIndx = treatWakGrpIndx;
-          treatWakGrpIndx += 1;
-        } else if ((d.treated===0)) {
-          d.groupIndx = treatMarGrpIndx;
-          treatMarGrpIndx += 1;
+        if ((d.wakefield == 1)){
+          d.groupIndx = obsWakGrpIndx;
+          obsWakGrpIndx += 1;
+        } else if ((d.wakefield===0)) {
+          d.groupIndx = obsMarGrpIndx;
+          obsMarGrpIndx += 1;
         } 
         return d;
       });
+      
+      console.log("what is this: ");
+      
+      console.log(data);
 
       //text element to display number of icons highlighted
       g.append('text')
@@ -179,23 +184,6 @@ var pictogramScroll = function () {
         .attr('y', yPadding)
         .attr('dy', -3)
         .text(data.length);
-
-      g.append('text')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-        .attr('height',localBoxHeight)
-        .attr('width', localBoxWidth)
-        .attr('id', 'wakefieldTxt');
-
-      g.append('text')
-        .attr(
-          'transform',
-          'translate(' + (width / 2 + margin.left) + ',' + margin.top + ')'
-        )
-        .attr('height',localBoxHeight)
-        .attr('width', localBoxWidth)
-        .attr('id', 'martinTxt');
-
-      
 
       g.call(icon_tip);
 
@@ -208,15 +196,27 @@ var pictogramScroll = function () {
         .append('use')
         .attr('xlink:href', '#iconCustom')
         .attr('id', function (d) {
-          return 'icon' + d.index;
+          return 'icon' + d.groupIndx;
         })
         .attr('x', function (d) {
-          var remainder = d.index % numCols; //calculates the x position (column number) using modulus
-          return xPadding + remainder * wBuffer; //apply the buffer and return value
+          var remainder = d.groupIndx % numCols; //calculates the x position (column number) using modulus
+          return (d.wakefield ===0 ? 0 : (width / 2)) + xPadding + remainder * clfWBuffer; //apply the buffer and return value
         })
         .attr('y', function (d) {
-          var whole = Math.floor(d.index / numCols); //calculates the y position (row number)
-          return yPadding + whole * hBuffer; //apply the buffer and return the value
+          var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
+          return yPadding + whole * clfHBuffer; //apply the buffer and return the value
+        })
+        .attr('class', function (d) {
+        if (d.black == 1) {
+          return 'people-of-color';
+        } else {
+          return 'other';
+        }
+        })
+        .attr('fill',function(d){
+          if(d.black==1){return '#4191cf'}else{
+            return '#b13';
+          }
         })
         .on('mouseover', icon_tip.show)
         .on('mouseout', icon_tip.hide);
@@ -237,17 +237,10 @@ var pictogramScroll = function () {
     //change the class of person
     g.selectAll('use')
       .transition()
-      .duration(1500)
-      .attr('class', function (d, i) {
-        if (d.wakefield == 1) {
-          return 'Wakefield';
-        } else {
-          return 'Martin Luther King Jr. Towers';
-        }
-      });
+      .duration(1500);
 
     icon_tip.html(function (d) {
-      if (d.Wakefield == 1) {
+      if (d.wakefield == 1) {
         return 'Community: Wakefield';
       } else {
         return 'Community: Martin Luther King Jr. Towers';
@@ -255,7 +248,7 @@ var pictogramScroll = function () {
     });
 
     g.call(icon_tip);
-  };
+  }
   
   return chart;
    

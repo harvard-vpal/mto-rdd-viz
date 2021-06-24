@@ -9,6 +9,8 @@ $(function () {
       var data=rawData.map(function(d,i){
                   d.treated = Math.round(Math.random());
                   d.y_experiment = d.treated == 1 ? d.y1 : d.y0;
+                  d.wakefield=Number(d.wakefield);
+                  d.black=Number(d.black);
                   return d;
           });
           
@@ -81,7 +83,9 @@ $(function () {
     display(data);
     
     
-      function display(data) {
+    
+    
+     function display(data) {
           d3.select('#vis').datum(data).call(plot);
       
           // setup scroll functionality
@@ -101,6 +105,8 @@ $(function () {
             plot.activate(index);
           });
         }
+        
+        
     
     });
     

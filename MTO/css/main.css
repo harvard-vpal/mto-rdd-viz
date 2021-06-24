@@ -165,17 +165,15 @@ text {
   font-weight: bold;
 }
 
-.iconPlain {
-  fill: #a7a59b;
-}
 
-.positive {
-  fill: #4191cf;
+
+.people-of-color {
+
   color: #4191cf;
 }
 
-.negative {
-  fill: #b13;
+.other {
+
   color: #b13;
 }
 
