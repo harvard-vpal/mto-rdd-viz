@@ -18,74 +18,67 @@ $(function () {
           
       var plot = pictogramScroll();   
           
-      // size variable    
-      var height= 500, width=450;
-      
-      var margin={
-        left:0,
-        bottom:0,
-        top:0,
-        right:10
-      };
-          
-    
-      var g = null;
-      
-      //horizontal and vertical spacing between the icons
-      var hBuffer = 15;
-      var wBuffer = 18;
-      
-      
-      //specify the number of columns and rows for pictogram layout
-      var numCols = 20;
-      var clfNumCols = 12;
-      
-      //tooltip for each icon
 
-  var icon_tip = d3
-    .tip()
-    .attr('class', 'icon-tip')
-    .direction('e')
-    .offset([-35, 0])
-    .html(function (d) {
-      if ((d.wakefield==1) & (d.black==1)){
-        return(
-          'Community: Wakfield'+
-          '<br>'+
-          'Race: People of color');
-      }else if((d.wakefield==1)&(d.black===0)){
-        return(
-          'Community: Wakfield'+
-          '<br>'+
-          'Race: White');
-        
-      }else if ((d.wakefield===0)&(d.black===0)){
-        return(
-          'Community: Martin Luther King Jr. Towers'+
-          '<br>'+
-          'Race: White');
-        
-      }else{
-        return(
-          'Community: Martin Luther King Jr. Towers'+
-          '<br>'+
-          'Race: People of color');
-      }
-    });
-
-  // global variable for each categories data length;
-
-      var dt_wakefield_black_length=0;
-      var dt_wakefield_other_length=0;
-      var dt_martin_black_length=0;
-      var dt_martin_other_length=0;
-    
     display(data);
     
+   function showStep1() {
+    // show step 1---------------------------------------
+    d3.select('.canvas-1').transition().duration(0).style('opacity', 1);
+
+    d3.select('.init-rect').transition().duration(0).style('opacity', 1);
+
+    d3.selectAll('.init-patient-tip')
+      .transition()
+      .duration(0)
+      .style('opacity', 1);
+
+    d3.select('.init-txtValue').transition().duration(0).style('opacity', 1);
+
+    d3.selectAll('.iconSelected Wakefield')
+      .transition()
+      .duration(0)
+      .style('opacity', 1);
+
+    d3.selectAll('.iconSelected Martin')
+      .transition()
+      .duration(0)
+      .style('opacity', 1);
+
+    // hide step 2 ---------------------
+    d3.select('.canvas-2').transition().duration(0).style('opacity', 0);
+
+    d3.selectAll('.iconSepsis-Predicted')
+      .transition()
+      .duration(0)
+      .style('opacity', 0);
+
+    d3.selectAll('.iconSepsis-NonPredicted')
+      .transition()
+      .duration(0)
+      .style('opacity', 0);
+
+    d3.selectAll('.iconNonSepsis-NonPredicted')
+      .transition()
+      .duration(0)
+      .style('opacity', 0);
+
+    d3.selectAll('.iconNonSepsis-Predicted')
+      .transition()
+      .duration(0)
+      .style('opacity', 0);
+
+    d3.select('.predicted-patient-tip')
+      .transition()
+      .duration(0)
+      .style('opacity', 0);
+
+    d3.select('.predicted-txtValue')
+      .transition()
+      .duration(0)
+      .style('opacity', 0);
+  }  
     
-    
-    
-     function display(data) {
+  function display(data) {
           d3.select('#vis').datum(data).call(plot);
       
           // setup scroll functionality
@@ -108,7 +101,7 @@ $(function () {
         
         
     
-    });
+    }); // end of d3.csv data loading
     
     
     

@@ -1,6 +1,6 @@
 /* Main CSS file */
 body {
-  color: #111;
+  
   font-size: 1em;
   line-height: 1.5;
   background-color: #fafafa;
@@ -15,6 +15,7 @@ h3 {
 }
 
 p {
+  color: #111;
   font-size: 10pt;
 }
 
@@ -123,31 +124,36 @@ span.ui-slider-handle.ui-state-default.ui-corner-all.ui-state-active {
 }
 
 .x-axis line {
-  stroke: #f5f5f5;
+  stroke: #141414;
 }
 
 .x-axis path {
-  stroke: #f5f5f5;
+  stroke: #141414;
+;
 }
 
 .x-axis text {
-  fill: #f5f5f5;
+  fill: #141414;
+;
 }
 
 .y-axis line {
-  stroke: #f5f5f5;
+  stroke: #141414;
+;
 }
 
 .y-axis path {
-  stroke: #f5f5f5;
+  stroke: #141414;
+;
 }
 
 .y-axis text {
-  fill: #f5f5f5;
+  fill: #141414;
+
 }
 
 .axis-title text {
-  fill: #f5f5f5;
+  fill: #141414;
 }
 
 .sigmoid {
@@ -158,7 +164,7 @@ span.ui-slider-handle.ui-state-default.ui-corner-all.ui-state-active {
 
 /* style for pictogram */
 text {
-  fill: white;
+  fill: black;
   text-anchor: left;
   font-size: 12px;
   font-family: sans-serif, Helvetica, Arial;
@@ -169,12 +175,14 @@ text {
 
 .people-of-color {
 
+  fill: #4191cf;
   color: #4191cf;
 }
 
-.other {
+.people-of-white {
 
-  color: #b13;
+  fill: #f2ca02;
+  color: #f2ca02;
 }
 
 .true-positive {
