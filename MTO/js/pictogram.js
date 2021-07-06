@@ -491,17 +491,67 @@ var pictogramScroll = function () {
     activateFunctions[0] = showInitial;
     activateFunctions[1] = showObsIncomeBar;
     activateFunctions[2] = showObsRaceBar;
-    //activateFunctions[3] = showInitial;// has an extra step of randomize the figures
+    activateFunctions[3] = showInitial;// has an extra step of randomize the figures
     //activateFunctions[4] = showTreatIncomeBar;
     //activateFunctions[5] = showTreatRaceBar;
   };
   
   // showInital needs a button animation
+ 
+  // showInital needs a button animation
   function showInitial() {
+    
+    hideAxis(yAxisBarIncome,'.x-axis-income');
+    hideAxis(xAxisBarIncome,'.y-axis-income');
+    hideAxis(xAxisBarRace,'.x-axis-race');
+    hideAxis(yAxisBarRace,'.y-axis-race');
+  
+    // hide all income bar element    
+    g.selectAll('.bar-income')
+     .transition()
+     .duration(0)
+     .attr('opacity', 0);
+     
+   g.selectAll('.bar-text-income')
+      .transition()
+      .duration(0)
+      .attr('opacity',0);
+      
+  
+   g.select('.y-label-income')
+      .transition()
+      .delay(function (d, i) { return 300 * (i + 1);})
+      .duration(0)
+      .attr('opacity',0);
+      
+   // hide all race bar element
+   
+   g.selectAll('.bar-race')
+     .transition()
+     .duration(0)
+     .attr('opacity', 0);
+     
+   g.selectAll('.bar-text-race')
+      .transition()
+      .duration(0)
+      .attr('opacity',0);
+      
+  
+   g.select('.y-label-race')
+      .transition()
+      .delay(function (d, i) { return 300 * (i + 1);})
+      .duration(0)
+      .attr('opacity',0);
+
+    
+    g.select('#txtValue-mlk').transition().duration(0).attr('opacity', 1);
+    g.select('#txtValue-wakefield').transition().duration(0).attr('opacity', 1);
+    
     //change the class of person
     g.selectAll('use')
       .transition()
       .duration(1500)
+      .attr('opacity',1)
       .attr('class', function (d, i) {
         if (d.black == 1) {
           return 'people-of-color';
@@ -556,32 +606,65 @@ var pictogramScroll = function () {
   
   function showObsIncomeBar(){
     
+    // hide the location and number title
     g.select('#txtValue-mlk').transition().duration(0).attr('opacity', 0);
     g.select('#txtValue-wakefield').transition().duration(0).attr('opacity', 0);
+    
+    
+    // hide the observed race bar element
+    
+    hideAxis(xAxisBarIncome,'.x-axis-race');
+    hideAxis(yAxisBarIncome,'.y-axis-race');
+    
+    // hide all income bar element    
+    g.selectAll('.bar-race')
+     .transition()
+     .duration(0)
+     .attr('opacity', 0);
+     
+   g.selectAll('.bar-text-race')
+      .transition()
+      .duration(0)
+      .attr('opacity',0);
+      
+  
+   g.select('.y-label-race')
+      .transition()
+      //.delay(function (d, i) { return 300 * (i + 1);})
+      .duration(0)
+      .attr('opacity',0);
+      
+    // hide initial pictorgram element
+    
    
    
    icon_tip.html(function (d) {return null;})
    
-       // ensure bar axis is set
-    showAxis(xAxisBarIncome,'.x-axis-income');
-    showAxis(yAxisBarIncome,'.y-axis-income');
+      
 
     g.selectAll('use')
       .transition()
-      .duration(800)
+      .duration(0)
       .attr('opacity', 0);
       
     g.selectAll('.icon-tip')
      .transition()
-     .duration(800)
+     .duration(0)
      .attr('opacity', 0);
+     
+     // show observed income bar element
+     
+      // ensure bar axis is set
+    showAxis(xAxisBarIncome,'.x-axis-income');
+    showAxis(yAxisBarIncome,'.y-axis-income');
      
      g.selectAll('.bar-income')
       .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
-      .duration(600)
+      .duration(1500)
       .attr('y',function(d,i){return yBarScaleIncome(d.value);})
-      .attr('height', function (d,i) { return drawHeight - yBarScaleIncome(d.value); });
+      .attr('height', function (d,i) { return drawHeight - yBarScaleIncome(d.value); })
+      .attr('opacity',1);
       
      g.selectAll('.bar-text-income')
       .transition()
@@ -597,59 +680,65 @@ var pictogramScroll = function () {
      
   }
   
-   function showObsRaceBar(){
+  
+  // showRaceCompBar
+  
+  function showObsRaceBar(){
     
     g.select('#txtValue-mlk').transition().duration(0).attr('opacity', 0);
     g.select('#txtValue-wakefield').transition().duration(0).attr('opacity', 0);
    
-   
-   icon_tip.html(function (d) {return null;})
-   
-       // ensure bar axis is set
-    showAxis(xAxisBarRace,'.x-axis-race');
-    showAxis(yAxisBarRace,'.y-axis-race');
     hideAxis(yAxisBarIncome,'.x-axis-income');
     hideAxis(xAxisBarIncome,'.y-axis-income');
-    
+   
+   
+   icon_tip.html(function (d) {return null;})
+  
   
     g.selectAll('use')
       .transition()
-      .duration(800)
+      .duration(0)
       .attr('opacity', 0);
       
     g.selectAll('.icon-tip')
      .transition()
-     .duration(800)
+     .duration(0)
      .attr('opacity', 0);
  
  // hide all income bar element    
     g.selectAll('.bar-income')
      .transition()
-     .duration(800)
+     .duration(0)
      .attr('opacity', 0);
      
    g.selectAll('.bar-text-income')
       .transition()
-      .duration(800)
+      .duration(0)
       .attr('opacity',0);
       
   
    g.select('.y-label-income')
       .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
-      .duration(600)
+      .duration(0)
       .attr('opacity',0)   
       
   /// show race bar elements
+  
+     // ensure bar axis is set
+    showAxis(xAxisBarRace,'.x-axis-race');
+    showAxis(yAxisBarRace,'.y-axis-race');
+    
      g.selectAll('.bar-race')
       .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
-      .duration(600)
+      .duration(1500)
       .attr('y',function(d,i){return yBarScaleRace(d.value);})
-      .attr('height', function (d,i) { return drawHeight - yBarScaleRace(d.value); });
+      .attr('height', function (d,i) { return drawHeight - yBarScaleRace(d.value); })
+      .attr('opacity',1);
       
      g.selectAll('.bar-text-race')
-      .transition()
+      .transition(600)
       .delay(function (d, i) { return 300 * (i + 1);})
       .duration(600)
       .attr('opacity',1)
@@ -852,7 +941,7 @@ var pictogramScroll = function () {
   function hideAxis(axis,nameClass) {
     g.select(nameClass)
       .call(axis)
-     // .transition().duration(500)
+      .transition().duration(0)
       .style('opacity', 0);
   }
 
