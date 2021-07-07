@@ -6,6 +6,8 @@ $(function () {
     d3.csv("mto-data.csv",function(error,rawData){
     console.log(rawData);
     
+    
+    
       var data=rawData.map(function(d,i){
                   d.treated = Math.round(Math.random());
                   d.y_experiment = d.treated == 1 ? d.y1 : d.y0;
@@ -17,6 +19,53 @@ $(function () {
           console.log(data);
           
       var plot = pictogramScroll();   
+      
+      Math.seedrandom('randomizeLocation');
+      
+      
+      $('#randomize').click(function(){
+      
+          console.log('randomize');
+          
+          
+          //data=rawData.map(function(d,i){
+                     // d.treated = Math.round(Math.random());
+                    //  d.y_experiment = d.treated == 1 ? d.y1 : d.y0;
+                     // d.wakefield=Number(d.wakefield);
+                     // d.black=Number(d.black);
+                     // return d;
+            //  });
+            
+        
+          temp=rawData.map(function(d,i){
+            if (i<250){
+              d.treated=0;
+            }else{
+              d.treated=1;
+            }
+            
+            return d;
+        });  
+        
+          console.log("temp:");
+          console.log(temp);
+     
+     
+     
+         shuffle(temp,"treated");
+              
+         data=temp.map(function(d,i){
+           d.y_experiment = d.treated == 1 ? d.y1 : d.y0;
+           d.wakefield=Number(d.wakefield);
+           d.black=Number(d.black);
+           return d;
+         });
+          
+          
+         plot.updateData(data);
+      
+    });
+      
           
 
     display(data);
@@ -77,7 +126,32 @@ $(function () {
       .duration(0)
       .style('opacity', 0);
   }  
+  
+  
+  // untility function to generate 250 1s and 250 0s and randomly assign them to the data rows
     
+  function shuffle(data, attr) { //inplace shuffle
+    n = data.length;
+    for(var i = 0; i < n; ++i) {
+      r = getRandomIntInclusive(0, n - 1 - i);
+      swap(data, i, i + r, attr);
+    }
+  }
+  
+  function swap(data, i, j, attr) {
+    var temp = data[i][attr];
+    data[i][attr] = data[j][attr];
+    data[j][attr] = temp;
+    return;
+  }
+  
+  function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
+  }
+  
+  
   function display(data) {
           d3.select('#vis').datum(data).call(plot);
       
@@ -95,7 +169,7 @@ $(function () {
             });
       
             // activate current section
-            plot.activate(index);
+            plot.activate(index, data);
           });
         }
         

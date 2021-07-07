@@ -293,26 +293,10 @@ var pictogramScroll = function () {
       });
       console.log(data);
       
-    var treatWakGrpIndx = 0;
-    var treatMarGrpIndx = 0;
+    //var treatWakGrpIndx = 0;
+    //var treatMarGrpIndx = 0;
     var obsWakGrpIndx = 0;
     var obsMarGrpIndx = 0;
-
-    dt_wakefield_black_length=data.filter(function(d){
-            return (d.wakefield==1) & (d.black==1);
-          }).length;
-          
-    dt_wakefield_other_length=data.filter(function(d){
-            return (d.wakefield==1) & (d.black===0);
-          }).length;
-          
-    dt_martin_black_length=data.filter(function(d){
-            return (d.wakefield===0) & (d.black==1);
-          }).length;
-          
-    dt_martin_other_length=data.filter(function(d){
-            return (d.wakefield===0) & (d.black===0);
-          }).length;
           
           
       data = data.map(function (d, idx) {
@@ -499,7 +483,7 @@ var pictogramScroll = function () {
   // showInital needs a button animation
  
   // showInital needs a button animation
-  function showInitial() {
+  function showInitial(data) {
     
     hideAxis(yAxisBarIncome,'.x-axis-income');
     hideAxis(xAxisBarIncome,'.y-axis-income');
@@ -520,7 +504,7 @@ var pictogramScroll = function () {
   
    g.select('.y-label-income')
       .transition()
-      .delay(function (d, i) { return 300 * (i + 1);})
+      //.delay(function (d, i) { return 300 * (i + 1);})
       .duration(0)
       .attr('opacity',0);
       
@@ -539,17 +523,76 @@ var pictogramScroll = function () {
   
    g.select('.y-label-race')
       .transition()
-      .delay(function (d, i) { return 300 * (i + 1);})
+      //.delay(function (d, i) { return 300 * (i + 1);})
       .duration(0)
       .attr('opacity',0);
 
     
-    g.select('#txtValue-mlk').transition().duration(0).attr('opacity', 1);
-    g.select('#txtValue-wakefield').transition().duration(0).attr('opacity', 1);
+    g.select('#txtValue-mlk')
+     .text("MLK Jr. Towers: "+data.length/2)
+     .transition().duration(0).attr('opacity', 1);
+     
+    g.select('#txtValue-wakefield')
+     .attr('x', xPadding*2+width/2)
+     .text("Wakefield: "+data.length/2)
+     .transition().duration(0).attr('opacity', 1);
     
-    //change the class of person
-    g.selectAll('use')
+    //redraw the initial pictorgram
+    
+    
+      var numRows = Math.ceil(data.length / numCols);
+
+      //generate a d3 range for the total number of required elements
+      var myIndex = d3.range(numCols * numRows);
+     
+      console.log(myIndex);
+      data = data.map(function (d, idx) {
+        d.index = myIndex[idx];
+        return d;
+      });
+      console.log(data);
+      
+    //var treatWakGrpIndx = 0;
+    //var treatMarGrpIndx = 0;
+    var obsWakGrpIndx = 0;
+    var obsMarGrpIndx = 0;
+          
+          
+      data = data.map(function (d, idx) {
+        if ((d.wakefield == 1)){
+          d.groupIndx = obsWakGrpIndx;
+          obsWakGrpIndx += 1;
+        } else if ((d.wakefield===0)) {
+          d.groupIndx = obsMarGrpIndx;
+          obsMarGrpIndx += 1;
+        } 
+        return d;
+      });
+      
+      console.log("what is this: ");
+      
+      console.log(data);
+    
+    var use=g.selectAll('use')
+             .data(data);
+    
+    
+    use.enter()
+       .append('use')
+       .merge(use)
       .transition()
+      .attr('xlink:href', '#iconCustom')
+        .attr('id', function (d) {
+          return 'icon' + d.groupIndx;
+        })
+        .attr('x', function (d) {
+          var remainder = d.groupIndx % numCols; //calculates the x position (column number) using modulus
+          return (d.wakefield ===0 ? 0 : (width / 2)) + xPadding + remainder * clfWBuffer; //apply the buffer and return value
+        })
+        .attr('y', function (d) {
+          var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
+          return yPadding + whole * clfHBuffer; //apply the buffer and return the value
+        })
       .duration(1500)
       .attr('opacity',1)
       .attr('class', function (d, i) {
@@ -559,6 +602,8 @@ var pictogramScroll = function () {
           return 'people-of-white';
         }
       });
+      
+      use.exit().remove();
 
     icon_tip.html(function (d) {
       if ((d.wakefield==1) & (d.black==1)){
@@ -719,11 +764,11 @@ var pictogramScroll = function () {
   
    g.select('.y-label-income')
       .transition()
-      .delay(function (d, i) { return 300 * (i + 1);})
+      //.delay(function (d, i) { return 300 * (i + 1);})
       .duration(0)
       .attr('opacity',0)   
       
-  /// show race bar elements
+  /// show observe race bar elements
   
      // ensure bar axis is set
     showAxis(xAxisBarRace,'.x-axis-race');
@@ -751,179 +796,8 @@ var pictogramScroll = function () {
       .attr('opacity',1)
   }
   
-  function showPrediction() {
-  var truepos = 0,
-      trueneg = 0,
-      falsepos = 0,
-      falseneg = 0;
-
-    g.selectAll('use')
-      .transition()
-      .duration(1500)
-      .attr('class', function (d, i) {
-        if ((d.y == 1) & (d.yhat == 1)) {
-          truepos++;
-          return 'true-positive';
-        } else if ((d.y == 1) & (d.yhat === 0)) {
-          falseneg++;
-          return 'false-negative';
-        } else if ((d.y === 0) & (d.yhat == 1)) {
-          falsepos++;
-          return 'false-positive';
-        } else {
-          trueneg++;
-          return 'true-negative';
-        }
-      });
-
-    icon_tip.html(function (d) {
-      if ((d.y == 1) & (d.yhat == 1)) {
-        return (
-          'Sepsis: yes' +
-          '<br>' +
-          'Prediction: yes' +
-          '<br>' +
-          'Model predicted probability of having sepsis: ' +
-          d.predY.toFixed(3)
-        );
-      } else if ((d.y == 1) & (d.yhat === 0)) {
-        return (
-          'Sepsis: yes' +
-          '<br>' +
-          'Prediction: no' +
-          '<br>' +
-          'Model predicted probability of having sepsis: ' +
-          d.predY.toFixed(3)
-        );
-      } else if ((d.y === 0) & (d.yhat === 0)) {
-        return (
-          'Sepsis: no' +
-          '<br>' +
-          'Prediction: no' +
-          '<br>' +
-          'Model predicted probability of having sepsis: ' +
-          d.predY.toFixed(3)
-        );
-      } else {
-        return (
-          'Sepsis: no' +
-          '<br>' +
-          'Prediction: yes' +
-          '<br>' +
-          'Model predicted probability of having sepsis: ' +
-          d.predY.toFixed(3)
-        );
-      }
-    });
-
-    g.call(icon_tip);
-
-    g.select('#txtValue-mlk').transition().duration(0).attr('opacity', 1);
-    g.select('#txtValue-wakefield').transition().duration(0).attr('opacity', 1);
-    g.selectAll('use')
-      .transition()
-      .duration(1500)
-      .attr('x', function (d) {
-        var remainder = d.index % numCols; //calculates the x position (column number) using modulus
-        return xPadding + remainder * wBuffer; //apply the buffer and return value
-      })
-      .attr('y', function (d) {
-        var whole = Math.floor(d.index / numCols); //calculates the y position (row number)
-        return yPadding + whole * hBuffer; //apply the buffer and return the value
-      });
-
-    g.select('#truePositiveClf').transition().duration(0).attr('opacity', 0);
-    g.select('#trueNegativeClf').transition().duration(0).attr('opacity', 0);
-    g.select('#falseNegativeClf').transition().duration(0).attr('opacity', 0);
-    g.select('#falsePositiveClf').transition().duration(0).attr('opacity', 0);
-
-    // Update numbers elsewhere on the page.
-    d3.selectAll('.truepos').text(truepos);
-    d3.selectAll('.trueneg').text(trueneg);
-    d3.selectAll('.falsepos').text(falsepos);
-    d3.selectAll('.falseneg').text(falseneg);
-    d3.selectAll('.totalpos').text(falsepos + truepos);
-    d3.selectAll('.totalneg').text(falseneg + trueneg);
-
-    // Have to select this with jquery - d3 doesn't select invisible things.
-    $('.falsetextsr').text(
-      falsepos + ' false positives, ' + falseneg + ' false negatives'
-    );
-  }
-
-  function showClassification() {
-    g.select('#txtValue').transition().duration(0).attr('opacity', 0);
-    g.select('#truePositiveClf')
-      .attr('class', 'true-positive')
-      .attr('x', xPadding)
-      .attr('y', yPadding)
-      .attr('dy', -3)
-      .text('True Positive: ' + dt_tp_length)
-      .transition()
-      .duration(0)
-      .attr('opacity', 1);
-
-    g.select('#trueNegativeClf')
-      .attr('class', 'true-negative')
-      .attr('x', xPadding)
-      .attr('y', yPadding)
-      .attr('dy', -3)
-      .text('True Negative: ' + dt_tn_length)
-      .transition()
-      .duration(0)
-      .attr('opacity', 1);
-
-    g.select('#falsePositiveClf')
-      .attr('class', 'false-positive')
-      .attr('x', xPadding)
-      .attr('y', yPadding)
-      .attr('dy', -3)
-      .text('False Positive: ' + dt_fp_length)
-      .transition()
-      .duration(0)
-      .attr('opacity', 1);
-
-    g.select('#falseNegativeClf')
-      .attr('class', 'false-negative')
-      .attr('x', xPadding)
-      .attr('y', yPadding)
-      .attr('dy', -3)
-      .text('False Negative: ' + dt_fn_length)
-      .transition()
-      .duration(0)
-      .attr('opacity', 1);
-
-    g.selectAll('use')
-      .transition()
-      .duration(1500)
-      .attr('x', function (d) {
-        var remainder = d.groupIndx % clfNumCols; //calculates the x position (column number) using modulus
-        if ((d.y == 1) & (d.yhat == 1)) {
-          return xPadding + remainder * clfWBuffer; //apply the buffer and return value
-        } else if ((d.y == 1) & (d.yhat === 0)) {
-          return width / 2 + xPadding + remainder * clfWBuffer;
-        } else if ((d.y === 0) & (d.yhat == 1)) {
-          return xPadding + remainder * clfWBuffer;
-        } else if ((d.y === 0) & (d.yhat === 0)) {
-          return width / 2 + xPadding + remainder * clfWBuffer;
-        }
-      })
-      .attr('y', function (d) {
-        var whole = Math.floor(d.groupIndx / clfNumCols); //calculates the y position (row number)
-        if ((d.y == 1) & (d.yhat == 1)) {
-          return yPadding + whole * clfHBuffer; //apply the buffer and return the value
-        } else if ((d.y == 1) & (d.yhat === 0)) {
-          return yPadding + whole * clfHBuffer;
-        } else if ((d.y === 0) & (d.yhat == 1)) {
-          return height / 4 + yPadding + whole * clfHBuffer;
-        } else if ((d.y === 0) & (d.yhat === 0)) {
-          return height / 4 + yPadding + whole * clfHBuffer;
-        }
-      });
-  }
   
-  
-   function showAxis(axis,className) {
+  function showAxis(axis,className) {
     g.select(className)
       .call(axis)
       .transition().duration(500)
@@ -948,13 +822,13 @@ var pictogramScroll = function () {
   /**
    * @param index - index of the activate section
    * */
-  chart.activate = function (index) {
+  chart.activate = function (index, data) {
     activeIndex = index;
     var sign = activeIndex - lastIndex < 0 ? -1 : 1;
     var scrolledSections = d3.range(lastIndex + sign, activeIndex + sign, sign);
     scrolledSections.forEach(function (i) {
       console.log(i);
-      activateFunctions[i]();
+      activateFunctions[i](data);
     });
     lastIndex = activeIndex;
   };
@@ -963,50 +837,29 @@ var pictogramScroll = function () {
    *@param data - data for the plot of the chart
    */
   chart.updateData = function (data) {
-    var numCols = 20;
+    
     var numRows = Math.ceil(data.length / numCols);
     //generate a d3 range for the total number of required elements
     var myIndex = d3.range(numCols * numRows);
 
     //console.log(myIndex);
-    data = data.map(function (d, idx) {
-      d.index = myIndex[idx];
-      return d;
-    });
-    var truePosGrpIndx = 0;
-    var falseNegGrpIndx = 0;
-    var falsePosGrpIndx = 0;
-    var trueNegGrpIndx = 0;
+    
+    var treatWakGrpIndx = 0;
+    var treatMarGrpIndx = 0;
 
-    dt_tp_length = data.filter(function (d) {
-      return (d.y == 1) & (d.yhat == 1);
-    }).length;
-    dt_tn_length = data.filter(function (d) {
-      return (d.y === 0) & (d.yhat === 0);
-    }).length;
-    dt_fp_length = data.filter(function (d) {
-      return (d.y === 0) & (d.yhat == 1);
-    }).length;
-    dt_fn_length = data.filter(function (d) {
-      return (d.y == 1) & (d.yhat === 0);
-    }).length;
 
-    data = data.map(function (d, idx) {
-      if ((d.y == 1) & (d.yhat == 1)) {
-        d.groupIndx = truePosGrpIndx;
-        truePosGrpIndx += 1;
-      } else if ((d.y == 1) & (d.yhat === 0)) {
-        d.groupIndx = falseNegGrpIndx;
-        falseNegGrpIndx += 1;
-      } else if ((d.y === 0) & (d.yhat == 1)) {
-        d.groupIndx = falsePosGrpIndx;
-        falsePosGrpIndx += 1;
-      } else if ((d.y === 0) & (d.yhat === 0)) {
-        d.groupIndx = trueNegGrpIndx;
-        trueNegGrpIndx += 1;
-      }
-      return d;
-    });
+  data = data.map(function (d, idx) {
+        if ((d.treated == 1)){
+          d.groupIndx = treatWakGrpIndx;
+          treatWakGrpIndx += 1;
+        } else if ((d.treated===0)) {
+          d.groupIndx = treatMarGrpIndx;
+          treatMarGrpIndx += 1;
+        } 
+        return d;
+      });
+
+    console.log('updated data: '+ data);
 
     var use = g.selectAll('use').data(data);
 
@@ -1015,21 +868,133 @@ var pictogramScroll = function () {
       .append('use')
       .merge(use)
       .attr('xlink:href', '#iconCustom')
-      .attr('id', function (d) {
-        return 'icon' + d.index;
-      })
-      .attr('x', function (d) {
-        var remainder = d.index % numCols; //calculates the x position (column number) using modulus
-        return xPadding + remainder * wBuffer; //apply the buffer and return value
-      })
-      .attr('y', function (d) {
-        var whole = Math.floor(d.index / numCols); //calculates the y position (row number)
-        return yPadding + whole * hBuffer; //apply the buffer and return the value
-      });
+        .attr('id', function (d) {
+          return 'icon' + d.groupIndx;
+        })
+        .attr('x', function (d) {
+          var remainder = d.groupIndx % numCols; //calculates the x position (column number) using modulus
+          return (d.treated ===0 ? 0 : (width / 2)) + xPadding + remainder * clfWBuffer; //apply the buffer and return value
+        })
+        .attr('y', function (d) {
+          var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
+          return yPadding + whole * clfHBuffer; //apply the buffer and return the value
+        })
 
     use.exit().remove();
-    activateFunctions[1]();
-  };
+    
+    
+    g.select('#txtValue-mlk')
+     .text("Assigned MLK Jr. Towers: "+data.length/2)
+     .transition().duration(0).attr('opacity', 1);
+     
+    g.select('#txtValue-wakefield')
+     .attr('x', width/2)
+     .text("Assigned Wakefield: "+data.length/2)
+     .transition().duration(0).attr('opacity', 1);
+    
+    
+    icon_tip.html(function(d){
+      if(d.wakefield===0){
+        if(d.black===0 & d.treated===0){
+          return(
+          'Community: Martin Luther King Jr. Towers'+
+          '<br>'+
+          'Assigned Community: Martin Luther King Jr. Towers'+
+          '<br>'+
+          'Race: White'+
+          '<br>'+
+          'Observed Income: '+d.y_obs+
+          '<br>'+
+          'Experiment Income: '+ d.y_experiment);
+        }else if(d.black===0 & d.treated==1){
+          return(
+          'Community: Martin Luther King Jr. Towers'+
+          '<br>'+
+          'Assigned Community: Wakefield'+
+          '<br>'+
+          'Race: White'+
+          '<br>'+
+          'Observed Income: '+d.y_obs+
+          '<br>'+
+          'Experiment Income: '+ d.y_experiment);
+        }else if(d.black==1 & d.treated===0){
+           return(
+          'Community: Martin Luther King Jr. Towers'+
+          '<br>'+
+          'Assigned Community: Martin Luther King Jr. Towers'+
+          '<br>'+
+          'Race: People of color'+
+          '<br>'+
+          'Observed Income: '+d.y_obs+
+          '<br>'+
+          'Experiment Income: '+ d.y_experiment);
+        }else if(d.black==1 & d.treated==1){
+          return(
+          'Community: Martin Luther King Jr. Towers'+
+          '<br>'+
+          'Assigned Community: Wakefield'+
+          '<br>'+
+          'Race: People of color'+
+          '<br>'+
+          'Observed Income: '+d.y_obs+
+          '<br>'+
+          'Experiment Income: '+ d.y_experiment);
+        }
+        
+       }else if(d.wakefield==1){
+         
+         if(d.black===0 & d.treated===0){
+          return(
+          'Community: Wakefield'+
+          '<br>'+
+          'Assigned Community: Martin Luther King Jr. Towers'+
+          '<br>'+
+          'Race: White'+
+          '<br>'+
+          'Observed Income: '+d.y_obs+
+          '<br>'+
+          'Experiment Income: '+ d.y_experiment);
+        }else if(d.black===0 & d.treated==1){
+          return(
+          'Community: Wakefield'+
+          '<br>'+
+          'Assigned Community: Wakefield'+
+          '<br>'+
+          'Race: White'+
+          '<br>'+
+          'Observed Income: '+d.y_obs+
+          '<br>'+
+          'Experiment Income: '+ d.y_experiment);
+        }else if(d.black==1 & d.treated===0){
+           return(
+          'Community: Wakefield'+
+          '<br>'+
+          'Assigned Community: Martin Luther King Jr. Towers'+
+          '<br>'+
+          'Race: People of color'+
+          '<br>'+
+          'Observed Income: '+d.y_obs+
+          '<br>'+
+          'Experiment Income: '+ d.y_experiment);
+        }else if(d.black==1 & d.treated==1){
+          return(
+          'Community: Wakefield'+
+          '<br>'+
+          'Assigned Community: Wakefield'+
+          '<br>'+
+          'Race: People of color'+
+          '<br>'+
+          'Observed Income: '+d.y_obs+
+          '<br>'+
+          'Experiment Income: '+ d.y_experiment);
+        }
+       }
+       
+    
+       
+    })
+ 
+  };// end of updateData function
   
 
   
