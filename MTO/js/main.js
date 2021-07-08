@@ -18,6 +18,35 @@ $(function () {
           
           console.log(data);
           
+      var raceData=d3.nest()
+        .key(function(d){return d.wakefield})
+        .rollup(function(v){
+          return (d3.mean(v,function(d){return d.black})*100).toFixed(1);
+        })
+        .entries(data);
+        
+       raceData=raceData.map(function(d,i){
+         d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+        return d;
+       }); 
+       
+     
+     
+     var incomeData=d3.nest()
+      .key(function(d){return d.wakefield})
+      .rollup(function(v){
+        return d3.mean(v,function(d){return d.y_obs;}).toFixed(1);
+      })
+      .entries(data);
+      
+      incomeData=incomeData.map(function(d,i){
+        d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+        return d;
+      });
+      
+      console.log(incomeData);  
+       
+          
       var plot = pictogramScroll();   
       
       Math.seedrandom('randomizeLocation');
@@ -62,7 +91,39 @@ $(function () {
          });
           
           
-         plot.updateData(data);
+        // update treatment income data
+        
+         var incomeDataTreat=d3.nest()
+            .key(function(d){return d.treated})
+            .rollup(function(v){
+              return d3.mean(v,function(d){return d.y_experiment;}).toFixed(1);
+            })
+            .entries(data);
+            
+             incomeDataTreat=incomeDataTreat.map(function(d,i){
+              d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+              return d;
+            });
+            
+            console.log("incomeDataTreat");
+            console.log(incomeDataTreat);
+            
+         var raceDataTreat=d3.nest()
+            .key(function(d){return d.treated})
+            .rollup(function(v){
+              return (d3.mean(v,function(d){return d.black})*100).toFixed(1);
+            })
+            .entries(data);
+            
+           raceDataTreat=raceDataTreat.map(function(d,i){
+            d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+            return d;
+           }); 
+            
+          console.log(raceDataTreat);
+        
+          
+         plot.updateData(data,incomeDataTreat,raceDataTreat);
       
     });
       
@@ -172,15 +233,7 @@ $(function () {
             plot.activate(index, data);
           });
         }
-        
-        
-    
+      
     }); // end of d3.csv data loading
-    
-    
-    
-
-  
-    
     
 });
