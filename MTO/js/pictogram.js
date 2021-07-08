@@ -618,6 +618,7 @@ var pictogramScroll = function () {
         d.index = myIndex[idx];
         return d;
       });
+      console.log("orginial or clicked data?")
       console.log(data);
       
     var treatWakGrpIndx = 0;

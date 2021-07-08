@@ -49,6 +49,8 @@ $(function () {
           
       var plot = pictogramScroll();   
       
+       display(data);
+      
       Math.seedrandom('randomizeLocation');
       
       
@@ -127,66 +129,7 @@ $(function () {
       
     });
       
-          
 
-    display(data);
-    
-   function showStep1() {
-    // show step 1---------------------------------------
-    d3.select('.canvas-1').transition().duration(0).style('opacity', 1);
-
-    d3.select('.init-rect').transition().duration(0).style('opacity', 1);
-
-    d3.selectAll('.init-patient-tip')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    d3.select('.init-txtValue').transition().duration(0).style('opacity', 1);
-
-    d3.selectAll('.iconSelected Wakefield')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    d3.selectAll('.iconSelected Martin')
-      .transition()
-      .duration(0)
-      .style('opacity', 1);
-
-    // hide step 2 ---------------------
-    d3.select('.canvas-2').transition().duration(0).style('opacity', 0);
-
-    d3.selectAll('.iconSepsis-Predicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconSepsis-NonPredicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconNonSepsis-NonPredicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.selectAll('.iconNonSepsis-Predicted')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.select('.predicted-patient-tip')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-
-    d3.select('.predicted-txtValue')
-      .transition()
-      .duration(0)
-      .style('opacity', 0);
-  }  
   
   
   // untility function to generate 250 1s and 250 0s and randomly assign them to the data rows
@@ -233,7 +176,7 @@ $(function () {
             plot.activate(index, data);
           });
         }
-      
+    
     }); // end of d3.csv data loading
     
 });
