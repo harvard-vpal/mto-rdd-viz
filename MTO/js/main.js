@@ -52,13 +52,12 @@ $(function () {
        display(data);
       
       Math.seedrandom('randomizeLocation');
-      
+    
       
       $('#randomize').click(function(){
       
           console.log('randomize');
-          
-          
+        
           //data=rawData.map(function(d,i){
                      // d.treated = Math.round(Math.random());
                     //  d.y_experiment = d.treated == 1 ? d.y1 : d.y0;
@@ -129,8 +128,6 @@ $(function () {
       
     });
       
-
-  
   
   // untility function to generate 250 1s and 250 0s and randomly assign them to the data rows
     

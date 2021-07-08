@@ -165,7 +165,7 @@ var pictogramScroll = function () {
       
       console.log(incomeData);
      
-       var incomeDataTreat=d3.nest()
+      var incomeDataTreat=d3.nest()
       .key(function(d){return d.treated})
       .rollup(function(v){
         return d3.mean(v,function(d){return d.y_experiment;}).toFixed(1);
@@ -499,7 +499,6 @@ var pictogramScroll = function () {
     activateFunctions[2] = showObsRaceBar;
     activateFunctions[3] = showInitial;// has an extra step of randomize the figures
     activateFunctions[4] = showTreatBars;
-    //activateFunctions[5] = showTreatRaceBar;
   };
   
   // showInitial needs a button animation
@@ -612,8 +611,8 @@ var pictogramScroll = function () {
 
       //generate a d3 range for the total number of required elements
       var myIndex = d3.range(numCols * numRows);
-     
-      console.log(myIndex);
+      
+      
       data = data.map(function (d, idx) {
         d.index = myIndex[idx];
         return d;
@@ -636,10 +635,7 @@ var pictogramScroll = function () {
         } 
         return d;
       });
-    
-      console.log("what is this: ");
-      
-      console.log(data);
+   
     
     var use=g.selectAll('use')
              .data(data);
@@ -649,7 +645,7 @@ var pictogramScroll = function () {
        .append('use')
        .merge(use)
        .transition()
-       //.delay(function (d, i) { return 3 * (i + 1);})
+       .delay(function (d, i) { return 3 * (i + 1);})
        .attr('xlink:href', '#iconCustom')
        .attr('id', function (d) {return 'icon' + d.groupIndx;})
         .attr('x', function (d) {
@@ -774,7 +770,6 @@ var pictogramScroll = function () {
     showAxis(xAxisBarIncome,'.x-axis-income');
     showAxis(yAxisBarIncome,'.y-axis-income');
     
-    
     incomeData=d3.nest()
       .key(function(d){return d.wakefield})
       .rollup(function(v){
@@ -801,6 +796,7 @@ var pictogramScroll = function () {
                   .attr('width', xBarScaleIncome.bandwidth()/2); 
                   
         barsIncome.exit().remove();
+     
      
      
      g.selectAll('.bar-income')
@@ -934,7 +930,41 @@ var pictogramScroll = function () {
   
   // showTreatIncomeBar
   
-  function showTreatBars(){
+  function showTreatBars(data){
+    
+    
+    
+    // update treatment income data
+        
+         var incomeDataTreat=d3.nest()
+            .key(function(d){return d.treated})
+            .rollup(function(v){
+              return d3.mean(v,function(d){return d.y_experiment;}).toFixed(1);
+            })
+            .entries(data);
+            
+             incomeDataTreat=incomeDataTreat.map(function(d,i){
+              d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+              return d;
+            });
+            
+            console.log("incomeDataTreat");
+            console.log(incomeDataTreat);
+            
+         var raceDataTreat=d3.nest()
+            .key(function(d){return d.treated})
+            .rollup(function(v){
+              return (d3.mean(v,function(d){return d.black})*100).toFixed(1);
+            })
+            .entries(data);
+            
+           raceDataTreat=raceDataTreat.map(function(d,i){
+            d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+            return d;
+           }); 
+            
+          console.log(raceDataTreat);
+          
     
     g.select('#txtValue-mlk').transition().duration(0).attr('opacity', 0);
     g.select('#txtValue-wakefield').transition().duration(0).attr('opacity', 0);
@@ -998,6 +1028,42 @@ var pictogramScroll = function () {
     showAxis(xAxisBarIncome,'.x-axis-income-treat');
     showAxis(yAxisBarIncome,'.y-axis-income-treat');
     
+    var barsIncomeTreat=g.selectAll('.bar-income-treat')
+                         .data(incomeDataTreat);
+                         
+                         
+        barsIncomeTreat.enter()
+                       .append('rect')
+                       .attr('class','bar-income-treat')
+                       .merge(barsIncomeTreat)
+                       .attr('y', drawHeight/2-20)
+                        .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
+                        .attr('fill', function (d) { return barColorsIncome[d.group]; })
+                        .attr('height', 0)
+                        .attr('width', xBarScaleIncome.bandwidth()/2);  
+                      
+        barsIncomeTreat.exit().remove();  
+        
+        
+            
+    var barTextIncomeTreat = g.selectAll('.bar-text-income-treat').data(incomeDataTreat);
+   
+            barTextIncomeTreat.enter()
+              .append('text')
+              .attr('class', 'bar-text-income-treat')
+              .merge(barTextIncomeTreat)
+              .text(function (d) { return d.value+"k"; })
+              .attr('y', 0)
+              .attr('dy',function(d,i){return yBarScaleIncome(d.value)-10;})
+              .attr('x', function (d) { return xBarScaleIncome(d.group);})
+              .attr('dx', xBarScaleIncome.bandwidth() / 4)
+              .style('font-size', '25px')
+              .attr('fill', 'black')
+              .attr('opacity', 0);
+              
+        barTextIncomeTreat.exit().remove(); 
+        
+
      g.selectAll('.bar-income-treat')
       .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
@@ -1023,6 +1089,44 @@ var pictogramScroll = function () {
     
     showAxis(xAxisBarRace,'.x-axis-race-treat');
     showAxis(yAxisBarRace,'.y-axis-race-treat');
+    
+     var barsRaceTreat=g.selectAll('.bar-race-treat')
+                         .data(raceDataTreat);
+                         
+                         
+        barsRaceTreat.enter()
+                       .append('rect')
+                       .attr('class','bar-race-treat')
+                       .merge(barsRaceTreat)
+                       .attr('y', drawHeight)
+                        .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
+                        .attr('fill', function (d) { return barColorsRace[d.group]; })
+                        .attr('height', 0)
+                        .attr('width', xBarScaleRace.bandwidth()/2);  
+                      
+                      
+        barsRaceTreat.exit().remove();  
+        
+        
+            
+    var barTextRaceTreat = g.selectAll('.bar-text-race-treat').data(raceDataTreat);
+   
+            barTextRaceTreat.enter()
+              .append('text')
+              .attr('class', 'bar-text-race-treat')
+              .merge(barTextRaceTreat)
+              
+              .text(function (d) { return d.value+"%"; })
+              .attr('y', 0)
+              .attr('dy',function(d,i){return yBarScaleRace(d.value)-10;})
+              .attr('x', function (d) { return xBarScaleRace(d.group);})
+              .attr('dx', xBarScaleRace.bandwidth() / 4)
+              .style('font-size', '25px')
+              .attr('fill', 'black')
+              .attr('opacity', 0);
+              
+        barTextRaceTreat.exit().remove(); 
+    
     
      g.selectAll('.bar-race-treat')
       .transition()
@@ -1119,7 +1223,7 @@ var pictogramScroll = function () {
       .append('use')
       .merge(use)
       .transition()
-      //.delay(function (d, i) { return 10 * (i + 1);})
+      .delay(function (d, i) { return 10 * (i + 1);})
       .duration(1500)
       .attr('xlink:href', '#iconCustom')
         .attr('id', function (d) {
@@ -1270,20 +1374,20 @@ var pictogramScroll = function () {
      g.select('.x-axis-income-treat').style('opacity',0);
      g.select('.y-axis-income-treat').style('opacity',0);
         
-     var barsIncomeTreat=g.selectAll('.bar-income')
+      var barsIncome=g.selectAll('.bar-income')
                           .data(incomeDataTreat);
       
-       barsIncomeTreat.enter()
+            barsIncome.enter()
                       .append('rect')
                       .attr('class','bar-income-treat')
-                      .merge(barsIncomeTreat)
+                      .merge(barsIncome)
                       .attr('y', drawHeight/2-20)
                       .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
                       .attr('fill', function (d) { return barColorsIncome[d.group]; })
                       .attr('height', 0)
                       .attr('width', xBarScaleIncome.bandwidth()/2);  
                       
-        barsIncomeTreat.exit().remove();              
+        barsIncome.exit().remove();              
                       
                       
      
