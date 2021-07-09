@@ -50,7 +50,7 @@ $(function () {
           
       var plot = pictogramScroll();   
       
-       display(data);
+      display(data);
       
       Math.seedrandom('randomizeLocation');
     
@@ -156,7 +156,6 @@ $(function () {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
   }
-  
   
   function display(data) {
           d3.select('#vis').datum(data).call(plot);

@@ -30,17 +30,11 @@ var pictogramScroll = function () {
   var yPadding = 10;
 
   //horizontal and vertical spacing between the icons
-  var hBuffer = 15;
-  var wBuffer = 18;
-
-  //horizontal and vertical spacing between the icons for classified
   var clfHBuffer = 15;
   var clfWBuffer = 12;
 
-  //specify the number of columns and rows for pictogram layout
+  //specify the number of columns for pictogram layout
   var numCols = 10;
-  var clfNumCols = 12;
- 
 
   //tooltip for each icon
 
@@ -76,7 +70,8 @@ var pictogramScroll = function () {
     });
   
   
-  // Observed Income bar graph scale and axis
+  
+  // Income Bar Scale and Axis----------------------
   
   var yBarScaleIncome = d3.scaleLinear()
                     .range([drawHeight,0]);
@@ -86,13 +81,8 @@ var pictogramScroll = function () {
                     .paddingInner(0.08)
                     .range([0,drawWidth])
                     .domain(["MLK Jr. Towers","Wakefield"]);
-                    
-                    
-    
-  var barColorsIncome = { "MLK Jr. Towers": '#4191cf', "Wakefield": '#f2ca02' };
-  
-  //var barColorsRace = { "MLK Jr. Towers": '#4191cf', "Wakefield": '#4191cf' };
- 
+
+
   var yAxisBarIncome = d3.axisLeft()
                    .scale(yBarScaleIncome)
                    .tickFormat(function(d){
@@ -103,9 +93,8 @@ var pictogramScroll = function () {
   var xAxisBarIncome= d3.axisBottom()
                   .scale(xBarScaleIncome);
                   
-                  
-  // observed race bar graph scale and axis         
- 
+          
+ // Race Bar Scale and Axis-------------------
    
   var yBarScaleRace = d3.scaleLinear()
                     .range([drawHeight,0]);
@@ -128,25 +117,23 @@ var pictogramScroll = function () {
                   .scale(xBarScaleRace);
   
   
+  // Color scale--------------                
+                  
+  var barColors = { "MLK Jr. Towers": '#4191cf', "Wakefield": '#f2ca02' };
+  
+  
   var chart = function (selection) {
-    // Height/width of the drawing area for data symbols
-    //var drawHeight = height - margin.bottom - margin.top;
-    //var drawWidth = width - margin.left - margin.right;
-
-   // var clfboxheight = height / 2 - margin.bottom - margin.top;
-  //  var clfboxwidth = width / 2 - margin.bottom - margin.top;
-   
-      var localBoxHeight=height - margin.bottom - margin.top;
-      var localBoxWidth= width / 2 - margin.bottom - margin.top;
 
     // Loop through selections and data bound to each element
+    
     selection.each(function (data) {
+      
       div = d3.select(this); // Container
 
       // Selection of SVG elements in DIV (making sure not to re-append svg)
+      
       svg = div.selectAll('svg').data([data]);
   
-      
       // Append a 'g' element in which to place the rects, shifted down and right from the top left corner
     
       svg.exit().remove();
@@ -200,7 +187,6 @@ var pictogramScroll = function () {
         
       console.log(raceData);
       
-      
       var raceDataTreat=d3.nest()
         .key(function(d){return d.treated})
         .rollup(function(v){
@@ -215,14 +201,9 @@ var pictogramScroll = function () {
         
       console.log(raceDataTreat);
       
-      var raceMax=Math.max(d3.max(raceData,function(d){return d.value}),d3.max(raceDataTreat,function(d){return d.value})); 
-      
+      var raceMax=Math.max(d3.max(raceData,function(d){return d.value}),d3.max(raceDataTreat,function(d){return d.value}));
       
       yBarScaleRace.domain([0, raceMax+5]);
-      
-      console.log("huan: "+ drawWidth);
-      console.log("huan: "+drawHeight);
-       
        
       setupVis(data,incomeData,raceData,incomeDataTreat,raceDataTreat);
      
@@ -233,11 +214,7 @@ var pictogramScroll = function () {
   
   var setupVis=function(data,incomeData,raceData,incomeDataTreat,raceDataTreat){
    
-   // var drawHeight = height - margin.bottom - margin.top;
-   // var drawWidth = width - margin.left - margin.right;
-   
-   console.log("Megan: "+ drawWidth);
-   console.log("Megan: " +drawHeight);
+
     // Initial pictogram
     
      var gEnter = svg
@@ -271,20 +248,8 @@ var pictogramScroll = function () {
           'M3.5,2H2.7C3,1.8,3.3,1.5,3.3,1.1c0-0.6-0.4-1-1-1c-0.6,0-1,0.4-1,1c0,0.4,0.2,0.7,0.6,0.9H1.1C0.7,2,0.4,2.3,0.4,2.6v1.9c0,0.3,0.3,0.6,0.6,0.6h0.2c0,0,0,0.1,0,0.1v1.9c0,0.3,0.2,0.6,0.3,0.6h1.3c0.2,0,0.3-0.3,0.3-0.6V5.3c0,0,0-0.1,0-0.1h0.2c0.3,0,0.6-0.3,0.6-0.6V2.6C4.1,2.3,3.8,2,3.5,2z'
         );
 
-      var numRows = Math.ceil(data.length / numCols);
+    var numRows = Math.ceil(data.length / numCols);
 
-      //generate a d3 range for the total number of required elements
-      var myIndex = d3.range(numCols * numRows);
-     
-      console.log(myIndex);
-      data = data.map(function (d, idx) {
-        d.index = myIndex[idx];
-        return d;
-      });
-      console.log(data);
-      
-    //var treatWakGrpIndx = 0;
-    //var treatMarGrpIndx = 0;
     var obsWakGrpIndx = 0;
     var obsMarGrpIndx = 0;
           
@@ -372,47 +337,47 @@ var pictogramScroll = function () {
                   .merge(bars)
                   .attr('y', drawHeight)
                   .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
-                  .attr('fill', function (d) { return barColorsIncome[d.group]; })
+                  .attr('fill', function (d) { return barColors[d.group]; })
                   .attr('height', 0)
                   .attr('width', xBarScaleIncome.bandwidth()/2); 
                   
                   
          bars.exit().remove();
      
-   var barTextIncome = g.selectAll('.bar-text').data(incomeData);
+     var barTextIncome = g.selectAll('.bar-text').data(incomeData);
    
-      barTextIncome.enter()
-              .append('text')
-              .attr('class', 'bar-text-income')
-              .merge(barTextIncome)
-              .text(function (d) { return "$"+d.value+"k"; })
-              .attr('y', 0)
-              .attr('dy',function(d,i){return yBarScaleIncome(d.value)-10;})
-              .attr('x', function (d) { return xBarScaleIncome(d.group);})
-              .attr('dx', xBarScaleIncome.bandwidth() / 4)
-              .style('font-size', '25px')
-              .attr('fill', 'black')
-              .attr('opacity', 0);
+        barTextIncome.enter()
+                .append('text')
+                .attr('class', 'bar-text-income')
+                .merge(barTextIncome)
+                .text(function (d) { return "$"+d.value+"k"; })
+                .attr('y', 0)
+                .attr('dy',function(d,i){return yBarScaleIncome(d.value)-10;})
+                .attr('x', function (d) { return xBarScaleIncome(d.group);})
+                .attr('dx', xBarScaleIncome.bandwidth() / 4)
+                .style('font-size', '25px')
+                .attr('fill', 'black')
+                .attr('opacity', 0);
+                
+          barTextIncome.exit().remove();     
+      
               
-         barTextIncome.exit().remove();     
-    
-              
-   g.append("text")
-    .attr("class", "y-label-income")
-    .attr("text-anchor", "middle")
-    .attr("x", -margin.left*4)
-    .attr("y", -40)
-    .attr("transform", "rotate(-90)")
-    .text("Average Income")
-    .attr('opacity',0);                   
+       g.append("text")
+        .attr("class", "y-label-income")
+        .attr("text-anchor", "middle")
+        .attr("x", -margin.left*4)
+        .attr("y", -40)
+        .attr("transform", "rotate(-90)")
+        .text("Average Income")
+        .attr('opacity',0);                   
                        
                        
   /// Racial composition bar ------------------------------------------
   
-  g.append('g')
-        .attr('class','x-axis-race')
-        .attr("transform", 'translate(0,'+drawHeight+')')
-        .call(xAxisBarRace);
+    g.append('g')
+          .attr('class','x-axis-race')
+          .attr("transform", 'translate(0,'+drawHeight+')')
+          .call(xAxisBarRace);
         
      g.append('g')
         .attr('class','y-axis-race')
@@ -432,13 +397,13 @@ var pictogramScroll = function () {
                   .merge(barsRace)
                   .attr('y', drawHeight)
                   .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
-                  .attr('fill', function (d) { return barColorsIncome[d.group]; })
+                  .attr('fill', function (d) { return barColors[d.group]; })
                   .attr('height', 0)
                   .attr('width', xBarScaleRace.bandwidth()/2);  
                   
            barsRace.exit().remove();
      
-   var barTextRace = g.selectAll('.bar-text').data(raceData);
+     var barTextRace = g.selectAll('.bar-text').data(raceData);
    
             barTextRace.enter()
               .append('text')
@@ -455,16 +420,16 @@ var pictogramScroll = function () {
               
       barTextRace.exit().remove();
               
-    g.append("text")
-    .attr("class", "y-label-race")
-    .attr("text-anchor", "middle")
-    .attr("x", -margin.left*4)
-    .attr("y", -40)
-    .attr("transform", "rotate(-90)")
-    .text("People of Color %")
-    .attr('opacity',0);
+       g.append("text")
+        .attr("class", "y-label-race")
+        .attr("text-anchor", "middle")
+        .attr("x", -margin.left*4)
+        .attr("y", -40)
+        .attr("transform", "rotate(-90)")
+        .text("People of Color %")
+        .attr('opacity',0);
     
-    ///-----------------------------------------------
+    /// append g only once in the setupVis--------------------
     
      g.append('g')
         .attr('class','x-axis-income-treat')
@@ -501,10 +466,10 @@ var pictogramScroll = function () {
     activateFunctions[4] = showTreatBars;
   };
   
-  // showInitial
+  // showInitial----------------------------------
   
   
-   function showInitial(data) {
+  function showInitial(data) {
     
     hideAxis(yAxisBarIncome,'.y-axis-income');
     hideAxis(xAxisBarIncome,'.x-axis-income');
@@ -598,28 +563,11 @@ var pictogramScroll = function () {
     //redraw the initial pictorgram
     
     
-      var numRows = Math.ceil(data.length / numCols);
+    var numRows = Math.ceil(data.length / numCols);
 
-      //generate a d3 range for the total number of required elements
-      var myIndex = d3.range(numCols * numRows);
-      
-      
-      data = data.map(function (d, idx) {
-        d.index = myIndex[idx];
-        return d;
-      });
-      console.log("orginial or clicked data?")
-      console.log(data);
-      
-    var treatWakGrpIndx = 0;
-    var treatMarGrpIndx = 0;
     var obsWakGrpIndx = 0;
     var obsMarGrpIndx = 0;
-    
-    console.log("what is count");
-    console.log(count);
-    
-    
+
       
       // location title and number children in each location
     g.select('#txtValue-mlk')
@@ -716,14 +664,8 @@ var pictogramScroll = function () {
   }
   
   
-  
-  
-  
-  
-  
-  
- 
-  // showInitial needs a button animation
+
+  // showInitial+ a button animation--------------------
   function showInitialPlus(data) {
     
     hideAxis(yAxisBarIncome,'.y-axis-income');
@@ -818,18 +760,7 @@ var pictogramScroll = function () {
     //redraw the initial pictorgram
     
     
-      var numRows = Math.ceil(data.length / numCols);
-
-      //generate a d3 range for the total number of required elements
-      var myIndex = d3.range(numCols * numRows);
-      
-      
-      data = data.map(function (d, idx) {
-        d.index = myIndex[idx];
-        return d;
-      });
-      console.log("orginial or clicked data?")
-      console.log(data);
+    var numRows = Math.ceil(data.length / numCols);
       
     var treatWakGrpIndx = 0;
     var treatMarGrpIndx = 0;
@@ -1076,7 +1007,7 @@ var pictogramScroll = function () {
                   .merge(barsIncome)
                    .attr('y', drawHeight)
                   .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
-                  .attr('fill', function (d) { return barColorsIncome[d.group]; })
+                  .attr('fill', function (d) { return barColors[d.group]; })
                   .attr('height', 0)
                   .attr('width', xBarScaleIncome.bandwidth()/2); 
                   
@@ -1183,7 +1114,7 @@ var pictogramScroll = function () {
                 .merge(barsRace)
                 .attr('y', drawHeight)
                   .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
-                  .attr('fill', function (d) { return barColorsIncome[d.group]; })
+                  .attr('fill', function (d) { return barColors[d.group]; })
                   .attr('height', 0)
                   .attr('width', xBarScaleRace.bandwidth()/2);  
                   
@@ -1359,7 +1290,7 @@ var pictogramScroll = function () {
                        .merge(barsIncomeTreat)
                        .attr('y', drawHeight/2-20)
                         .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
-                        .attr('fill', function (d) { return barColorsIncome[d.group]; })
+                        .attr('fill', function (d) { return barColors[d.group]; })
                         .attr('height', 0)
                         .attr('width', xBarScaleIncome.bandwidth()/2);  
                       
@@ -1421,7 +1352,7 @@ var pictogramScroll = function () {
                        .merge(barsRaceTreat)
                        .attr('y', drawHeight)
                         .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
-                        .attr('fill', function (d) { return barColorsIncome[d.group]; })
+                        .attr('fill', function (d) { return barColors[d.group]; })
                         .attr('height', 0)
                         .attr('width', xBarScaleRace.bandwidth()/2);  
                       
@@ -1475,21 +1406,15 @@ var pictogramScroll = function () {
     
   }
   
+  // function to show and hide axis---------------------
+  
   function showAxis(axis,className) {
     g.select(className)
       .call(axis)
       .transition().duration(500)
       .style('opacity', 1);
   }
-  
-  /**
-   * hideAxis - helper function
-   * to hide the axis
-   *
-   */
-   
- 
-  
+
   function hideAxis(axis,nameClass) {
     g.select(nameClass)
       .call(axis)
@@ -1497,9 +1422,7 @@ var pictogramScroll = function () {
       .style('opacity', 0);
   }
 
-  /**
-   * @param index - index of the activate section
-   * */
+  // function to activate chart--------------------------
   chart.activate = function (index, data) {
     activeIndex = index;
     var sign = activeIndex - lastIndex < 0 ? -1 : 1;
@@ -1511,16 +1434,11 @@ var pictogramScroll = function () {
     lastIndex = activeIndex;
   };
 
-  /*
-   *@param data - data for the plot of the chart
-   */
+ 
+ // updateData method of chart function------------------------------
   chart.updateData = function (data,incomeDataTreat,raceDataTreat) {
     
     var numRows = Math.ceil(data.length / numCols);
-    //generate a d3 range for the total number of required elements
-    var myIndex = d3.range(numCols * numRows);
-
-    //console.log(myIndex);
     
     var treatWakGrpIndx = 0;
     var treatMarGrpIndx = 0;
@@ -1672,8 +1590,6 @@ var pictogramScroll = function () {
        }
     })// end of icon-tip update
     
-    
-    
            
     // Draw Treatment Income bars------------------
     
@@ -1706,7 +1622,7 @@ var pictogramScroll = function () {
                       .merge(barsIncome)
                       .attr('y', drawHeight/2-20)
                       .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
-                      .attr('fill', function (d) { return barColorsIncome[d.group]; })
+                      .attr('fill', function (d) { return barColors[d.group]; })
                       .attr('height', 0)
                       .attr('width', xBarScaleIncome.bandwidth()/2);  
                       
@@ -1756,7 +1672,7 @@ var pictogramScroll = function () {
                       .merge(barsRaceTreat)
                       .attr('y', drawHeight)
                       .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
-                      .attr('fill', function (d) { return barColorsIncome[d.group]; })
+                      .attr('fill', function (d) { return barColors[d.group]; })
                       .attr('height', 0)
                       .attr('width', xBarScaleRace.bandwidth()/2);  
                       
@@ -1792,9 +1708,6 @@ var pictogramScroll = function () {
     
   };// end of updateData function
 
-  
   return chart;
    
-
-  
 };
