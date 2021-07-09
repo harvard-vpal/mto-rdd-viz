@@ -625,6 +625,12 @@ var pictogramScroll = function () {
     var obsWakGrpIndx = 0;
     var obsMarGrpIndx = 0;
     
+    console.log("what is count");
+    console.log(count);
+    
+    
+    if(count===0){
+    
       data = data.map(function (d, idx) {
         if ((d.wakefield == 1)){
           d.groupIndx = obsWakGrpIndx;
@@ -635,9 +641,8 @@ var pictogramScroll = function () {
         } 
         return d;
       });
-   
-    
-    var use=g.selectAll('use')
+      
+      var use=g.selectAll('use')
              .data(data);
     
     
@@ -667,6 +672,56 @@ var pictogramScroll = function () {
       });
       
       use.exit().remove();
+      
+      
+    }else if(count >0){
+      
+      data = data.map(function (d, idx) {
+        if ((d.treated == 1)){
+          d.groupIndx = treatWakGrpIndx;
+          treatWakGrpIndx += 1;
+        } else if ((d.treated===0)) {
+          d.groupIndx = treatMarGrpIndx;
+          treatMarGrpIndx += 1;
+        } 
+        return d;
+      });
+      
+      
+      var use=g.selectAll('use')
+             .data(data);
+    
+    
+    use.enter()
+       .append('use')
+       .merge(use)
+       .transition()
+       .delay(function (d, i) { return 3 * (i + 1);})
+       .attr('xlink:href', '#iconCustom')
+       .attr('id', function (d) {return 'icon' + d.groupIndx;})
+        .attr('x', function (d) {
+          var remainder = d.groupIndx % numCols; //calculates the x position (column number) using modulus
+          return (d.treated ===0 ? 0 : (width / 2)) + xPadding + remainder * clfWBuffer; //apply the buffer and return value
+        })
+        .attr('y', function (d) {
+          var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
+          return yPadding + whole * clfHBuffer; //apply the buffer and return the value
+        })
+      .duration(1500)
+      .attr('opacity',1)
+      .attr('class', function (d, i) {
+        if (d.black == 1) {
+          return 'people-of-color';
+        } else {
+          return 'people-of-white';
+        }
+      });
+      
+      use.exit().remove();
+      
+    }
+    
+
 
     icon_tip.html(function (d) {
       if ((d.wakefield==1) & (d.black==1)){
@@ -932,9 +987,21 @@ var pictogramScroll = function () {
   
   function showTreatBars(data){
     
+    console.log('what is count?');
     
+    console.log(count);
     
+   if (count===0){
+    
+    return null
+   
+   }
+   
+   
+   
     // update treatment income data
+  
+  if (count>0){
         
          var incomeDataTreat=d3.nest()
             .key(function(d){return d.treated})
@@ -951,6 +1018,8 @@ var pictogramScroll = function () {
             console.log("incomeDataTreat");
             console.log(incomeDataTreat);
             
+            var incomeDiff=Math.abs(incomeDataTreat[0].value-incomeDataTreat[1].value).toFixed(2);
+            
          var raceDataTreat=d3.nest()
             .key(function(d){return d.treated})
             .rollup(function(v){
@@ -965,6 +1034,16 @@ var pictogramScroll = function () {
             
           console.log(raceDataTreat);
           
+          var raceDiff=Math.abs(raceDataTreat[0].value-raceDataTreat[1].value).toFixed(2);
+        
+        /// change the section 5 html side text
+      
+          d3.selectAll("#incomeDIFF").text("$"+incomeDiff+"K.");
+          d3.selectAll("#whyDIFF").text("Why does this work better than the observational comparison? Randomization ensures that the treatment and control groups are comparable.");
+          d3.selectAll("#raceDIFF").text(raceDiff);
+          d3.selectAll("#experimentReminder").text("try another random assignment.");
+     
+     /// hide other visual elements
     
     g.select('#txtValue-mlk').transition().duration(0).attr('opacity', 0);
     g.select('#txtValue-wakefield').transition().duration(0).attr('opacity', 0);
@@ -1148,9 +1227,11 @@ var pictogramScroll = function () {
       .delay(function (d, i) { return 300 * (i + 1);})
       .duration(600)
       .attr('opacity',1)
+      
+      
+   }
     
   }
-  
   
   function showAxis(axis,className) {
     g.select(className)

@@ -6,6 +6,7 @@ $(function () {
     d3.csv("mto-data.csv",function(error,rawData){
     console.log(rawData);
     
+    console.log(count);
     
     
       var data=rawData.map(function(d,i){
@@ -53,6 +54,7 @@ $(function () {
       
       Math.seedrandom('randomizeLocation');
     
+      
       
       $('#randomize').click(function(){
       
@@ -109,6 +111,8 @@ $(function () {
             console.log("incomeDataTreat");
             console.log(incomeDataTreat);
             
+      
+            
          var raceDataTreat=d3.nest()
             .key(function(d){return d.treated})
             .rollup(function(v){
@@ -127,7 +131,8 @@ $(function () {
          plot.updateData(data,incomeDataTreat,raceDataTreat);
       
     });
-      
+    
+
   
   // untility function to generate 250 1s and 250 0s and randomly assign them to the data rows
     

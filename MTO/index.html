@@ -133,7 +133,9 @@
                 <br>
                 <p>We will now simulate an experiment where we randomly assign half of the 500 children to grow up in the Martin Luther King Jr. Towers in Harlem and the other half to grow up in Wakefield in the Bronx.</p>
                 <p>Press the button below to randomly assign each observation to one of the two groups:</p>
-                <p><button class="button" id="randomize" style="font-size:32px; background-color:green;color:White;">Randomize</button></p> 
+                <p><button onclick='counter()' class="button" id="randomize" style="font-size:32px; background-color:green;color:White;">Randomize</button></p>
+                
+                <p style="font-size:16px;">Experiment NO.: <span style="font-size:16px; color:red" id="countDisplay">0</span></p>
   
                 <p><strong>Scroll down</strong> to check the differences in avergage income and racial composition.</p>
               </div>
@@ -158,10 +160,10 @@
               <div class="slider-holder">
                 <h3>Differences in Earnings and Racial Composition</h3>
                 <br>
-                <p>The difference in earnings between the two groups is $2.21K</p>
-                <p>Why does this work better than the observational comparison? Randomization ensures that the treatment and control groups are comparable.</p>
-                <p>The difference in racial composition in the two groups is now only 1.4 percentage points.</p>
-                <p><strong>Scroll up</strong> to try another random assignment.</p>
+                <p>The difference in earnings between the two groups is <span id="incomeDIFF"> $8K without randomizaiton.</span></p>
+                <p><span id="whyDIFF"></span></p>
+                <p>The difference in racial composition in the two groups is <span id="raceDIFF"> 30.4 </span> percentage points.</p>
+                <p><strong>Scroll up</strong> <span id="experimentReminder">to randomize.</span>.</p>
               </div>
             </div>
 
@@ -178,6 +180,17 @@
   </div>
 
 
+
+<script>
+    // set up a counter 
+    var count=0;
+   
+    function counter(){
+     d3.selectAll('#countDisplay').text(++count);
+    }
+  
+  
+</script>
 
 
 </body>
