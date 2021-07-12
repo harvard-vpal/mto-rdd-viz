@@ -53,6 +53,8 @@ p {
   margin-top: 25px;
 }
 
+
+
 /* Clear floats after the columns */
 .row:after {
   content: "";
@@ -93,6 +95,11 @@ p {
   fill: #141414;
 }
 
+.sigmoid {
+  stroke-dasharray: 4px 4px;
+  stroke: #aaa;
+  fill: #121212;
+}
 
 /* style for pictogram */
 text {
@@ -122,6 +129,10 @@ text {
   padding-bottom: 2px;
 }
 
+.sample {
+  width: 15px;
+  padding-left: .5em;
+}
 
 .icon-tip {
   z-index: 2;
