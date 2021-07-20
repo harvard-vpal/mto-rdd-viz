@@ -6,7 +6,7 @@ var pictogramScroll = function () {
     width = 500;
   //Magrin: spaces saved in the svg for axes and titles
   var margin = {
-    left:50,
+    left:60,
     bottom: 100,
     top: 30,
     right: 10,
@@ -26,8 +26,8 @@ var pictogramScroll = function () {
   var svg=null;
 
   //padding for the grid
-  var xPadding = 10;
-  var yPadding = 10;
+  var xPadding = 5;
+  var yPadding = 5;
 
   //horizontal and vertical spacing between the icons
   var clfHBuffer = 15;
@@ -104,7 +104,7 @@ var pictogramScroll = function () {
                     .paddingInner(0.08)
                     .range([0,drawWidth])
                     .domain(["MLK Jr. Towers","Wakefield"]);
-                    
+                     
  
   var yAxisBarRace = d3.axisLeft()
                    .scale(yBarScaleRace)
@@ -117,7 +117,12 @@ var pictogramScroll = function () {
                   .scale(xBarScaleRace);
   
   
-  // Color scale--------------                
+  // Color scale--------------  
+  
+  
+    var incomeColor=d3.scaleSequential(d3.interpolateRdYlGn);
+   // var incomeColor=d3.scaleSequential(d3.interpolateYlGn);
+   //  var incomeColor=d3.scaleSequential(d3.interpolateGreens);
                   
   var barColors = { "MLK Jr. Towers": '#4191cf', "Wakefield": '#f2ca02' };
   
@@ -166,11 +171,15 @@ var pictogramScroll = function () {
       
       console.log(incomeDataTreat);
       
+      var incomeMin=Math.min(d3.min(incomeData,function(d){return d.value}),d3.min(incomeDataTreat,function(d){return d.value}));
       var incomeMax=Math.max(d3.max(incomeData,function(d){return d.value}),d3.max(incomeDataTreat,function(d){return d.value}));
       
       console.log(incomeMax);
       
+      // update the domain of two scales with range of income
        yBarScaleIncome.domain([0, incomeMax+5]);
+       
+       incomeColor.domain([incomeMin-10, incomeMax+10]);
        
       var raceData=d3.nest()
         .key(function(d){return d.wakefield})
@@ -276,7 +285,7 @@ var pictogramScroll = function () {
         .attr('x', xPadding)
         .attr('y', yPadding)
         .attr('dy', -10)
-        .text('MLK Jr. Towers: '+data.length/2);
+        .text('Van Dyke Public Housing: '+data.length/2);
         
         
        g.append('text')
@@ -285,7 +294,7 @@ var pictogramScroll = function () {
         .attr('x', xPadding*2+width/2)
         .attr('y', yPadding)
         .attr('dy', -10)
-        .text('Wakefield: '+data.length/2);
+        .text('Nehemiah Houses: '+data.length/2);
         
       
 
@@ -310,6 +319,7 @@ var pictogramScroll = function () {
           var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
         })
+        //.attr('fill',function(d,i){return incomeColor(d.y_obs)})
         .on('mouseover', icon_tip.show)
         .on('mouseout', icon_tip.hide);
         
@@ -609,15 +619,16 @@ var pictogramScroll = function () {
           var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
         })
+        .style('fill',function(d,i){ return incomeColor(d.y_obs)})
       .duration(1500)
-      .attr('opacity',1)
-      .attr('class', function (d, i) {
-        if (d.black == 1) {
-          return 'people-of-color';
-        } else {
-          return 'people-of-white';
-        }
-      });
+      .attr('opacity',1);
+     // .attr('class', function (d, i) {
+       // if (d.black == 1) {
+         // return 'people-of-color';
+      //  } else {
+        //  return 'people-of-white';
+      //  }
+    //  });
       
       use.exit().remove();
       
@@ -759,8 +770,10 @@ var pictogramScroll = function () {
     
     //redraw the initial pictorgram
     
+    numCols=20
     
     var numRows = Math.ceil(data.length / numCols);
+    var myIndex = d3.range(numCols * numRows);
       
     var treatWakGrpIndx = 0;
     var treatMarGrpIndx = 0;
@@ -769,6 +782,7 @@ var pictogramScroll = function () {
     
     console.log("what is count");
     console.log(count);
+    console.log(myIndex);
     
     
     if(count===0){
@@ -776,21 +790,27 @@ var pictogramScroll = function () {
       // location title and number children in each location
     g.select('#txtValue-mlk')
      .text("MLK Jr. Towers: "+data.length/2)
-     .transition().duration(0).attr('opacity', 1);
+     .transition().duration(0).attr('opacity', 0);
      
     g.select('#txtValue-wakefield')
      .attr('x', xPadding*2+width/2)
      .text("Wakefield: "+data.length/2)
-     .transition().duration(0).attr('opacity', 1);
+     .transition().duration(0).attr('opacity', 0);
     
+      //data = data.map(function (d, idx) {
+        //if ((d.wakefield == 1)){
+         // d.groupIndx = obsWakGrpIndx;
+         // obsWakGrpIndx += 1;
+      //  } else if ((d.wakefield===0)) {
+       //   d.groupIndx = obsMarGrpIndx;
+       //   obsMarGrpIndx += 1;
+      // } 
+     //   return d;
+     // });
+     
+     
       data = data.map(function (d, idx) {
-        if ((d.wakefield == 1)){
-          d.groupIndx = obsWakGrpIndx;
-          obsWakGrpIndx += 1;
-        } else if ((d.wakefield===0)) {
-          d.groupIndx = obsMarGrpIndx;
-          obsMarGrpIndx += 1;
-        } 
+        d.index = myIndex[idx];
         return d;
       });
       
@@ -804,13 +824,19 @@ var pictogramScroll = function () {
        .transition()
        .delay(function (d, i) { return 3 * (i + 1);})
        .attr('xlink:href', '#iconCustom')
-       .attr('id', function (d) {return 'icon' + d.groupIndx;})
-        .attr('x', function (d) {
-          var remainder = d.groupIndx % numCols; //calculates the x position (column number) using modulus
-          return (d.wakefield ===0 ? 0 : (width / 2)) + xPadding + remainder * clfWBuffer; //apply the buffer and return value
+      .attr('id', function (d) {
+          return 'icon' + d.index;
         })
+       .attr('x',function(d){
+          var remainder = d.index % numCols;
+          return xPadding + remainder * clfWBuffer;
+       })
+        //.attr('x', function (d) {
+        //  var remainder = d.groupIndx % numCols; //calculates the x position (column number) using modulus
+        //  return (d.wakefield ===0 ? 0 : (width / 2)) + xPadding + remainder * clfWBuffer; //apply the buffer and return value
+       //  })
         .attr('y', function (d) {
-          var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
+          var whole = Math.floor(d.index / numCols); //calculates the y position (row number)
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
         })
       .duration(1500)

@@ -15,6 +15,11 @@
   <script src="libraries/d3.v4.min.js"></script>
   <script src="libraries/d3-format.v1.min.js"></script>
   <script src="libraries/d3-tip.js"></script>
+  
+  
+  <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 
   <!-- scroller js-->
   <script src="js/scroller.js"></script>
@@ -51,17 +56,12 @@
             <div class="column middle">
               <div class="slider-holder">
                 <h3>Treatment Effect</h3>
-                <p>In this simulation, In this simulation, we will compare the earnings of 500 individuals, 250 growing up in the MLK Towers and 250 growing up in Wakefield in the Bronx.</p>
+                <p>We will compare the earnings of 500 individuals, 250 growing up in Van Dyke Public Housing and 250 growing up in Nehemiah Houses.</p>
                 <p>In this simulation, the only reason that different people earn different amounts is either because of their neighborhood or their race.</p>
-                <p>The causal effect of growing up in the Wakefield in the Bronx compared with growing up in Martin Luther King Jr. Towers in Harlem is $2000.</p>
-                <p>That is, if you grow up in Wakefield, you’d make $2000 more than you’d make if you grew up in the Martin Luther King Jr. Towers.</p>
+                <p>The causal effect of growing up in the Nehemiah Houses compared with growing up in the Van Dyke Public Housing is <span style="font-size:24px; color:#024453;font-weight:bold;">$2,000</span>.</p>
+                <p>That is, if you grow up in the Nehemiah Houses, you’d make $2000 more than you’d make if you grew up in the Van Dyke Public Housing.</p>
                <p><strong>Scroll down</strong> to check the observed average income and racial composition of the two communities.</p>
-                <p aria-hidden="true"> People of color: <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="male" class="svg-inline--fa fa-male fa-w-6 true-positive sample" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512">
-                  <path stroke="none" fill="#4191cf" d="M96 0c35.346 0 64 28.654 64 64s-28.654 64-64 64-64-28.654-64-64S60.654 0 96 0m48 144h-11.36c-22.711 10.443-49.59 10.894-73.28 0H48c-26.51 0-48 21.49-48 48v136c0 13.255 10.745 24 24 24h16v136c0 13.255 10.745 24 24 24h64c13.255 0 24-10.745 24-24V352h16c13.255 0 24-10.745 24-24V192c0-26.51-21.49-48-48-48z"></path>
-                </svg></p>
-                <p aria-hidden="true"> White: <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="male" class="svg-inline--fa fa-male fa-w-6 true-negative sample" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512">
-                  <path stroke="none" fill="#f2ca02" d="M96 0c35.346 0 64 28.654 64 64s-28.654 64-64 64-64-28.654-64-64S60.654 0 96 0m48 144h-11.36c-22.711 10.443-49.59 10.894-73.28 0H48c-26.51 0-48 21.49-48 48v136c0 13.255 10.745 24 24 24h16v136c0 13.255 10.745 24 24 24h64c13.255 0 24-10.745 24-24V352h16c13.255 0 24-10.745 24-24V192c0-26.51-21.49-48-48-48z"></path>
-                </svg></p>
+
               </div>
             </div>
 
@@ -82,9 +82,9 @@
 
               <div class="slider-holder">
                 <h3>Differences in Earnings</h3>
-                <p>The observed average earnings for the children growing up in Wakefield is $27.6K.</p>
-                <p>The observed average earnings for the children growing up in the MLK Towers is $19.5K</p>
-                <p>The difference is $8K, which is four times as large as the real causal effect!</p>
+                <p>The observed average earnings for the children growing up in Nehemiah Houses is $27.6K.</p>
+                <p>The observed average earnings for the children growing up in the Van Dyke Public Housing is $19.5K</p>
+                <p>The difference is <span style="font-size:24px; color:#024453;font-weight:bold;">$8,000</span>, which is four times as large as the real causal effect!</p>
 
                 <p><strong>Scroll down</strong> to check differences in racial composition.</p>
               </div>
@@ -106,9 +106,9 @@
               <div class="slider-holder">
                 <h3>Differences in Racial Composition</h3>
                 <br>
-                <p>Note also that 46.8% of children of the children growing up in Wakefield are Black.</p>
-                <p>In the MLK Towers, it is 77.2%.</p>
-                <p>The $8K difference in earnings is also picking up racial disparities in earnings, leading to an overestimate of the causal effect.</p>
+                <p>Note also that <span style="font-size:24px; color:#024453;font-weight:bold;">46.8%</span> of children of the children growing up in Nehemiah Houses are Black.</p>
+                <p>In the Van Dyke Public Housing, it is <span style="font-size:24px; color:#024453;font-weight:bold;">77.2%</span>.</p>
+                <p>The <span style="font-size:24px; color:#024453;font-weight:bold;">$8,000</span> difference in earnings is also picking up racial disparities in earnings, leading to an overestimate of the causal effect.</p>
                 <p><strong>Scroll down</strong> to try random assignment.</p>
               </div>
             </div>
@@ -131,7 +131,7 @@
               <div class="slider-holder">
                 <h3>Random Assignment</h3>
                 <br>
-                <p>We will now simulate an experiment where we randomly assign half of the 500 children to grow up in the Martin Luther King Jr. Towers in Harlem and the other half to grow up in Wakefield in the Bronx.</p>
+                <p>We will now simulate an experiment where we randomly assign half of the 500 children to grow up in the Van Dyke Public Housing and the other half to grow up in Nehemiah Houses.</p>
                 <p>Press the button below to randomly assign each observation to one of the two groups:</p>
                 <p><button onclick='counter()' class="button" id="randomize" style="font-size:32px; background-color:green;color:White;">Randomize</button></p>
                 
@@ -160,9 +160,9 @@
               <div class="slider-holder">
                 <h3>Differences in Earnings and Racial Composition</h3>
                 <br>
-                <p>The difference in earnings between the two groups is <span id="incomeDIFF"> $8K without randomizaiton.</span></p>
+                <p>The difference in earnings between the two groups is <span id="incomeDIFF"> <span style="font-size:24px; color:#024453;font-weight:bold;">$8,000</span> without randomizaiton.</span></p>
                 <p><span id="whyDIFF"></span></p>
-                <p>The difference in racial composition in the two groups is <span id="raceDIFF"> 30.4 </span> percentage points.</p>
+                <p>The difference in racial composition in the two groups is <span id="raceDIFF"> <span style="font-size:32px; color:#024453;font-weight:bold;">30.4</span> </span> percentage points.</p>
                 <p><strong>Scroll up</strong> <span id="experimentReminder">to randomize.</span>.</p>
               </div>
             </div>
