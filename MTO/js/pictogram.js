@@ -46,24 +46,24 @@ var pictogramScroll = function () {
     .html(function (d) {
       if ((d.wakefield==1) & (d.black==1)){
         return(
-          'Community: Wakefield'+
+          'Community: Nehemiah Houses'+
           '<br>'+
           'Race: People of color');
       }else if((d.wakefield==1)&(d.black===0)){
         return(
-          'Community: Wakefield'+
+          'Community: Nehemiah Houses'+
           '<br>'+
           'Race: White');
         
       }else if ((d.wakefield===0)&(d.black===0)){
         return(
-          'Community: Martin Luther King Jr. Towers'+
+          'Community: Van Dyke Public Housing'+
           '<br>'+
           'Race: White');
         
       }else{
         return(
-          'Community: Martin Luther King Jr. Towers'+
+          'Community: Van Dyke Public Housing'+
           '<br>'+
           'Race: People of color');
       }
@@ -80,7 +80,7 @@ var pictogramScroll = function () {
   var xBarScaleIncome = d3.scaleBand()
                     .paddingInner(0.08)
                     .range([0,drawWidth])
-                    .domain(["MLK Jr. Towers","Wakefield"]);
+                    .domain([" Van Dyke Public Housing","Nehemiah Houses"]);
 
 
   var yAxisBarIncome = d3.axisLeft()
@@ -103,7 +103,7 @@ var pictogramScroll = function () {
   var xBarScaleRace = d3.scaleBand()
                     .paddingInner(0.08)
                     .range([0,drawWidth])
-                    .domain(["MLK Jr. Towers","Wakefield"]);
+                    .domain([" Van Dyke Public Housing","Nehemiah Houses"]);
                      
  
   var yAxisBarRace = d3.axisLeft()
@@ -124,7 +124,7 @@ var pictogramScroll = function () {
    // var incomeColor=d3.scaleSequential(d3.interpolateYlGn);
    //  var incomeColor=d3.scaleSequential(d3.interpolateGreens);
                   
-  var barColors = { "MLK Jr. Towers": '#4191cf', "Wakefield": '#f2ca02' };
+  var barColors = { " Van Dyke Public Housing": '#4191cf', "Nehemiah Houses": '#f2ca02' };
   
   
   var chart = function (selection) {
@@ -151,7 +151,7 @@ var pictogramScroll = function () {
       .entries(data);
       
       incomeData=incomeData.map(function(d,i){
-        d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+        d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
         return d;
       });
       
@@ -165,7 +165,7 @@ var pictogramScroll = function () {
       .entries(data);
       
        incomeDataTreat=incomeDataTreat.map(function(d,i){
-        d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+        d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
         return d;
       });
       
@@ -189,7 +189,7 @@ var pictogramScroll = function () {
         .entries(data);
         
        raceData=raceData.map(function(d,i){
-         d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+         d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
         return d;
        }); 
         
@@ -204,7 +204,7 @@ var pictogramScroll = function () {
         .entries(data);
         
        raceDataTreat=raceDataTreat.map(function(d,i){
-        d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+        d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
         return d;
        }); 
         
@@ -280,7 +280,7 @@ var pictogramScroll = function () {
 
       //text element to display number of figures in each location
       g.append('text')
-        .attr('id', 'txtValue-mlk')
+        .attr('id', 'txtValue-vdph')
         .attr('class', 'initial-txtValue')
         .attr('x', xPadding)
         .attr('y', yPadding)
@@ -289,7 +289,7 @@ var pictogramScroll = function () {
         
         
        g.append('text')
-        .attr('id', 'txtValue-wakefield')
+        .attr('id', 'txtValue-Nehemiah-Houses')
         .attr('class', 'initial-txtValue')
         .attr('x', xPadding*2+width/2)
         .attr('y', yPadding)
@@ -319,7 +319,6 @@ var pictogramScroll = function () {
           var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
         })
-        //.attr('fill',function(d,i){return incomeColor(d.y_obs)})
         .on('mouseover', icon_tip.show)
         .on('mouseout', icon_tip.hide);
         
@@ -580,13 +579,13 @@ var pictogramScroll = function () {
 
       
       // location title and number children in each location
-    g.select('#txtValue-mlk')
-     .text("MLK Jr. Towers: "+data.length/2)
+    g.select('#txtValue-vdph')
+     .text(" Van Dyke Public Housing: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
      
-    g.select('#txtValue-wakefield')
+    g.select('#txtValue-Nehemiah-Houses')
      .attr('x', xPadding*2+width/2)
-     .text("Wakefield: "+data.length/2)
+     .text("Nehemiah Houses: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
     
       data = data.map(function (d, idx) {
@@ -608,7 +607,7 @@ var pictogramScroll = function () {
        .append('use')
        .merge(use)
        .transition()
-       .delay(function (d, i) { return 3 * (i + 1);})
+      // .delay(function (d, i) { return 3 * (i + 1);})
        .attr('xlink:href', '#iconCustom')
        .attr('id', function (d) {return 'icon' + d.groupIndx;})
         .attr('x', function (d) {
@@ -636,14 +635,14 @@ var pictogramScroll = function () {
     icon_tip.html(function (d) {
       if ((d.wakefield==1) & (d.black==1)){
         return(
-          'Community: Wakefield'+
+          'Community: Nehemiah Houses'+
           '<br>'+
           'Race: People of color'+
           '<br>'+
           'Income: '+d.y0);
       }else if((d.wakefield==1)&(d.black===0)){
         return(
-          'Community: Wakefield'+
+          'Community: Nehemiah Houses'+
           '<br>'+
           'Race: White' +
           '<br>'+
@@ -651,7 +650,7 @@ var pictogramScroll = function () {
         
       }else if ((d.wakefield===0)&(d.black===0)){
         return(
-          'Community: Martin Luther King Jr. Towers'+
+          'Community: Van Dyke Public Housing'+
           '<br>'+
           'Race: White'+
           '<br>'+
@@ -660,7 +659,7 @@ var pictogramScroll = function () {
         
       }else{
         return(
-          'Community: Martin Luther King Jr. Towers'+
+          'Community: Van Dyke Public Housing'+
           '<br>'+
           'Race: People of color'+
           '<br>'+
@@ -770,7 +769,7 @@ var pictogramScroll = function () {
     
     //redraw the initial pictorgram
     
-    numCols=20
+    var numCols=10
     
     var numRows = Math.ceil(data.length / numCols);
     var myIndex = d3.range(numCols * numRows);
@@ -787,14 +786,19 @@ var pictogramScroll = function () {
     
     if(count===0){
       
+    numCols=20
+    
+    numRows = Math.ceil(data.length / numCols);
+    myIndex = d3.range(numCols * numRows);
+      
       // location title and number children in each location
-    g.select('#txtValue-mlk')
-     .text("MLK Jr. Towers: "+data.length/2)
+    g.select('#txtValue-vdph')
+     .text(" Van Dyke Public Housing: "+data.length/2)
      .transition().duration(0).attr('opacity', 0);
      
-    g.select('#txtValue-wakefield')
+    g.select('#txtValue-Nehemiah-Houses')
      .attr('x', xPadding*2+width/2)
-     .text("Wakefield: "+data.length/2)
+     .text("Nehemiah Houses: "+data.length/2)
      .transition().duration(0).attr('opacity', 0);
     
       //data = data.map(function (d, idx) {
@@ -839,28 +843,29 @@ var pictogramScroll = function () {
           var whole = Math.floor(d.index / numCols); //calculates the y position (row number)
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
         })
-      .duration(1500)
-      .attr('opacity',1)
-      .attr('class', function (d, i) {
-        if (d.black == 1) {
-          return 'people-of-color';
-        } else {
-          return 'people-of-white';
-        }
-      });
+        .style('fill','black')      
+        .duration(1500)
+      .attr('opacity',1);
+      //.attr('class', function (d, i) {
+        //if (d.black == 1) {
+        //  return 'people-of-color';
+       // } else {
+       //   return 'people-of-white';
+       // }
+     // });
       
       use.exit().remove();
       
       
     }else if(count >0){
       
-    g.select('#txtValue-mlk')
-     .text("Assigned MLK Jr. Towers: "+data.length/2)
+    g.select('#txtValue-vdph')
+     .text("Van Dyke Public Housing: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
      
-    g.select('#txtValue-wakefield')
+    g.select('#txtValue-Nehemiah-Houses')
      .attr('x', width/2)
-     .text("Assigned Wakefield: "+data.length/2)
+     .text("Nehemiah Houses: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
       
       data = data.map(function (d, idx) {
@@ -894,15 +899,9 @@ var pictogramScroll = function () {
           var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
         })
-      .duration(1500)
-      .attr('opacity',1)
-      .attr('class', function (d, i) {
-        if (d.black == 1) {
-          return 'people-of-color';
-        } else {
-          return 'people-of-white';
-        }
-      });
+        .style('fill',function(d,i){ return incomeColor(d.y_experiment)})
+        .duration(1500)
+        .attr('opacity',1);
       
       use.exit().remove();
       
@@ -913,14 +912,14 @@ var pictogramScroll = function () {
     icon_tip.html(function (d) {
       if ((d.wakefield==1) & (d.black==1)){
         return(
-          'Community: Wakefield'+
+          'Community: Nehemiah Houses'+
           '<br>'+
           'Race: People of color'+
           '<br>'+
           'Income: '+d.y0);
       }else if((d.wakefield==1)&(d.black===0)){
         return(
-          'Community: Wakefield'+
+          'Community: Nehemiah Houses'+
           '<br>'+
           'Race: White' +
           '<br>'+
@@ -928,7 +927,7 @@ var pictogramScroll = function () {
         
       }else if ((d.wakefield===0)&(d.black===0)){
         return(
-          'Community: Martin Luther King Jr. Towers'+
+          'Community: Van Dyke Public Housing'+
           '<br>'+
           'Race: White'+
           '<br>'+
@@ -937,7 +936,7 @@ var pictogramScroll = function () {
         
       }else{
         return(
-          'Community: Martin Luther King Jr. Towers'+
+          'Community: Van Dyke Public Housing'+
           '<br>'+
           'Race: People of color'+
           '<br>'+
@@ -957,8 +956,8 @@ var pictogramScroll = function () {
   function showObsIncomeBar(data){
     
     // hide the location and number title
-    g.select('#txtValue-mlk').transition().duration(0).attr('opacity', 0);
-    g.select('#txtValue-wakefield').transition().duration(0).attr('opacity', 0);
+    g.select('#txtValue-vdph').transition().duration(0).attr('opacity', 0);
+    g.select('#txtValue-Nehemiah-Houses').transition().duration(0).attr('opacity', 0);
     
     
     // hide the observed race bar element
@@ -1020,7 +1019,7 @@ var pictogramScroll = function () {
       .entries(data);
       
       incomeData=incomeData.map(function(d,i){
-        d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+        d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
         return d;
       });
     
@@ -1068,8 +1067,8 @@ var pictogramScroll = function () {
   
   function showObsRaceBar(data){
     
-    g.select('#txtValue-mlk').transition().duration(0).attr('opacity', 0);
-    g.select('#txtValue-wakefield').transition().duration(0).attr('opacity', 0);
+    g.select('#txtValue-vdph').transition().duration(0).attr('opacity', 0);
+    g.select('#txtValue-Nehemiah-Houses').transition().duration(0).attr('opacity', 0);
    
     hideAxis(yAxisBarIncome,'.y-axis-income');
     hideAxis(xAxisBarIncome,'.x-axis-income');
@@ -1127,7 +1126,7 @@ var pictogramScroll = function () {
         .entries(data);
         
        raceData=raceData.map(function(d,i){
-         d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+         d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
         return d;
        }); 
        
@@ -1196,7 +1195,7 @@ var pictogramScroll = function () {
             .entries(data);
             
              incomeDataTreat=incomeDataTreat.map(function(d,i){
-              d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+              d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
               return d;
             });
             
@@ -1213,7 +1212,7 @@ var pictogramScroll = function () {
             .entries(data);
             
            raceDataTreat=raceDataTreat.map(function(d,i){
-            d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+            d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
             return d;
            }); 
             
@@ -1230,8 +1229,8 @@ var pictogramScroll = function () {
      
      /// hide other visual elements
     
-    g.select('#txtValue-mlk').transition().duration(0).attr('opacity', 0);
-    g.select('#txtValue-wakefield').transition().duration(0).attr('opacity', 0);
+    g.select('#txtValue-vdph').transition().duration(0).attr('opacity', 0);
+    g.select('#txtValue-Nehemiah-Houses').transition().duration(0).attr('opacity', 0);
    
     hideAxis(yAxisBarIncome,'.y-axis-income');
     hideAxis(xAxisBarIncome,'.x-axis-income');
@@ -1503,18 +1502,19 @@ var pictogramScroll = function () {
         .attr('y', function (d) {
           var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
-        });
+        })
+        .style('fill',function(d,i){ return incomeColor(d.y_experiment)});
 
     use.exit().remove();
     
     
-    g.select('#txtValue-mlk')
-     .text("Assigned MLK Jr. Towers: "+data.length/2)
+    g.select('#txtValue-vdph')
+     .text("Van Dyke Public Housing: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
      
-    g.select('#txtValue-wakefield')
+    g.select('#txtValue-Nehemiah-Houses')
      .attr('x', width/2)
-     .text("Assigned Wakefield: "+data.length/2)
+     .text("Nehemiah Houses: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
     
     
@@ -1522,9 +1522,9 @@ var pictogramScroll = function () {
       if(d.wakefield===0){
         if(d.black===0 & d.treated===0){
           return(
-          'Community: Martin Luther King Jr. Towers'+
+          'Community: Van Dyke Public Housing'+
           '<br>'+
-          'Assigned Community: Martin Luther King Jr. Towers'+
+          'Assigned Community: Van Dyke Public Housing'+
           '<br>'+
           'Race: White'+
           '<br>'+
@@ -1533,9 +1533,9 @@ var pictogramScroll = function () {
           'Experiment Income: '+ d.y_experiment);
         }else if(d.black===0 & d.treated==1){
           return(
-          'Community: Martin Luther King Jr. Towers'+
+          'Community: Van Dyke Public Housing'+
           '<br>'+
-          'Assigned Community: Wakefield'+
+          'Assigned Community: Nehemiah Houses'+
           '<br>'+
           'Race: White'+
           '<br>'+
@@ -1544,9 +1544,9 @@ var pictogramScroll = function () {
           'Experiment Income: '+ d.y_experiment);
         }else if(d.black==1 & d.treated===0){
            return(
-          'Community: Martin Luther King Jr. Towers'+
+          'Community: Van Dyke Public Housing'+
           '<br>'+
-          'Assigned Community: Martin Luther King Jr. Towers'+
+          'Assigned Community: Van Dyke Public Housing'+
           '<br>'+
           'Race: People of color'+
           '<br>'+
@@ -1555,9 +1555,9 @@ var pictogramScroll = function () {
           'Experiment Income: '+ d.y_experiment);
         }else if(d.black==1 & d.treated==1){
           return(
-          'Community: Martin Luther King Jr. Towers'+
+          'Community: Van Dyke Public Housing'+
           '<br>'+
-          'Assigned Community: Wakefield'+
+          'Assigned Community: Nehemiah Houses'+
           '<br>'+
           'Race: People of color'+
           '<br>'+
@@ -1570,9 +1570,9 @@ var pictogramScroll = function () {
          
          if(d.black===0 & d.treated===0){
           return(
-          'Community: Wakefield'+
+          'Community: Nehemiah Houses'+
           '<br>'+
-          'Assigned Community: Martin Luther King Jr. Towers'+
+          'Assigned Community: Van Dyke Public Housing'+
           '<br>'+
           'Race: White'+
           '<br>'+
@@ -1581,9 +1581,9 @@ var pictogramScroll = function () {
           'Experiment Income: '+ d.y_experiment);
         }else if(d.black===0 & d.treated==1){
           return(
-          'Community: Wakefield'+
+          'Community: Nehemiah Houses'+
           '<br>'+
-          'Assigned Community: Wakefield'+
+          'Assigned Community: Nehemiah Houses'+
           '<br>'+
           'Race: White'+
           '<br>'+
@@ -1592,9 +1592,9 @@ var pictogramScroll = function () {
           'Experiment Income: '+ d.y_experiment);
         }else if(d.black==1 & d.treated===0){
            return(
-          'Community: Wakefield'+
+          'Community: Nehemiah Houses'+
           '<br>'+
-          'Assigned Community: Martin Luther King Jr. Towers'+
+          'Assigned Community: Van Dyke Public Housing'+
           '<br>'+
           'Race: People of color'+
           '<br>'+
@@ -1603,9 +1603,9 @@ var pictogramScroll = function () {
           'Experiment Income: '+ d.y_experiment);
         }else if(d.black==1 & d.treated==1){
           return(
-          'Community: Wakefield'+
+          'Community: Nehemiah Houses'+
           '<br>'+
-          'Assigned Community: Wakefield'+
+          'Assigned Community: Nehemiah Houses'+
           '<br>'+
           'Race: People of color'+
           '<br>'+
