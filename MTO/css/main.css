@@ -144,14 +144,19 @@ text {
 }
 
 
-/* Hides things so only screen readers will find them. */
-.sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
+
+.income-color-scale{
+  font-size: 15 ;
+
+}
+
+#extra-space {
+  height: 300px;
+}
+
+.notice {
+  font-size: 18px;
+  font-weight: bold;
+  color:#024453;
+  
 }
