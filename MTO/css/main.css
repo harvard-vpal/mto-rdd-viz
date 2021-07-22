@@ -104,7 +104,7 @@ p {
 /* style for pictogram */
 text {
   fill: black;
-  text-anchor: left;
+  text-anchor: middle;
   font-size: 12px;
   font-family: sans-serif, Helvetica, Arial;
   font-weight: bold;
