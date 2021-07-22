@@ -6,10 +6,10 @@ var pictogramScroll = function () {
     width = 500;
   //Magrin: spaces saved in the svg for axes and titles
   var margin = {
-    left:60,
+    left:50,
     bottom: 100,
     top: 30,
-    right: 10,
+    right: 50,
   };
   
   var drawHeight = height - margin.bottom - margin.top;
@@ -229,12 +229,10 @@ var pictogramScroll = function () {
      var gEnter = svg
         .enter()
         .append('svg')
-        //.merge(svg)
-        //.attr('height', height)
-        //.attr('width', width);
-        .attr('preserveAspectRatio', 'xMinYMin meet')
-        //.attr('viewBox', [0, 0, width, height]);
-        .attr('viewBox', [0, 0, width - 50, height - 50]);
+        .attr("preserveAspectRatio", "xMinYMin meet")
+                 .attr("viewBox", [0, 0, width-50, height-50])
+                 .style("overflow", "visible")
+                 .classed("svg-content", true);
   
   
       gEnter
@@ -282,7 +280,7 @@ var pictogramScroll = function () {
       g.append('text')
         .attr('id', 'txtValue-vdph')
         .attr('class', 'initial-txtValue')
-        .attr('x', xPadding)
+        .attr('x', xPadding*10)
         .attr('y', yPadding)
         .attr('dy', -10)
         .text('Van Dyke Public Housing: '+data.length/2);
@@ -291,10 +289,10 @@ var pictogramScroll = function () {
        g.append('text')
         .attr('id', 'txtValue-Nehemiah-Houses')
         .attr('class', 'initial-txtValue')
-        .attr('x', xPadding*2+width/2)
+        .attr('x', xPadding*8+width/2)
         .attr('y', yPadding)
         .attr('dy', -10)
-        .text('Nehemiah Houses: '+data.length/2);
+        .text('Nehemiah Houses Test: '+data.length/2);
         
       
 
@@ -313,7 +311,7 @@ var pictogramScroll = function () {
         })
         .attr('x', function (d) {
           var remainder = d.groupIndx % numCols; //calculates the x position (column number) using modulus
-          return (d.wakefield ===0 ? 0 : (width / 3)) + xPadding + remainder * clfWBuffer; //apply the buffer and return value
+          return (d.wakefield ===0 ? 0 : (width / 2)) + xPadding + remainder * clfWBuffer; //apply the buffer and return value
         })
         .attr('y', function (d) {
           var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
@@ -322,10 +320,29 @@ var pictogramScroll = function () {
         .on('mouseover', icon_tip.show)
         .on('mouseout', icon_tip.hide);
         
-// Income Bar graph-----------------------            
+    
+  
+    /// update the range of yAxis
+    yAxisBarIncome = d3.axisLeft()
+                   .scale(yBarScaleIncome.range([drawHeight/2-20,0]))
+                   .tickFormat(function(d){
+                     return d+"K";
+                   });
+ 
+   yAxisBarRace = d3.axisLeft()
+                   .scale(yBarScaleRace.range([drawHeight,drawHeight/2+20]))
+                   .tickFormat(function(d){
+                     return d+"%";
+                   });
+                   
+                   
+                   
+ // Append all the axes
+
+
      g.append('g')
         .attr('class','x-axis-income')
-        .attr("transform", 'translate(0,'+drawHeight+')')
+        .attr("transform", 'translate(0,'+(drawHeight/2-20)+')')
         .call(xAxisBarIncome);
         
      g.append('g')
@@ -333,111 +350,115 @@ var pictogramScroll = function () {
         .attr("transform", 'translate(0,0)')
         .call(yAxisBarIncome);
         
-     g.select('.x-axis-income').style('opacity',0);
-     g.select('.y-axis-income').style('opacity',0);
         
-     var bars=g.append('g')
-                .selectAll('.bar')
-                .data(incomeData);
-      
-              bars.enter()
-                  .append('rect')
-                  .attr('class','bar-income')
-                  .merge(bars)
-                  .attr('y', drawHeight)
-                  .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
-                  .attr('fill', function (d) { return barColors[d.group]; })
-                  .attr('height', 0)
-                  .attr('width', xBarScaleIncome.bandwidth()/2); 
-                  
-                  
-         bars.exit().remove();
-     
-     var barTextIncome = g.selectAll('.bar-text').data(incomeData);
-   
-        barTextIncome.enter()
-                .append('text')
-                .attr('class', 'bar-text-income')
-                .merge(barTextIncome)
-                .text(function (d) { return "$"+d.value+"k"; })
-                .attr('y', 0)
-                .attr('dy',function(d,i){return yBarScaleIncome(d.value)-10;})
-                .attr('x', function (d) { return xBarScaleIncome(d.group);})
-                .attr('dx', xBarScaleIncome.bandwidth() / 4)
-                .style('font-size', '25px')
-                .attr('fill', 'black')
-                .attr('opacity', 0);
-                
-          barTextIncome.exit().remove();     
-      
-              
-       g.append("text")
-        .attr("class", "y-label-income")
-        .attr("text-anchor", "middle")
-        .attr("x", -margin.left*4)
-        .attr("y", -40)
-        .attr("transform", "rotate(-90)")
-        .text("Average Income")
-        .attr('opacity',0);                   
-                       
-                       
-  /// Racial composition bar ------------------------------------------
-  
-    g.append('g')
-          .attr('class','x-axis-race')
-          .attr("transform", 'translate(0,'+drawHeight+')')
-          .call(xAxisBarRace);
+     g.append('g')
+        .attr('class','x-axis-race')
+        .attr("transform", 'translate(0,'+drawHeight+')')
+        .call(xAxisBarRace);
         
      g.append('g')
         .attr('class','y-axis-race')
         .attr("transform", 'translate(0,0)')
         .call(yAxisBarRace);
         
-     g.select('.x-axis-race').style('opacity',0);
-     g.select('.y-axis-race').style('opacity',0);
+ // Income bar graph----------------     
         
-     var barsRace=g.append('g')
-                .selectAll('.bar')
-                .data(raceData);
+     g.select('.x-axis-income').style('opacity',0);
+     g.select('.y-axis-income').style('opacity',0);
+        
+      var barsIncome=g.selectAll('.bar-income')
+                          .data(incomeData);
       
-          barsRace.enter()
-                  .append('rect')
-                  .attr('class','bar-race')
-                  .merge(barsRace)
-                  .attr('y', drawHeight)
-                  .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
-                  .attr('fill', function (d) { return barColors[d.group]; })
-                  .attr('height', 0)
-                  .attr('width', xBarScaleRace.bandwidth()/2);  
-                  
-           barsRace.exit().remove();
+            barsIncome.enter()
+                      .append('rect')
+                      .attr('class','bar-income')
+                      .merge(barsIncome)
+                      .attr('y', drawHeight/2-20)
+                      .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
+                      .attr('fill', function (d) { return barColors[d.group]; })
+                      .attr('height', 0)
+                      .attr('width', xBarScaleIncome.bandwidth()/2);  
+                      
+        barsIncome.exit().remove();              
+                      
+                      
      
-     var barTextRace = g.selectAll('.bar-text').data(raceData);
+   var barTextIncome = g.selectAll('.bar-text').data(incomeData);
    
-            barTextRace.enter()
+            barTextIncome.enter()
               .append('text')
-              .merge(barTextRace)
-              .attr('class', 'bar-text-race')
-              .text(function (d) { return d.value+"%"; })
+              .attr('class', 'bar-text-income')
+              .merge(barTextIncome)
+              .text(function (d) { return "$"+d.value+"k"; })
               .attr('y', 0)
-              .attr('dy',function(d,i){return yBarScaleRace(d.value)-10;})
-              .attr('x', function (d) { return xBarScaleRace(d.group);})
-              .attr('dx', xBarScaleRace.bandwidth() / 4)
+              .attr('dy',function(d,i){return yBarScaleIncome(d.value)-10;})
+              .attr('x', function (d) { return xBarScaleIncome(d.group)+xBarScaleIncome.bandwidth() / 4;})
+              .attr('dx', xBarScaleIncome.bandwidth() / 4)
               .style('font-size', '25px')
               .attr('fill', 'black')
               .attr('opacity', 0);
               
-      barTextRace.exit().remove();
+        barTextIncome.exit().remove();
               
-       g.append("text")
-        .attr("class", "y-label-race")
-        .attr("text-anchor", "middle")
-        .attr("x", -margin.left*4)
-        .attr("y", -40)
-        .attr("transform", "rotate(-90)")
-        .text("People of Color %")
-        .attr('opacity',0);
-    
+     g.append("text")
+    .attr("class", "y-label-income")
+    .attr("text-anchor", "middle")
+    .attr("x", -80)
+    .attr("y", -30)
+    .attr("transform", "rotate(-90)")
+    .text("Average Income")
+    .attr('opacity',0); 
+  
+        
+   // Race bar graph     
+        
+    g.select('.x-axis-race').style('opacity',0);
+    g.select('.y-axis-race').style('opacity',0);
+        
+     var barsRace=g.selectAll('.bar-race')
+                        .data(raceData);
+      
+       barsRace.enter()
+                      .append('rect')
+                      .attr('class','bar-race')
+                      .merge(barsRace)
+                      .attr('y', drawHeight)
+                      .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
+                      .attr('fill', function (d) { return barColors[d.group]; })
+                      .attr('height', 0)
+                      .attr('width', xBarScaleRace.bandwidth()/2);  
+                      
+        barsRace.exit().remove();              
+                      
+                      
+     
+   var barTextRace = g.selectAll('.bar-text').data(raceData);
+   
+            barTextRace.enter()
+              .append('text')
+              .attr('class', 'bar-text-race')
+              .merge(barTextRace)
+              .text(function (d) { return d.value+"%"; })
+              .attr('y', 0)
+              .attr('dy',function(d,i){return yBarScaleRace(d.value)-10;})
+              .attr('x', function (d) { return xBarScaleRace(d.group)+xBarScaleRace.bandwidth()/4;})
+              .attr('dx', xBarScaleRace.bandwidth()/4)
+              .style('font-size', '25px')
+              .attr('fill', 'black')
+              .attr('opacity', 0);
+              
+        barTextRace.exit().remove();
+              
+     g.append("text")
+    .attr("class", "y-label-race")
+    .attr("text-anchor", "middle")
+    .attr("x", -280)
+    .attr("y", -30)
+    .attr("transform", "rotate(-90)")
+    .text("People of Color %")
+    .attr('opacity',0);     
+      
+
     /// append g only once in the setupVis--------------------
     
      g.append('g')
@@ -586,7 +607,6 @@ var pictogramScroll = function () {
          .transition().duration(0).attr('opacity', 1);
      
       g.select('#txtValue-Nehemiah-Houses')
-       .attr('x', width/2)
        .text("Nehemiah Houses: "+data.length/2)
        .transition().duration(0).attr('opacity', 1);
      
@@ -610,7 +630,6 @@ var pictogramScroll = function () {
        .append('use')
        .merge(use)
        .transition()
-      // .delay(function (d, i) { return 3 * (i + 1);})
        .attr('xlink:href', '#iconCustom')
        .attr('id', function (d) {return 'icon' + d.groupIndx;})
         .attr('x', function (d) {
@@ -776,7 +795,6 @@ var pictogramScroll = function () {
      .transition().duration(0).attr('opacity', 1);
      
     g.select('#txtValue-Nehemiah-Houses')
-     .attr('x', width/2)
      .text("Nehemiah Houses: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
      
@@ -815,7 +833,6 @@ var pictogramScroll = function () {
        .append('use')
        .merge(use)
        .transition()
-      // .delay(function (d, i) { return 3 * (i + 1);})
        .attr('xlink:href', '#iconCustom')
        .attr('id', function (d) {return 'icon' + d.groupIndx;})
         .attr('x', function (d) {
@@ -982,7 +999,6 @@ var pictogramScroll = function () {
      .transition().duration(0).attr('opacity', 1);
      
     g.select('#txtValue-Nehemiah-Houses')
-     .attr('x', width/2)
      .text("Nehemiah Houses: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
       
@@ -1005,11 +1021,6 @@ var pictogramScroll = function () {
         return d;
       });
       
-   
-      
-      console.log("chicken");
-      console.log(data);
-      
       var use=g.selectAll('use')
              .data(data);
     
@@ -1018,7 +1029,6 @@ var pictogramScroll = function () {
        .append('use')
        .merge(use)
        .transition()
-      // .delay(function (d, i) { return 3 * (i + 1);})
        .attr('xlink:href', '#iconCustom')
        .attr('id', function (d) {return 'icon' + d.groupIndx;})
         .attr('x', function (d) {
@@ -1188,12 +1198,9 @@ var pictogramScroll = function () {
     var obsWakGrpIndx = 0;
     var obsMarGrpIndx = 0;
     
-    console.log("what is count");
-    console.log(count);
-    console.log(myIndex);
-    
     
     if(count===0){
+    
       
     numCols=20
     
@@ -1206,7 +1213,6 @@ var pictogramScroll = function () {
      .transition().duration(0).attr('opacity', 0);
      
     g.select('#txtValue-Nehemiah-Houses')
-     .attr('x', xPadding*2+width/2)
      .text("Nehemiah Houses: "+data.length/2)
      .transition().duration(0).attr('opacity', 0);
     
@@ -1247,7 +1253,7 @@ var pictogramScroll = function () {
           return '#f2ca02';
         }})    
         .duration(1500)
-       .attr('opacity',1);
+        .attr('opacity',1);
      
       
       use.exit().remove();
@@ -1260,11 +1266,14 @@ var pictogramScroll = function () {
      .transition().duration(0).attr('opacity', 1);
      
     g.select('#txtValue-Nehemiah-Houses')
-     .attr('x', width/2)
      .text("Nehemiah Houses: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
      
-      
+     
+      data=data.sort(function(a,b){
+        return a.black-b.black;
+      })
+     
       data = data.map(function (d, idx) {
         if ((d.treated == 1)){
           d.groupIndx = treatWakGrpIndx;
@@ -1285,7 +1294,7 @@ var pictogramScroll = function () {
        .append('use')
        .merge(use)
        .transition()
-       //.delay(function (d, i) { return 3 * (i + 1);})
+       .delay(function (d, i) { return 3 * (i + 1);})
        .attr('xlink:href', '#iconCustom')
        .attr('id', function (d) {return 'icon' + d.groupIndx;})
         .attr('x', function (d) {
@@ -1296,6 +1305,12 @@ var pictogramScroll = function () {
           var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
         })
+        .style("fill",function(d,i){
+         if (d.black == 1) {
+          return '#4191cf';
+        } else {
+          return '#f2ca02';
+        }})
         .duration(1500)
         .attr('opacity',1);
       
@@ -1439,10 +1454,11 @@ var pictogramScroll = function () {
       .attr('opacity',0);   
 
 
-  // show pictogram
+if (count===0){
+  return null;
+  }else if(count>0){
     
-    //redraw the initial pictorgram
-    
+  
     var numCols=10
     
     var numRows = Math.ceil(data.length / numCols);
@@ -1453,18 +1469,12 @@ var pictogramScroll = function () {
     var obsWakGrpIndx = 0;
     var obsMarGrpIndx = 0;
     
-    console.log("what is count");
-    console.log(count);
-    console.log(myIndex);
-    
-    
   
     g.select('#txtValue-vdph')
      .text("Van Dyke Public Housing: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
      
     g.select('#txtValue-Nehemiah-Houses')
-     .attr('x', width/2)
      .text("Nehemiah Houses: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
      
@@ -1549,224 +1559,7 @@ var pictogramScroll = function () {
     g.call(icon_tip);
     
   }
-  
-  
-  // showObsIncomeBar
-  
-  function showObsIncomeBar(data){
-    
-    // hide the location and number title
-    g.select('#txtValue-vdph').transition().duration(0).attr('opacity', 0);
-    g.select('#txtValue-Nehemiah-Houses').transition().duration(0).attr('opacity', 0);
-    
-    
-    // hide the observed race bar element
-    
-    hideAxis(xAxisBarRace,'.x-axis-race');
-    hideAxis(yAxisBarRace,'.y-axis-race');
-    
-    // hide all income bar element    
-    g.selectAll('.bar-race')
-     .transition()
-     .duration(0)
-     .attr('opacity', 0);
-     
-   g.selectAll('.bar-text-race')
-      .transition()
-      .duration(0)
-      .attr('opacity',0);
-      
-  
-   g.select('.y-label-race')
-      .transition()
-      .duration(0)
-      .attr('opacity',0);
-      
-    // hide initial pictorgram element
-   
-   icon_tip.html(function (d) {return null;})
-   
-    
-    g.selectAll('use')
-      .transition()
-      .duration(0)
-      .attr('opacity', 0);
-      
-    g.selectAll('.icon-tip')
-     .transition()
-     .duration(0)
-     .attr('opacity', 0);
-     
-     // show observed income bar element
-     
-     
-    yAxisBarIncome = d3.axisLeft()
-                   .scale(yBarScaleIncome.range([drawHeight,0]))
-                   .tickFormat(function(d){
-                     return d+"K";
-                   });
- 
-   
-      // ensure bar axis is set
-    showAxis(xAxisBarIncome,'.x-axis-income');
-    showAxis(yAxisBarIncome,'.y-axis-income');
-    
-    incomeData=d3.nest()
-      .key(function(d){return d.wakefield})
-      .rollup(function(v){
-        return d3.mean(v,function(d){return d.y_obs;}).toFixed(1);
-      })
-      .entries(data);
-      
-      incomeData=incomeData.map(function(d,i){
-        d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
-        return d;
-      });
-    
-    var barsIncome=g.selectAll('.bar-income')
-                    .data(incomeData);
-                    
-        barsIncome.enter()
-                  .append('rect')
-                  .attr('class','bar-income')
-                  .merge(barsIncome)
-                   .attr('y', drawHeight)
-                  .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
-                  .attr('fill', function (d) { return barColors[d.group]; })
-                  .attr('height', 0)
-                  .attr('width', xBarScaleIncome.bandwidth()/2); 
-                  
-        barsIncome.exit().remove();
-     
-     
-     
-     g.selectAll('.bar-income')
-      .transition()
-      .delay(function (d, i) { return 300 * (i + 1);})
-      .duration(1500)
-      .attr('y',function(d,i){return yBarScaleIncome(d.value);})
-      .attr('height', function (d,i) { return drawHeight - yBarScaleIncome(d.value); })
-      .attr('opacity',1);
-      
-     g.selectAll('.bar-text-income')
-      .transition()
-      .delay(function (d, i) { return 300 * (i + 1);})
-      .duration(600)
-      .attr('opacity',1)
-      
-     g.select('.y-label-income')
-      .transition()
-      .delay(function (d, i) { return 300 * (i + 1);})
-      .duration(600)
-      .attr('opacity',1)
-     
-  }
-  
-  
-  // showRaceCompBar
-  
-  function showObsRaceBar(data){
-    
-    g.select('#txtValue-vdph').transition().duration(0).attr('opacity', 0);
-    g.select('#txtValue-Nehemiah-Houses').transition().duration(0).attr('opacity', 0);
-   
-    hideAxis(yAxisBarIncome,'.y-axis-income');
-    hideAxis(xAxisBarIncome,'.x-axis-income');
-   
-   
-   icon_tip.html(function (d) {return null;})
-  
-  
-    g.selectAll('use')
-      .transition()
-      .duration(0)
-      .attr('opacity', 0);
-      
-    g.selectAll('.icon-tip')
-     .transition()
-     .duration(0)
-     .attr('opacity', 0);
- 
- // hide all income bar element    
-    g.selectAll('.bar-income')
-     .transition()
-     .duration(0)
-     .attr('opacity', 0);
-     
-   g.selectAll('.bar-text-income')
-      .transition()
-      .duration(0)
-      .attr('opacity',0);
-      
-  
-   g.select('.y-label-income')
-      .transition()
-      .duration(0)
-      .attr('opacity',0)   
-      
-  /// show observe race bar elements
-  
-    yAxisBarRace = d3.axisLeft()
-                   .scale(yBarScaleRace.range([drawHeight,0]))
-                   .tickFormat(function(d){
-                     return d+"%";
-                   });
-     
-  
-     // ensure bar axis is set
-    showAxis(xAxisBarRace,'.x-axis-race');
-    showAxis(yAxisBarRace,'.y-axis-race');
-  
-     
-     raceData=d3.nest()
-        .key(function(d){return d.wakefield})
-        .rollup(function(v){
-          return (d3.mean(v,function(d){return d.black})*100).toFixed(1);
-        })
-        .entries(data);
-        
-       raceData=raceData.map(function(d,i){
-         d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
-        return d;
-       }); 
-       
-     var barsRace=g.selectAll('.bar-race')
-                   .data(raceData);
-        
-        barsRace.enter()
-                .append('rect')
-                .attr('class','bar-race')
-                .merge(barsRace)
-                .attr('y', drawHeight)
-                  .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
-                  .attr('fill', function (d) { return barColors[d.group]; })
-                  .attr('height', 0)
-                  .attr('width', xBarScaleRace.bandwidth()/2);  
-                  
-           barsRace.exit().remove();
-     
-     
-     g.selectAll('.bar-race')
-      .transition()
-      .delay(function (d, i) { return 300 * (i + 1);})
-      .duration(1500)
-      .attr('y',function(d,i){return yBarScaleRace(d.value);})
-      .attr('height', function (d,i) { return drawHeight - yBarScaleRace(d.value); })
-      .attr('opacity',1);
-      
-     g.selectAll('.bar-text-race')
-      .transition()
-      .delay(function (d, i) { return 300 * (i + 1);})
-      .duration(600)
-      .attr('opacity',1)
-     
-     
-     g.select('.y-label-race')
-      .transition()
-      .delay(function (d, i) { return 300 * (i + 1);})
-      .duration(600)
-      .attr('opacity',1)
-  }
+}//end of else if
   
   // showObsBars
   
@@ -1829,48 +1622,29 @@ var pictogramScroll = function () {
          // d3.selectAll("#raceDIFF").text(raceDiff);
           //d3.selectAll("#experimentReminder").text("try another random assignment");
      
-     /// hide other visual elements
-  
+  // show all visual element for income and race bars
    
     showAxis(yAxisBarIncome,'.y-axis-income');
     showAxis(xAxisBarIncome,'.x-axis-income');
     showAxis(yAxisBarRace,'.y-axis-race');
     showAxis(xAxisBarRace,'.x-axis-race');
- 
-       /// update the range of yAxis
-    yAxisBarIncome = d3.axisLeft()
-                   .scale(yBarScaleIncome.range([drawHeight/2-20,0]))
-                   .tickFormat(function(d){
-                     return d+"K";
-                   });
- 
-   yAxisBarRace = d3.axisLeft()
-                   .scale(yBarScaleRace.range([drawHeight,drawHeight/2+20]))
-                   .tickFormat(function(d){
-                     return d+"%";
-                   });
- 
- 
- // show observed Income Bars-----     
     
     
-    var barsIncome=g.selectAll('.bar-income')
-                    .data(incomeData);
-                    
-        barsIncome.enter()
-                  .append('rect')
-                  .attr('class','bar-income')
-                  .merge(barsIncome)
-                   .attr('y', drawHeight)
-                  .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
-                  .attr('fill', function (d) { return barColors[d.group]; })
-                  .attr('height', 0)
-                  .attr('width', xBarScaleIncome.bandwidth()/2); 
-                  
-        barsIncome.exit().remove();
-     
-     
-     
+      var barsIncome=g.selectAll('.bar-income')
+                          .data(incomeData);
+      
+            barsIncome.enter()
+                      .append('rect')
+                      .attr('class','bar-income')
+                      .merge(barsIncome)
+                      .attr('y', drawHeight/2-20)
+                      .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
+                      .attr('fill', function (d) { return barColors[d.group]; })
+                      .attr('height', 0)
+                      .attr('width', xBarScaleIncome.bandwidth()/2);  
+                      
+        barsIncome.exit().remove();  
+ 
      g.selectAll('.bar-income')
       .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
@@ -1894,23 +1668,22 @@ var pictogramScroll = function () {
 
       
   // show observed race bars
-    
-     var barsRace=g.selectAll('.bar-race')
-                   .data(raceData);
-        
-        barsRace.enter()
-                .append('rect')
-                .attr('class','bar-race')
-                .merge(barsRace)
-                .attr('y', drawHeight)
-                  .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
-                  .attr('fill', function (d) { return barColors[d.group]; })
-                  .attr('height', 0)
-                  .attr('width', xBarScaleRace.bandwidth()/2);  
-                  
-           barsRace.exit().remove();
-     
-     
+  
+    var barsRace=g.selectAll('.bar-race')
+                        .data(raceData);
+      
+       barsRace.enter()
+                      .append('rect')
+                      .attr('class','bar-race')
+                      .merge(barsRace)
+                      .attr('y', drawHeight)
+                      .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
+                      .attr('fill', function (d) { return barColors[d.group]; })
+                      .attr('height', 0)
+                      .attr('width', xBarScaleRace.bandwidth()/2);  
+                      
+        barsRace.exit().remove();              
+  
      g.selectAll('.bar-race')
       .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
@@ -1937,10 +1710,6 @@ var pictogramScroll = function () {
   // showTreatBars
   
   function showTreatBars(data){
-    
-    console.log('what is count?');
-    
-    console.log(count);
     
    if (count===0){
     
@@ -2097,7 +1866,7 @@ var pictogramScroll = function () {
               .text(function (d) { return "$"+d.value+"k"; })
               .attr('y', 0)
               .attr('dy',function(d,i){return yBarScaleIncome(d.value)-10;})
-              .attr('x', function (d) { return xBarScaleIncome(d.group);})
+              .attr('x', function (d) { return xBarScaleIncome(d.group)+xBarScaleIncome.bandwidth()/4;})
               .attr('dx', xBarScaleIncome.bandwidth() / 4)
               .style('font-size', '25px')
               .attr('fill', 'black')
@@ -2161,8 +1930,8 @@ var pictogramScroll = function () {
               .text(function (d) { return d.value+"%"; })
               .attr('y', 0)
               .attr('dy',function(d,i){return yBarScaleRace(d.value)-10;})
-              .attr('x', function (d) { return xBarScaleRace(d.group);})
-              .attr('dx', xBarScaleRace.bandwidth() / 4)
+              .attr('x', function (d) { return xBarScaleRace(d.group)+xBarScaleRace.bandwidth()/4;})
+              .attr('dx', xBarScaleRace.bandwidth()/4)
               .style('font-size', '25px')
               .attr('fill', 'black')
               .attr('opacity', 0);
@@ -2233,6 +2002,10 @@ var pictogramScroll = function () {
     var treatWakGrpIndx = 0;
     var treatMarGrpIndx = 0;
 
+   data=data.sort(function(a,b){
+        return a.black-b.black;
+      })
+     
 
   data = data.map(function (d, idx) {
         if ((d.treated == 1)){
@@ -2283,7 +2056,6 @@ var pictogramScroll = function () {
      .transition().duration(0).attr('opacity', 1);
      
     g.select('#txtValue-Nehemiah-Houses')
-     .attr('x', width/2)
      .text("Nehemiah Houses: "+data.length/2)
      .transition().duration(0).attr('opacity', 1);
     
@@ -2447,7 +2219,7 @@ var pictogramScroll = function () {
     .attr("class", "y-label-income-treat")
     .attr("text-anchor", "middle")
     .attr("x", -80)
-    .attr("y", -40)
+    .attr("y", -30)
     .attr("transform", "rotate(-90)")
     .text("Average Income")
     .attr('opacity',0); 
@@ -2497,7 +2269,7 @@ var pictogramScroll = function () {
     .attr("class", "y-label-race-treat")
     .attr("text-anchor", "middle")
     .attr("x", -280)
-    .attr("y", -40)
+    .attr("y", -30)
     .attr("transform", "rotate(-90)")
     .text("People of Color %")
     .attr('opacity',0); 

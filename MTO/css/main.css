@@ -1,4 +1,9 @@
 /* Main CSS file */
+
+.container {
+  width: 1000px;
+}
+
 body {
   
   font-size: 1em;
