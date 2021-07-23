@@ -123,9 +123,9 @@ var pictogramScroll = function () {
   // Color scale--------------  
   
   
-    var incomeColor=d3.scaleSequential(d3.interpolateRdYlGn);
-   // var incomeColor=d3.scaleSequential(d3.interpolateYlGn);
-   //  var incomeColor=d3.scaleSequential(d3.interpolateGreens);
+    var incomeColor=d3.scaleSequential(d3.interpolateBrBG);
+     // var incomeColor=d3.scaleSequential(d3.interpolateYlGn);
+    // var incomeColor=d3.scaleSequential(d3.interpolateGreens);
    
    var legend = d3.legendColor()
                   .scale(incomeColor)
