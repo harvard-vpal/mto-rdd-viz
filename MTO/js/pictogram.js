@@ -36,40 +36,6 @@ var pictogramScroll = function () {
   //specify the number of columns for pictogram layout
   var numCols = 10;
 
-  //tooltip for each icon
-
-  var icon_tip = d3
-    .tip()
-    .attr('class', 'icon-tip')
-    .direction('e')
-    .offset([-35, 0])
-    .html(function (d) {
-      if ((d.wakefield==1) & (d.black==1)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: People of color');
-      }else if((d.wakefield==1)&(d.black===0)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: White');
-        
-      }else if ((d.wakefield===0)&(d.black===0)){
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: White');
-        
-      }else{
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: People of color');
-      }
-    });
-  
-  
   
   // Income Bar Scale and Axis----------------------
   
@@ -80,7 +46,7 @@ var pictogramScroll = function () {
   var xBarScaleIncome = d3.scaleBand()
                     .paddingInner(0.08)
                     .range([0,drawWidth])
-                    .domain([" Van Dyke Public Housing","Nehemiah Houses"]);
+                    .domain(["Public Housing Units","Mixed Income Neighborhood"]);
 
 
   var yAxisBarIncome = d3.axisLeft()
@@ -105,7 +71,7 @@ var pictogramScroll = function () {
   var xBarScaleRace = d3.scaleBand()
                     .paddingInner(0.08)
                     .range([0,drawWidth])
-                    .domain([" Van Dyke Public Housing","Nehemiah Houses"]);
+                    .domain(["Public Housing Units","Mixed Income Neighborhood"]);
                      
  
   var yAxisBarRace = d3.axisLeft()
@@ -134,7 +100,7 @@ var pictogramScroll = function () {
                   .cells(7);
    
                   
-  var barColors = { " Van Dyke Public Housing": '#4191cf', "Nehemiah Houses": '#f2ca02' };
+  var barColors = { "Public Housing Units": '#4191cf', "Mixed Income Neighborhood": '#f2ca02' };
   
   
   var chart = function (selection) {
@@ -161,7 +127,7 @@ var pictogramScroll = function () {
       .entries(data);
       
       incomeData=incomeData.map(function(d,i){
-        d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
+        d.group=d.key=="0"?"Public Housing Units":"Mixed Income Neighborhood";
         return d;
       });
       
@@ -175,7 +141,7 @@ var pictogramScroll = function () {
       .entries(data);
       
        incomeDataTreat=incomeDataTreat.map(function(d,i){
-        d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
+        d.group=d.key=="0"?"Public Housing Units":"Mixed Income Neighborhood";
         return d;
       });
       
@@ -191,7 +157,7 @@ var pictogramScroll = function () {
        
        incomeColor.domain([incomeMin-10, incomeMax+10]);
        
-      var raceData=d3.nest()
+       raceData=d3.nest()
         .key(function(d){return d.wakefield})
         .rollup(function(v){
           return (d3.mean(v,function(d){return d.black})*100).toFixed(1);
@@ -199,7 +165,7 @@ var pictogramScroll = function () {
         .entries(data);
         
        raceData=raceData.map(function(d,i){
-         d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
+         d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
         return d;
        }); 
         
@@ -214,7 +180,7 @@ var pictogramScroll = function () {
         .entries(data);
         
        raceDataTreat=raceDataTreat.map(function(d,i){
-        d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
+        d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
         return d;
        }); 
         
@@ -282,31 +248,40 @@ var pictogramScroll = function () {
         return d;
       });
       
-      console.log("what is this: ");
-      
-      console.log(data);
-
       //text element to display number of figures in each location
       g.append('text')
-        .attr('id', 'txtValue-vdph')
+        .attr('id', 'txtValue-ph')
         .attr('class', 'initial-txtValue')
-        .attr('x', xPadding*10)
+        .attr('x', xPadding*8)
         .attr('y', yPadding)
         .attr('dy', -10)
-        .text('Van Dyke Public Housing: '+data.length/2);
+        .text('Public Housing Units: '+data.length/2);
         
         
        g.append('text')
-        .attr('id', 'txtValue-Nehemiah-Houses')
+        .attr('id', 'txtValue-mixed')
         .attr('class', 'initial-txtValue')
         .attr('x', xPadding*8+width/2)
         .attr('y', yPadding)
         .attr('dy', -10)
-        .text('Nehemiah Houses Test: '+data.length/2);
+        .text('Mixed Income Neighborhood: '+data.length/2);
         
-      
+      // text element holding the summary stats
+       g.append('text')
+        .attr('id','stat-ph')
+        .attr('x', xPadding*8)
+        .attr('y', yPadding)
+        .attr('dy', 400)
+        .attr('opacity',0);
+  
+       g.append('text')
+        .attr('id','stat-mixed')
+        .attr('x', xPadding*8+width/2)
+        .attr('y', yPadding)
+        .attr('dy', 400)
+        .attr('opacity',0);;
 
-      g.call(icon_tip);
+      // g.call(icon_tip);
 
       //create group element and create an svg <use> element for each icon
       g.append('g')
@@ -326,9 +301,9 @@ var pictogramScroll = function () {
         .attr('y', function (d) {
           var whole = Math.floor(d.groupIndx / numCols); //calculates the y position (row number)
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
-        })
-        .on('mouseover', icon_tip.show)
-        .on('mouseout', icon_tip.hide);
+        });
+       // .on('mouseover', icon_tip.show)
+       // .on('mouseout', icon_tip.hide);
         
    // work on the color legend-------------
    
@@ -615,13 +590,20 @@ var pictogramScroll = function () {
 
       
       // location title and number children in each location
-      g.select('#txtValue-vdph')
-         .text("Van Dyke Public Housing: "+data.length/2)
+      g.select('#txtValue-ph')
          .transition().duration(0).attr('opacity', 1);
      
-      g.select('#txtValue-Nehemiah-Houses')
-       .text("Nehemiah Houses: "+data.length/2)
+      g.select('#txtValue-mixed')
        .transition().duration(0).attr('opacity', 1);
+      
+      
+      g.select('#stat-ph')
+         .transition().duration(0).attr('opacity', 0);
+         
+      g.select('#stat-mixed')
+         .transition().duration(0).attr('opacity', 0);
+       
+      
        
        
       g.select(".income-color-scale").transition().duration(0).attr('opacity', 0);
@@ -662,46 +644,7 @@ var pictogramScroll = function () {
      
       
       use.exit().remove();
-      
-      
-    icon_tip.html(function (d) {
-      if ((d.wakefield==1) & (d.black==1)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Income: '+d.y0);
-      }else if((d.wakefield==1)&(d.black===0)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: White' +
-          '<br>'+
-          'Income: '+d.y0);
-        
-      }else if ((d.wakefield===0)&(d.black===0)){
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: White'+
-          '<br>'+
-          'Income: '+d.y0
-          );
-        
-      }else{
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Income: '+d.y0
-          );
-      }
-    });
-    
-    g.call(icon_tip);
-  
+
     
   }
   
@@ -806,12 +749,10 @@ var pictogramScroll = function () {
 
       
       // location title and number children in each location
-    g.select('#txtValue-vdph')
-     .text("Van Dyke Public Housing: "+data.length/2)
+    g.select('#txtValue-ph')
      .transition().duration(0).attr('opacity', 1);
      
-    g.select('#txtValue-Nehemiah-Houses')
-     .text("Nehemiah Houses: "+data.length/2)
+    g.select('#txtValue-mixed')
      .transition().duration(0).attr('opacity', 1);
      
      
@@ -842,9 +783,33 @@ var pictogramScroll = function () {
         return a.y_obs-b.y_obs
       })
       
-      console.log("chicken");
-      console.log(data);
       
+      
+      incomeData=d3.nest()
+            .key(function(d){return d.wakefield})
+            .rollup(function(v){
+              return d3.mean(v,function(d){return d.y_obs;}).toFixed(1);
+            })
+            .entries(data);
+            
+             incomeData=incomeData.map(function(d,i){
+              d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
+              return d;
+            }).sort(function(a,b){
+              return a.key-b.key;
+            });
+            
+
+            
+        var incomeDiff=Math.abs(incomeData[0].value-incomeData[1].value).toFixed(2);
+        
+         g.selectAll("#stat-ph").text("Average Income: "+"$"+incomeData[0].value+"K").transition().duration(1500).attr('opacity', 1);;
+         g.selectAll("#stat-mixed").text("Average Income: "+"$"+incomeData[1].value+"K").transition().duration(1500).attr('opacity', 1);;
+        
+         d3.selectAll("#incomeRaw-1").text(incomeData[1].value+"K");
+         d3.selectAll("#incomeRaw-2").text(incomeData[0].value+"K");
+         d3.selectAll("#incomeDiff").text(incomeDiff+"K");
+   
       var use=g.selectAll('use')
              .data(data);
     
@@ -853,6 +818,7 @@ var pictogramScroll = function () {
        .append('use')
        .merge(use)
        .transition()
+       .delay(function (d, i) { return 3 * (i + 1);})
        .attr('xlink:href', '#iconCustom')
        .attr('id', function (d) {return 'icon' + d.groupIndx;})
         .attr('x', function (d) {
@@ -864,50 +830,11 @@ var pictogramScroll = function () {
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
         })
         .style('fill',function(d){return incomeColor(d.y_obs)})
-      .duration(1500)
+      .duration(0)
       .attr('opacity',1);
      
       
       use.exit().remove();
-      
-      
-    icon_tip.html(function (d) {
-      if ((d.wakefield==1) & (d.black==1)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Income: '+d.y0);
-      }else if((d.wakefield==1)&(d.black===0)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: White' +
-          '<br>'+
-          'Income: '+d.y0);
-        
-      }else if ((d.wakefield===0)&(d.black===0)){
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: White'+
-          '<br>'+
-          'Income: '+d.y0
-          );
-        
-      }else{
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Income: '+d.y0
-          );
-      }
-    });
-    
-    g.call(icon_tip);
   
     
   }  
@@ -1017,12 +944,10 @@ var pictogramScroll = function () {
       
       // location title and number children in each location
      
-    g.select('#txtValue-vdph')
-     .text("Van Dyke Public Housing: "+data.length/2)
+    g.select('#txtValue-ph')
      .transition().duration(0).attr('opacity', 1);
      
-    g.select('#txtValue-Nehemiah-Houses')
-     .text("Nehemiah Houses: "+data.length/2)
+    g.select('#txtValue-mixed')
      .transition().duration(0).attr('opacity', 1);
       
     
@@ -1044,6 +969,29 @@ var pictogramScroll = function () {
         return d;
       });
       
+       raceData=d3.nest()
+        .key(function(d){return d.wakefield})
+        .rollup(function(v){
+          return (d3.mean(v,function(d){return d.black})*100).toFixed(1);
+        })
+        .entries(data);
+        
+        
+       raceData=raceData.map(function(d,i){
+         d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
+        return d;
+       }).sort(function(a,b){
+         return a.key-b.key;
+       }); 
+       
+       
+       console.log("Why changed?")
+       console.log(raceData);
+       
+       d3.select("#stat-ph").text("People of Color: "+raceData[0].value+"%").transition().duration(1500).attr('opacity',1);
+       d3.select("#stat-mixed").text("People of Color: "+raceData[1].value+"%").transition().duration(1500).attr('opacity',1);
+      
+      
       var use=g.selectAll('use')
              .data(data);
     
@@ -1052,6 +1000,7 @@ var pictogramScroll = function () {
        .append('use')
        .merge(use)
        .transition()
+       .delay(function (d, i) { return 3 * (i + 1);})
        .attr('xlink:href', '#iconCustom')
        .attr('id', function (d) {return 'icon' + d.groupIndx;})
         .attr('x', function (d) {
@@ -1068,51 +1017,12 @@ var pictogramScroll = function () {
         } else {
           return '#f2ca02';
         }})
-      .duration(1500)
+      .duration(0)
       .attr('opacity',1);
       
       
       use.exit().remove();
       
-      
-    icon_tip.html(function (d) {
-      if ((d.wakefield==1) & (d.black==1)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Income: '+d.y0);
-      }else if((d.wakefield==1)&(d.black===0)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: White' +
-          '<br>'+
-          'Income: '+d.y0);
-        
-      }else if ((d.wakefield===0)&(d.black===0)){
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: White'+
-          '<br>'+
-          'Income: '+d.y0
-          );
-        
-      }else{
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Income: '+d.y0
-          );
-      }
-    });
-    
-    g.call(icon_tip);
-  
     
   } 
   
@@ -1231,19 +1141,20 @@ var pictogramScroll = function () {
     myIndex = d3.range(numCols * numRows);
       
       // location title and number children in each location
-    g.select('#txtValue-vdph')
-     .text(" Van Dyke Public Housing: "+data.length/2)
+    g.select('#txtValue-ph')
      .transition().duration(0).attr('opacity', 0);
      
-    g.select('#txtValue-Nehemiah-Houses')
-     .text("Nehemiah Houses: "+data.length/2)
+    g.select('#txtValue-mixed')
      .transition().duration(0).attr('opacity', 0);
+     
+    g.select("#stat-ph").transition().duration(0).attr('opacity',0);
+    g.select("#stat-mixed").transition().duration(0).attr('opacity',0);
      
      
     g.select(".income-color-scale")
      .transition().duration(0).attr('opacity', 0);
     
-      data=data.sort(function(a,b){
+     data=data.sort(function(a,b){
         return a.black-b.black;
       })
      
@@ -1251,10 +1162,10 @@ var pictogramScroll = function () {
         d.index = myIndex[idx];
         return d;
       });
+  
       
       var use=g.selectAll('use')
              .data(data);
-    
     
     use.enter()
        .append('use')
@@ -1288,19 +1199,16 @@ var pictogramScroll = function () {
       
     }else if(count >0){
       
-    g.select('#txtValue-vdph')
-     .text("Van Dyke Public Housing: "+data.length/2)
+    g.select('#txtValue-ph')
      .transition().duration(0).attr('opacity', 1);
      
-    g.select('#txtValue-Nehemiah-Houses')
-     .text("Nehemiah Houses: "+data.length/2)
+    g.select('#txtValue-mixed')
      .transition().duration(0).attr('opacity', 1);
      
     g.select(".income-color-scale")
      .transition().duration(0).attr('opacity', 0);
      
-     
-      data=data.sort(function(a,b){
+     data=data.sort(function(a,b){
         return a.black-b.black;
       })
      
@@ -1314,6 +1222,26 @@ var pictogramScroll = function () {
         } 
         return d;
       });
+      
+      
+      var raceDataTreat=d3.nest()
+            .key(function(d){return d.treated})
+            .rollup(function(v){
+              return (d3.mean(v,function(d){return d.black})*100).toFixed(1);
+            })
+            .entries(data);
+            
+           raceDataTreat=raceDataTreat.map(function(d,i){
+            d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
+            return d;
+           }); 
+    
+    console.log("why changed 2?")       
+      
+    console.log(raceDataTreat);
+ 
+       d3.select("#stat-ph").text("People of Color: "+raceDataTreat[0].value+"%").transition().duration(1500).attr("opacity",1);
+       d3.select("#stat-mixed").text("People of Color: "+raceDataTreat[1].value+"%").transition().duration(1500).attr("opacity",1);
       
       
       var use=g.selectAll('use')
@@ -1341,52 +1269,12 @@ var pictogramScroll = function () {
         } else {
           return '#f2ca02';
         }})
-        .duration(1500)
+        .duration(0)
         .attr('opacity',1);
       
       use.exit().remove();
       
     }
-    
-
-
-    icon_tip.html(function (d) {
-      if ((d.wakefield==1) & (d.black==1)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Income: '+d.y0);
-      }else if((d.wakefield==1)&(d.black===0)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: White' +
-          '<br>'+
-          'Income: '+d.y0);
-        
-      }else if ((d.wakefield===0)&(d.black===0)){
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: White'+
-          '<br>'+
-          'Income: '+d.y0
-          );
-        
-      }else{
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Income: '+d.y0
-          );
-      }
-    });
-    
-    g.call(icon_tip);
   
     
   }
@@ -1485,7 +1373,12 @@ var pictogramScroll = function () {
 
 
 if (count===0){
+
+  d3.selectAll("#scroll-up-down").text("Scroll up to step 5");
+  d3.selectAll("#scroll-reminder").text(" to randomize the assignment.");
+  d3.selectAll("#recallEffectSen").text("");
   return null;
+  
   }else if(count>0){
     
   
@@ -1500,12 +1393,10 @@ if (count===0){
     var obsMarGrpIndx = 0;
     
   
-    g.select('#txtValue-vdph')
-     .text("Van Dyke Public Housing: "+data.length/2)
+    g.select('#txtValue-ph')
      .transition().duration(0).attr('opacity', 1);
      
-    g.select('#txtValue-Nehemiah-Houses')
-     .text("Nehemiah Houses: "+data.length/2)
+    g.select('#txtValue-mixed')
      .transition().duration(0).attr('opacity', 1);
      
     g.select(".income-color-scale")
@@ -1528,6 +1419,38 @@ if (count===0){
       });
       
       
+       var incomeDataTreat=d3.nest()
+            .key(function(d){return d.treated})
+            .rollup(function(v){
+              return d3.mean(v,function(d){return d.y_experiment;}).toFixed(1);
+            })
+            .entries(data);
+            
+             incomeDataTreat=incomeDataTreat.map(function(d,i){
+              d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
+              return d;
+            });
+            
+      d3.selectAll("#stat-ph").text("Average Income: "+"$"+incomeDataTreat[0].value+"K").transition().duration(1500).attr('opacity',1);
+      
+      d3.selectAll("#stat-mixed").text("Average Income: "+"$"+incomeDataTreat[1].value+"K").transition().duration(1500).attr('opacity',1);
+      
+            
+       var incomeDiff=Math.abs(incomeDataTreat[0].value-incomeDataTreat[1].value).toFixed(2);
+            
+           /// change the section 5 html side text
+      
+      d3.selectAll("#incomeDIFF").text("$"+incomeDiff+"K");
+      d3.selectAll("#with-text").text("");
+      d3.selectAll("#recallEffect").text("Recall that the real causal effect in the simulation is")
+      d3.selectAll("#causalEffect").text(" $2K.");
+      d3.selectAll("#whyDIFF").text("Why does this randomized experiment work better than an observational comparison?");
+      
+      d3.selectAll("#scroll-up-down").text("Scroll down");
+      d3.selectAll("#scroll-reminder").text(" to see why.");
+ 
+      
+      
       var use=g.selectAll('use')
              .data(data);
     
@@ -1536,6 +1459,7 @@ if (count===0){
        .append('use')
        .merge(use)
        .transition()
+       .delay(function (d, i) { return 3 * (i + 1);})
        .attr('xlink:href', '#iconCustom')
        .attr('id', function (d) {return 'icon' + d.groupIndx;})
         .attr('x', function (d) {
@@ -1547,49 +1471,10 @@ if (count===0){
           return yPadding + whole * clfHBuffer; //apply the buffer and return the value
         })
         .style('fill',function(d){return incomeColor(d.y_experiment)})
-        .duration(1500)
+        .duration(0)
         .attr('opacity',1);
       
       use.exit().remove();
-      
-
-    icon_tip.html(function (d) {
-      if ((d.wakefield==1) & (d.black==1)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Income: '+d.y0);
-      }else if((d.wakefield==1)&(d.black===0)){
-        return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: White' +
-          '<br>'+
-          'Income: '+d.y0);
-        
-      }else if ((d.wakefield===0)&(d.black===0)){
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: White'+
-          '<br>'+
-          'Income: '+d.y0
-          );
-        
-      }else{
-        return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Income: '+d.y0
-          );
-      }
-    });
-    
-    g.call(icon_tip);
     
   }
 }//end of else if
@@ -1600,13 +1485,15 @@ if (count===0){
    
    
    // hide the location and number title
-    g.select('#txtValue-vdph').transition().duration(0).attr('opacity', 0);
-    g.select('#txtValue-Nehemiah-Houses').transition().duration(0).attr('opacity', 0);
+    g.select('#txtValue-ph').transition().duration(0).attr('opacity', 0);
+    g.select('#txtValue-mixed').transition().duration(0).attr('opacity', 0);
+    g.select("#stat-ph").transition().duration(0).attr('opacity',0);
+    g.select("#stat-mixed").transition().duration(0).attr('opacity',0);
     g.select(".income-color-scale").transition().duration(0).attr('opacity', 0);
 
   // hide initial pictorgram element
    
-   icon_tip.html(function (d) {return null;})
+  // icon_tip.html(function (d) {return null;})
    
     
     g.selectAll('use')
@@ -1629,7 +1516,7 @@ if (count===0){
       .entries(data);
       
       incomeData=incomeData.map(function(d,i){
-        d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
+        d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
         return d;
       });
 
@@ -1643,19 +1530,17 @@ if (count===0){
         .entries(data);
         
        raceData=raceData.map(function(d,i){
-         d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
+         d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
         return d;
        }); 
        
           
         var raceDiffRaw=Math.abs(raceData[0].value-raceData[1].value).toFixed(2);
        
-        console.log("children");
-        console.log(raceData[1].value);
         
         /// change the section 5 html side text
       
-          d3.selectAll("#incomeDIFFRaw").text("$"+incomeDiffRaw+"K.");
+         // d3.selectAll("#incomeDIFFRaw").text("$"+incomeDiffRaw+"K.");
           
           d3.selectAll("#raceRaw-1").text(raceData[1].value+"%");
           d3.selectAll("#raceRaw-2").text(raceData[0].value+"%");
@@ -1770,7 +1655,7 @@ if (count===0){
             .entries(data);
             
              incomeDataTreat=incomeDataTreat.map(function(d,i){
-              d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
+              d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
               return d;
             });
             
@@ -1787,7 +1672,7 @@ if (count===0){
             .entries(data);
             
            raceDataTreat=raceDataTreat.map(function(d,i){
-            d.group=d.key=="0"? " Van Dyke Public Housing":"Nehemiah Houses";
+            d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
             return d;
            }); 
             
@@ -1797,24 +1682,31 @@ if (count===0){
         
         /// change the section 5 html side text
       
-          d3.selectAll("#incomeDIFF").text("$"+incomeDiff+"K.");
-          d3.selectAll("#whyDIFF").text("Why does this work better than the observational comparison? Randomization ensures that the treatment and control groups are comparable.");
+          d3.selectAll("#with-text").text("");
+          d3.selectAll("#whyDIFF").text("The lesson is that randomization ensures that the treatment and control groups are comparable, eliminating confounding.");
+          d3.selectAll("#only").text("only ");
           d3.selectAll("#raceDIFF").text(raceDiff);
-          d3.selectAll("#experimentReminder").text("try another random assignment.");
+          d3.selectAll("#experimentReminder").text("repeat the experiment.");
      
      /// hide other visual elements
     
-    g.select('#txtValue-vdph').transition().duration(0).attr('opacity', 0);
-    g.select('#txtValue-Nehemiah-Houses').transition().duration(0).attr('opacity', 0);
+    g.select('#txtValue-ph').transition().duration(0).attr('opacity', 0);
+    g.select('#txtValue-mixed').transition().duration(0).attr('opacity', 0);
+    g.select('#stat-ph').transition().duration(0).attr('opacity', 0);
+    g.select('#stat-mixed').transition().duration(0).attr('opacity', 0);
+    
     g.select(".income-color-scale").transition().duration(0).attr('opacity', 0);
-   
+    
+    
+    
+    
     hideAxis(yAxisBarIncome,'.y-axis-income');
     hideAxis(xAxisBarIncome,'.x-axis-income');
     hideAxis(yAxisBarRace,'.y-axis-race');
     hideAxis(xAxisBarRace,'.x-axis-race');
    
    
-   icon_tip.html(function (d) {return null;})
+  // icon_tip.html(function (d) {return null;})
   
   
     g.selectAll('use')
@@ -2051,8 +1943,14 @@ if (count===0){
         } 
         return d;
       });
+      
+  
+ 
+          
+  d3.selectAll("#stat-ph").text("People of Color: "+raceDataTreat[0].value+"%").transition().duration(1500).attr("opacity",1);
+  d3.selectAll("#stat-mixed").text("People of Color: "+raceDataTreat[1].value+"%").transition().duration(1500).attr("opacity",1);
 
-    console.log('updated data: '+ data);
+
 
     var use = g.selectAll('use').data(data);
 
@@ -2085,113 +1983,11 @@ if (count===0){
     use.exit().remove();
     
     
-    g.select('#txtValue-vdph')
-     .text("Van Dyke Public Housing: "+data.length/2)
+    g.select('#txtValue-ph')
      .transition().duration(0).attr('opacity', 1);
      
-    g.select('#txtValue-Nehemiah-Houses')
-     .text("Nehemiah Houses: "+data.length/2)
+    g.select('#txtValue-mixed')
      .transition().duration(0).attr('opacity', 1);
-    
-    
-    icon_tip.html(function(d){
-      if(d.wakefield===0){
-        if(d.black===0 & d.treated===0){
-          return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Assigned Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: White'+
-          '<br>'+
-          'Observed Income: '+d.y_obs+
-          '<br>'+
-          'Experiment Income: '+ d.y_experiment);
-        }else if(d.black===0 & d.treated==1){
-          return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Assigned Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: White'+
-          '<br>'+
-          'Observed Income: '+d.y_obs+
-          '<br>'+
-          'Experiment Income: '+ d.y_experiment);
-        }else if(d.black==1 & d.treated===0){
-           return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Assigned Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Observed Income: '+d.y_obs+
-          '<br>'+
-          'Experiment Income: '+ d.y_experiment);
-        }else if(d.black==1 & d.treated==1){
-          return(
-          'Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Assigned Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Observed Income: '+d.y_obs+
-          '<br>'+
-          'Experiment Income: '+ d.y_experiment);
-        }
-        
-       }else if(d.wakefield==1){
-         
-         if(d.black===0 & d.treated===0){
-          return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Assigned Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: White'+
-          '<br>'+
-          'Observed Income: '+d.y_obs+
-          '<br>'+
-          'Experiment Income: '+ d.y_experiment);
-        }else if(d.black===0 & d.treated==1){
-          return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Assigned Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: White'+
-          '<br>'+
-          'Observed Income: '+d.y_obs+
-          '<br>'+
-          'Experiment Income: '+ d.y_experiment);
-        }else if(d.black==1 & d.treated===0){
-           return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Assigned Community: Van Dyke Public Housing'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Observed Income: '+d.y_obs+
-          '<br>'+
-          'Experiment Income: '+ d.y_experiment);
-        }else if(d.black==1 & d.treated==1){
-          return(
-          'Community: Nehemiah Houses'+
-          '<br>'+
-          'Assigned Community: Nehemiah Houses'+
-          '<br>'+
-          'Race: People of color'+
-          '<br>'+
-          'Observed Income: '+d.y_obs+
-          '<br>'+
-          'Experiment Income: '+ d.y_experiment);
-        }
-       }
-    })// end of icon-tip update
-    
            
     // Draw Treatment Income bars------------------
     

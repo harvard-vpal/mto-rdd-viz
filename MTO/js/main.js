@@ -104,8 +104,10 @@ $(function () {
             .entries(data);
             
              incomeDataTreat=incomeDataTreat.map(function(d,i){
-              d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+              d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
               return d;
+            }).sort(function(a,b){
+              return a.key-b.key;
             });
             
             console.log("incomeDataTreat");
@@ -121,8 +123,10 @@ $(function () {
             .entries(data);
             
            raceDataTreat=raceDataTreat.map(function(d,i){
-            d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+            d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
             return d;
+           }).sort(function(a,b){
+             return a.key-b.key;
            }); 
             
           console.log(raceDataTreat);
