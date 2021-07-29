@@ -1810,7 +1810,7 @@ if (count===0){
       .attr('opacity',1);
       
      g.selectAll('.bar-text-income-treat')
-      .transition(600)
+      .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
       .duration(600)
       .attr('opacity',1)
@@ -1874,7 +1874,7 @@ if (count===0){
       .attr('opacity',1);
       
      g.selectAll('.bar-text-race-treat')
-      .transition(600)
+      .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
       .duration(600)
       .attr('opacity',1)
