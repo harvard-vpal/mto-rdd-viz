@@ -100,7 +100,7 @@ var pictogramScroll = function () {
                   .cells(7);
    
                   
-  var barColors = { "Public Housing Units": '#4191cf', "Mixed Income Neighborhood": '#f2ca02' };
+  var barColors = { "Public Housing Units": '#cccccc', "Mixed Income Neighborhood": '#f21c51' };
   
   
   var chart = function (selection) {
