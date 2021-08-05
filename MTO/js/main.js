@@ -1,8 +1,5 @@
 $(function () {
   
-  // utitlity functions----------------------------------------------
-  
-  
     d3.csv("mto-data.csv",function(error,rawData){
     console.log(rawData);
     
@@ -27,7 +24,7 @@ $(function () {
         .entries(data);
         
        raceData=raceData.map(function(d,i){
-         d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+         d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
         return d;
        }); 
        
@@ -41,7 +38,7 @@ $(function () {
       .entries(data);
       
       incomeData=incomeData.map(function(d,i){
-        d.group=d.key=="0"? "MLK Jr. Towers":"Wakefield";
+        d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
         return d;
       });
       
