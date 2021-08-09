@@ -56,7 +56,7 @@
             </div>
 
             <div class="column middle">
-              <div class="slider-holder">
+              <div class="text-holder">
                 <h3>Observational Comparisons</h3>
                 <p>We will compare the earnings of 500 hypothetical individuals, 250 growing up in public housing units and 250 growing up in a mixed income neighborhood.</p>
                 <p>In this simulation, the only reason that different people earn different amounts is either because of their neighborhood or their race.</p>
@@ -84,7 +84,7 @@
 
             <div class="column middle">
 
-              <div class="slider-holder">
+              <div class="text-holder">
                 <h3>Realized Earnings when the Children Grow Up</h3>
                 
                 <p>The observed average earnings in the mixed income neighborhood is <span id="incomeRaw-1" class="notice"></span>.</p>
@@ -111,7 +111,7 @@
 
             <div class="column middle">
 
-              <div class="slider-holder">
+              <div class="text-holder">
                 <h3>Racial Composition</h3>
                 
                 <p>But racial composition differs across the two neighborhoods as well…</p>
@@ -142,9 +142,9 @@
 
             <div class="column middle">
 
-              <div class="slider-holder">
+              <div class="text-holder">
                 <h3>Confounding in observational comparisons</h3>
-                <p>In this example, <strong>race</strong> is a <strong>confounding variable</strong>.</p>
+                <p>In this example, <strong>race</strong> is a <strong>confounding variable</strong>, because people of color are paid less for the same work.</p>
                 <p><span id="raceRaw-1" class="notice"></span> of children growing up in the mixed income neighborhood are people of color.  In the public housing units, it is <span id="raceRaw-2" class="notice"></span>.</p>
                 <p>The observed difference in earnings is picking up <strong>racial disparities</strong> in earnings, leading to an overestimate of the causal effect of place.</p>
                 <p><strong>Scroll down</strong> to see how random assignment solves this problem.</p>
@@ -164,15 +164,19 @@
             </div>
 
             <div class="column middle">
-              <div class="slider-holder">
+              <div class="text-holder">
                 <h3>Random Assignment</h3>
                 <br>
                 <p>We will now simulate an experiment where half of the 500 children are randomly assigned to the mixed income neighborhood and the other half to the public housing units.</p>
                 <p>Press the button below to randomly assign each observation to one of the two groups:</p>
-                <p><button onclick='counter()' class="button" id="randomize" style="font-size:32px; background-color:green;color:White;">Randomize</button></p>
+                <p><button title="randomize-children-button" onclick='counter()' class="button" id="randomize" style="font-size:32px; background-color:green;color:White;">Randomize</button></p>
                 
-                <p style="font-size:16px;">Experiment NO.: <span style="font-size:16px; color:red" id="countDisplay">0</span></p>
-  
+                <span aria-live='assertive' style="font-size:24px;color:red" id="countDisplay">Experiment: 0 </span>
+                
+                <span class='sr-only' aria-live='assertive' id="race-ratio-public">People of Color in Public Housing Units: NA</span>
+                
+                <span class='sr-only' aria-live='assertive' id="race-ratio-mixed">People of Color in Mixed Income Neighborhood: NA</span>
+
                 <p><strong>Scroll down</strong> to check the differences in avergage income and racial composition.</p>
                 
                   <p aria-hidden="true"> People of color: <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="male" class="svg-inline--fa fa-male fa-w-6 true-positive sample" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512">
@@ -198,7 +202,7 @@
             </div>
 
             <div class="column middle">
-              <div class="slider-holder">
+              <div class="text-holder">
                 <h3>Experimental Earnings when the Children Grow Up</h3>
                 <br>
                  <p>The difference in earnings between the two groups is <span id="incomeDIFF" class="notice">$8,000</span><span id="with-text"> without randomizaiton</span>.</p>
@@ -222,7 +226,7 @@
             </div>
 
             <div class="column middle">
-              <div class="slider-holder">
+              <div class="text-holder">
                 <h3>Balance of Racial Composition</h3>
                 <br>
                 
@@ -240,7 +244,7 @@
 
       </div> <!-- sections div -->
 
-      <div role="region" id='vis'></div>
+      <div role="region" id='vis' aria-hidden="true"></div>
       <div id="extra-space"></div>
 
     </div>
@@ -254,7 +258,7 @@
     var count=0;
    
     function counter(){
-     d3.selectAll('#countDisplay').text(++count);
+     d3.selectAll('#countDisplay').text("Experiment: "+ ++count);
     }
   
   

@@ -4,6 +4,14 @@
   width: 1000px;
 }
 
+
+
+#graphic {
+  padding-top: -60px;
+}
+
+
+
 body {
   
   font-size: 1em;
@@ -43,6 +51,7 @@ p {
   width: 80%;
 }
 
+
 .step-circle {
   width: 50px;
   line-height: 50px;
@@ -57,6 +66,8 @@ p {
   margin-right: 5px;
   margin-top: 25px;
 }
+
+
 
 
 

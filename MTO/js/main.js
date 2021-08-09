@@ -127,6 +127,10 @@ $(function () {
            }); 
             
           console.log(raceDataTreat);
+          
+          
+         d3.selectAll("#race-ratio-public").text("People of Color in Public Housing Units: "+raceDataTreat[0].value+"%");
+         d3.selectAll("#race-ratio-mixed").text("People of Color in Mixed Income Neighborhood: "+raceDataTreat[1].value+"%");
         
           
          plot.updateData(data,incomeDataTreat,raceDataTreat);
@@ -177,6 +181,7 @@ $(function () {
             // activate current section
             plot.activate(index, data);
           });
+          
         }
     
     }); // end of d3.csv data loading

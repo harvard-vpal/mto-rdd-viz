@@ -8,7 +8,7 @@ var pictogramScroll = function () {
   var margin = {
     left:100,
     bottom: 100,
-    top: 30,
+    top: 20,
     right: 50,
   };
   
@@ -1242,8 +1242,7 @@ var pictogramScroll = function () {
  
        d3.select("#stat-ph").text("People of Color: "+raceDataTreat[0].value+"%").transition().duration(1500).attr("opacity",1);
        d3.select("#stat-mixed").text("People of Color: "+raceDataTreat[1].value+"%").transition().duration(1500).attr("opacity",1);
-      
-      
+       
       var use=g.selectAll('use')
              .data(data);
     
