@@ -59,10 +59,9 @@
               <div class="text-holder">
                 <h3>Observational Comparisons</h3>
                 <p>We will compare the earnings of 500 hypothetical individuals, 250 growing up in public housing units and 250 growing up in a mixed income neighborhood.</p>
-                <p>In this simulation, the only reason that different people earn different amounts is either because of their neighborhood or their race.</p>
                 <p>The causal effect of growing up in the mixed income homes compared with public housing units is <span class="notice">$2,000</span>.</p>
-                <p>That is, if you grow up in the mixed income neighborhood, you’d make $2000 more than if you grew up in the public housing units.</p>
-               <p><strong>Scroll down</strong> to view realized earnings.</p>
+                <p>That is, if you grow up in the mixed income neighborhood, you’d make <span class="notice">$2,000</span> more than if you grew up in the public housing units.</p>
+               <p>In addition, earnings differ across individuals due to various other factors, including their race.</p>
 
               </div>
             </div>
@@ -89,8 +88,11 @@
                 
                 <p>The observed average earnings in the mixed income neighborhood is <span id="incomeRaw-1" class="notice"></span>.</p>
                 <p>The observed average earnings in the public housing units is <span id="incomeRaw-2" class="notice"></span>.</p>
-                <p>The difference is <span id="incomeDiff" class="notice"></span>, which is four times as large as the real causal effect!</p>
-                <p><strong>Scroll down</strong> to view racial composition.</p>
+                <p>The difference is <span id="incomeDIFF-1" class="notice"></span>, which is <span id="times" class="notice"></span> times as large as the real causal effect!</p>
+                <p><strong>Scroll down</strong> to understand why.</p>
+                
+                <p aria-hidden='true' style="text-align: center;"><u>Earnings Level</u></p> <!-- Cannot find the legend title posistion parameter in d3.legend-->
+                <svg aria-hidden='true' style="align: center;" id="legend-canvas"></svg>
               </div>
             </div>
 
@@ -114,9 +116,19 @@
               <div class="text-holder">
                 <h3>Racial Composition</h3>
                 
-                <p>But racial composition differs across the two neighborhoods as well…</p>
-
-                <p><strong>Scroll down</strong> to see why this matters.</p>
+                <p>Not only are realized earnings different in the two neighborhoods, but racial composition is as well.</p>
+                <p>The observational comparison is picking up racial disparities in earnings, leading to an overestimate of the causal effect of place.</p>
+                <p>In this simulation, people of color earn <span class="notice">$10,000</span> less on average than whites, making race a confounding variable.</p>
+                <p>“Confounders” are factors that are both:</p>
+               <!--
+                <ol>
+                  <li>determinants of the outcome variable; and</li>
+                  <li>different on average across the two groups.</li>
+                </ol>
+               --> 
+                <p>(1) determinants of the outcome variable; and</p>
+                <p>(2) different on average across the two groups.</p>
+                <p><strong>Scroll down</strong> to see how random assignment solves this problem.</p>
                 
                   <p aria-hidden="true"> People of color: <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="male" class="svg-inline--fa fa-male fa-w-6 true-positive sample" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512">
                   <path stroke="none" fill="#4191cf" d="M96 0c35.346 0 64 28.654 64 64s-28.654 64-64 64-64-28.654-64-64S60.654 0 96 0m48 144h-11.36c-22.711 10.443-49.59 10.894-73.28 0H48c-26.51 0-48 21.49-48 48v136c0 13.255 10.745 24 24 24h16v136c0 13.255 10.745 24 24 24h64c13.255 0 24-10.745 24-24V352h16c13.255 0 24-10.745 24-24V192c0-26.51-21.49-48-48-48z"></path>
@@ -130,37 +142,13 @@
           </div>
 
         </section>
-
-        <!-- step 4: show observed income differences and racial composition -->
+        
+   <!-- step 4: random assignment of children into two communities -->
         <section class="step">
-
           <div class="row">
 
             <div class="column left">
               <div class="step-circle">4</div>
-            </div>
-
-            <div class="column middle">
-
-              <div class="text-holder">
-                <h3>Confounding in observational comparisons</h3>
-                <p>In this example, <strong>race</strong> is a <strong>confounding variable</strong>, because people of color are paid less for the same work.</p>
-                <p><span id="raceRaw-1" class="notice"></span> of children growing up in the mixed income neighborhood are people of color.  In the public housing units, it is <span id="raceRaw-2" class="notice"></span>.</p>
-                <p>The observed difference in earnings is picking up <strong>racial disparities</strong> in earnings, leading to an overestimate of the causal effect of place.</p>
-                <p><strong>Scroll down</strong> to see how random assignment solves this problem.</p>
-              </div>
-            </div>
-
-          </div>
-
-        </section>
-
-   <!-- step 5: random assignment of children into two communities -->
-        <section class="step">
-          <div class="row">
-
-            <div class="column left">
-              <div class="step-circle">5</div>
             </div>
 
             <div class="column middle">
@@ -169,15 +157,15 @@
                 <br>
                 <p>We will now simulate an experiment where half of the 500 children are randomly assigned to the mixed income neighborhood and the other half to the public housing units.</p>
                 <p>Press the button below to randomly assign each observation to one of the two groups:</p>
-                <p><button title="randomize-children-button" onclick='counter()' class="button" id="randomize" style="font-size:32px; background-color:green;color:White;">Randomize</button></p>
+                <p><button title="randomize-children-button" onclick='counter()' class="button" id="randomize" style="font-size:28px; background-color:green;color:White;">Randomize</button></p>
                 
-                <span aria-live='assertive' style="font-size:24px;color:red" id="countDisplay">Experiment: 0 </span>
+                <span aria-live='assertive' style="font-size:16px;color:red" id="countDisplay" class="notice">Experiment No.: 0 </span>
                 
                 <span class='sr-only' aria-live='assertive' id="race-ratio-public">People of Color in Public Housing Units: NA</span>
                 
                 <span class='sr-only' aria-live='assertive' id="race-ratio-mixed">People of Color in Mixed Income Neighborhood: NA</span>
 
-                <p><strong>Scroll down</strong> to check the differences in avergage income and racial composition.</p>
+                <p style="color:red;font-size:16px"><strong>Scroll down</strong> to view realized earnings.</p>
                 
                   <p aria-hidden="true"> People of color: <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="male" class="svg-inline--fa fa-male fa-w-6 true-positive sample" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512">
                   <path stroke="none" fill="#4191cf" d="M96 0c35.346 0 64 28.654 64 64s-28.654 64-64 64-64-28.654-64-64S60.654 0 96 0m48 144h-11.36c-22.711 10.443-49.59 10.894-73.28 0H48c-26.51 0-48 21.49-48 48v136c0 13.255 10.745 24 24 24h16v136c0 13.255 10.745 24 24 24h64c13.255 0 24-10.745 24-24V352h16c13.255 0 24-10.745 24-24V192c0-26.51-21.49-48-48-48z"></path>
@@ -185,6 +173,9 @@
                 <p aria-hidden="true"> White: <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="male" class="svg-inline--fa fa-male fa-w-6 true-negative sample" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512">
                   <path stroke="none" fill="#f2ca02" d="M96 0c35.346 0 64 28.654 64 64s-28.654 64-64 64-64-28.654-64-64S60.654 0 96 0m48 144h-11.36c-22.711 10.443-49.59 10.894-73.28 0H48c-26.51 0-48 21.49-48 48v136c0 13.255 10.745 24 24 24h16v136c0 13.255 10.745 24 24 24h64c13.255 0 24-10.745 24-24V352h16c13.255 0 24-10.745 24-24V192c0-26.51-21.49-48-48-48z"></path>
                 </svg></p>
+                
+                <p></p><!---Getting some extra scrolling space-->
+                
               </div>
             </div>
 
@@ -192,9 +183,38 @@
 
         </section>
         
-   <!-- step 6: stick figures sorted and colored by income -->
+   <!-- step 5: stick figures sorted and colored by income -->
   
   <section class="step">
+          <div class="row">
+
+            <div class="column left">
+              <div class="step-circle">5</div>
+            </div>
+
+            <div class="column middle">
+              <div class="text-holder">
+                <h3>Experimental Earnings when the Children Grow Up</h3>
+                <br>
+                 <p><span id="no-experiment">No experiment has been executed.</span><span id="incomeDIFF-2" class="notice"></span><span id="ending-period"></span></p>
+                 <p><span id="recallEffect-1"></span><span id="causalEffect" class="notice"></span><span id="recallEffect-2"></span></p>
+                 <p><span id="whyDIFF-1"></span></p>
+                <p><strong><span id="scroll-up-down"></span></strong><span id="scroll-reminder"></span></p>
+                
+                 
+                <p aria-hidden="true" style="text-align: center;" id="legend-canvas-treat-title"><u>Earnings Level</u></p> <!-- Cannot find the legend title posistion parameter in d3.legend-->
+                <svg aria-hidden='true' style="align: center;" id="legend-canvas-treat"></svg>
+                
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+        
+        
+           <!-- step 6: Experimental differences in earnings and racial composition -->
+        <section class="step">
           <div class="row">
 
             <div class="column left">
@@ -203,38 +223,16 @@
 
             <div class="column middle">
               <div class="text-holder">
-                <h3>Experimental Earnings when the Children Grow Up</h3>
-                <br>
-                 <p>The difference in earnings between the two groups is <span id="incomeDIFF" class="notice">$8,000</span><span id="with-text"> without randomizaiton</span>.</p>
-                 <p><span id="recallEffect"></span><span id="causalEffect" class="notice"></span></p>
-                 <p><span id="whyDIFF"></span></p>
-                <p><strong><span id="scroll-up-down"></span></strong><span id="scroll-reminder"></span></p>
-              </div>
-            </div>
-
-          </div>
-
-        </section>
-        
-        
-           <!-- step 7: Experimental differences in earnings and racial composition -->
-        <section class="step">
-          <div class="row">
-
-            <div class="column left">
-              <div class="step-circle">7</div>
-            </div>
-
-            <div class="column middle">
-              <div class="text-holder">
                 <h3>Balance of Racial Composition</h3>
                 <br>
                 
-                <p><span id="whyDIFF"></span></p>
+                <p><span id="whyDIFF-2"></span></p>
                 
-                <p>The difference in racial composition in the two groups is <span id="only"></span><span id="raceDIFF" class="notice"
-                >30.4 </span> percentage points <span id="with-text">without randomization</span>.</p>
-                <p><strong>Scroll up to Step 5</strong> <span id="experimentReminder">to randomize the assignment.</span></p>
+                <p><span id="no-experiment-2">No experiment has been executed.</span><span id="only"></span><span id="raceDIFF" class="notice"></span><span id="percentage-points"></span></p>
+                
+                <p><span id="whyDIFF-3"></span></p>
+                
+                <p><strong>Scroll up to Step 4</strong> <span id="experimentReminder">to randomize the assignment.</span></p>
               </div>
             </div>
 
@@ -258,7 +256,7 @@
     var count=0;
    
     function counter(){
-     d3.selectAll('#countDisplay').text("Experiment: "+ ++count);
+     d3.selectAll('#countDisplay').text("Experiment No.: "+ ++count);
     }
   
   

@@ -63,15 +63,27 @@ var pictogramScroll = function () {
                   
           
  // Race Bar Scale and Axis-------------------
+ 
+ 
+  var yBarScaleRaceObs = d3.scaleLinear()
+                    .range([drawHeight,0]); 
    
   var yBarScaleRace = d3.scaleLinear()
                     .range([drawHeight,0]);
-                   
     
   var xBarScaleRace = d3.scaleBand()
                     .paddingInner(0.08)
                     .range([0,drawWidth])
                     .domain(["Public Housing Units","Mixed Income Neighborhood"]);
+                    
+                    
+                    
+   var yAxisBarRaceObs = d3.axisLeft()
+                   .scale(yBarScaleRaceObs)
+                    .tickPadding([20])
+                   .tickFormat(function(d){
+                     return d+"%";
+                   });
                      
  
   var yAxisBarRace = d3.axisLeft()
@@ -83,7 +95,12 @@ var pictogramScroll = function () {
                    
                    
   var xAxisBarRace= d3.axisBottom()
-                  .scale(xBarScaleRace);
+                      .scale(xBarScaleRace);
+                  
+  var xAxisBarRaceObs= d3.axisBottom()
+                         .scale(xBarScaleRace)
+                         .tickFormat("");
+                        
   
   
   // Color scale--------------  
@@ -96,8 +113,13 @@ var pictogramScroll = function () {
    // var incomeColor=d3.scaleSequential(d3.interpolateGreens);
    
    var legend = d3.legendColor()
+                  .shapeWidth(30)
+                  .orient('horizontal')
+                  //.title('Earnings Level')
                   .scale(incomeColor)
-                  .cells(7);
+                  .cells(7)
+                  //.labelFormat(d3.format(","))
+                  .labelFormat(d3.format("$,.2r"));
    
                   
   var barColors = { "Public Housing Units": '#cccccc', "Mixed Income Neighborhood": '#737373' };
@@ -122,7 +144,7 @@ var pictogramScroll = function () {
       var incomeData=d3.nest()
       .key(function(d){return d.wakefield})
       .rollup(function(v){
-        return d3.mean(v,function(d){return d.y_obs;}).toFixed(1);
+        return d3.mean(v,function(d){return d.y_obs;}).toFixed(0);
       })
       .entries(data);
       
@@ -136,7 +158,7 @@ var pictogramScroll = function () {
       var incomeDataTreat=d3.nest()
       .key(function(d){return d.treated})
       .rollup(function(v){
-        return d3.mean(v,function(d){return d.y_experiment;}).toFixed(1);
+        return d3.mean(v,function(d){return d.y_experiment;}).toFixed(0);
       })
       .entries(data);
       
@@ -147,15 +169,18 @@ var pictogramScroll = function () {
       
       console.log(incomeDataTreat);
       
-      var incomeMin=Math.min(d3.min(incomeData,function(d){return d.value}),d3.min(incomeDataTreat,function(d){return d.value}));
-      var incomeMax=Math.max(d3.max(incomeData,function(d){return d.value}),d3.max(incomeDataTreat,function(d){return d.value}));
+      var incomeMin=Math.min(d3.min(incomeData,function(d){return d.value}),d3.min(incomeDataTreat,function(d){return d.value})).toFixed(0);
+      var incomeMax=Math.max(d3.max(incomeData,function(d){return d.value}),d3.max(incomeDataTreat,function(d){return d.value})).toFixed(0);
       
       console.log(incomeMax);
+      console.log(Number(incomeMax)+50);
+      console.log(incomeMin);
+      console.log(incomeMin+10);
       
       // update the domain of two scales with range of income
-       yBarScaleIncome.domain([0, incomeMax+5]);
+       yBarScaleIncome.domain([0, Number(incomeMax)+5]);
        
-       incomeColor.domain([incomeMin-10, incomeMax+10]);
+       incomeColor.domain([Number(incomeMin)-3000, Number(incomeMax)+2000]);
        
        raceData=d3.nest()
         .key(function(d){return d.wakefield})
@@ -189,6 +214,7 @@ var pictogramScroll = function () {
       var raceMax=Math.max(d3.max(raceData,function(d){return d.value}),d3.max(raceDataTreat,function(d){return d.value}));
       
       yBarScaleRace.domain([0, raceMax+5]);
+      yBarScaleRaceObs.domain([0,raceMax+5]);
        
       setupVis(data,incomeData,raceData,incomeDataTreat,raceDataTreat);
      
@@ -307,13 +333,17 @@ var pictogramScroll = function () {
         
    // work on the color legend-------------
    
-    g.append("g")
-    .attr("transform", "translate(500,10)")
+    d3.select('#legend-canvas').append("g")
+    //.attr("transform", "translate(500,10)")
     .attr('class',"income-color-scale")
     .call(legend)
-    .attr('opacity',0);
+    .attr('opacity',1);
    
-   
+    d3.select('#legend-canvas-treat').append("g")
+    //.attr("transform", "translate(500,10)")
+    .attr('class',"income-color-scale-treat")
+    .call(legend)
+    .attr('opacity',1);
    
   
     /// update the range of yAxis
@@ -459,6 +489,18 @@ var pictogramScroll = function () {
         .attr("transform", 'translate(0,0)')
         .call(yAxisBarIncome);
         
+      
+        
+    g.append('g')
+        .attr('class','x-axis-race-obs')
+        .attr("transform", 'translate(0,'+(drawHeight/2-20)+')')
+        .call(xAxisBarRaceObs);
+        
+     g.append('g')
+        .attr('class','y-axis-race-obs')
+        .attr("transform", 'translate(0,0)')
+        .call(yAxisBarRaceObs);
+        
         
      g.append('g')
         .attr('class','x-axis-race-treat')
@@ -470,6 +512,9 @@ var pictogramScroll = function () {
         .attr("transform", 'translate(0,0)')
         .call(yAxisBarRace);
         
+        
+        
+        
     
     
   };
@@ -480,10 +525,10 @@ var pictogramScroll = function () {
     activateFunctions[0] = showInitial;
     activateFunctions[1] = showInitialIncome;
     activateFunctions[2] = showInitialRace;
-    activateFunctions[3] = showObsBars;
-    activateFunctions[4] = showInitialPlus;// has an extra step of randomize the figures
-    activateFunctions[5] = showRandom;
-    activateFunctions[6] = showTreatBars;
+    //activateFunctions[3] = showObsBars;
+    activateFunctions[3] = showInitialPlus;// has an extra step of randomize the figures
+    activateFunctions[4] = showRandom;
+    activateFunctions[5] = showTreatBars;
   };
   
   // showInitial----------------------------------
@@ -497,6 +542,8 @@ var pictogramScroll = function () {
     hideAxis(yAxisBarRace,'.y-axis-race');
     hideAxis(yAxisBarIncome,'.y-axis-income-treat');
     hideAxis(xAxisBarIncome,'.x-axis-income-treat');
+    hideAxis(yAxisBarRaceObs,'.y-axis-race-obs');
+    hideAxis(xAxisBarRaceObs,'.x-axis-race-obs');
     hideAxis(yAxisBarRace,'.y-axis-race-treat');
     hideAxis(xAxisBarRace,'.x-axis-race-treat');
     
@@ -538,6 +585,24 @@ var pictogramScroll = function () {
       .duration(0)
       .attr('opacity',0);
 
+
+   
+   g.selectAll('.bar-race-obs')
+     .transition()
+     .duration(0)
+     .attr('opacity', 0);
+     
+   g.selectAll('.bar-text-race-obs')
+      .transition()
+      .duration(0)
+      .attr('opacity',0);
+      
+  
+   g.select('.y-label-race-obs')
+      .transition()
+      //.delay(function (d, i) { return 300 * (i + 1);})
+      .duration(0)
+      .attr('opacity',0);
 
   // hide all treatment bars and text elements
     // income treatment bars
@@ -656,6 +721,8 @@ var pictogramScroll = function () {
     hideAxis(yAxisBarRace,'.y-axis-race');
     hideAxis(yAxisBarIncome,'.y-axis-income-treat');
     hideAxis(xAxisBarIncome,'.x-axis-income-treat');
+    hideAxis(yAxisBarRaceObs,'.y-axis-race-obs');
+    hideAxis(xAxisBarRaceObs,'.x-axis-race-obs');
     hideAxis(yAxisBarRace,'.y-axis-race-treat');
     hideAxis(xAxisBarRace,'.x-axis-race-treat');
     
@@ -696,6 +763,29 @@ var pictogramScroll = function () {
       //.delay(function (d, i) { return 300 * (i + 1);})
       .duration(0)
       .attr('opacity',0);
+      
+  // additional bar-race-obs shown in the last step
+  
+      
+    g.selectAll('.bar-race-obs')
+     .transition()
+     .duration(0)
+     .attr('opacity', 0);
+     
+   g.selectAll('.bar-text-race-obs')
+      .transition()
+      .duration(0)
+      .attr('opacity',0);
+      
+  
+   g.select('.y-label-race-obs')
+      .transition()
+      //.delay(function (d, i) { return 300 * (i + 1);})
+      .duration(0)
+      .attr('opacity',0);   
+      
+      
+      
 
 
   // hide all treatment bars and text elements
@@ -759,6 +849,9 @@ var pictogramScroll = function () {
     g.select(".income-color-scale")
      .transition().duration(1500).attr('opacity', 1);
      
+     
+     
+     console.log(data);
     
       // sort the data by observed income 
       
@@ -788,7 +881,7 @@ var pictogramScroll = function () {
       incomeData=d3.nest()
             .key(function(d){return d.wakefield})
             .rollup(function(v){
-              return d3.mean(v,function(d){return d.y_obs;}).toFixed(1);
+              return d3.mean(v,function(d){return d.y_obs;}).toFixed(0);
             })
             .entries(data);
             
@@ -801,14 +894,18 @@ var pictogramScroll = function () {
             
 
             
-        var incomeDiff=Math.abs(incomeData[0].value-incomeData[1].value).toFixed(2);
+        var incomeDiff=Math.abs(incomeData[0].value-incomeData[1].value).toFixed(0);
         
-         g.selectAll("#stat-ph").text("Average Income: "+"$"+incomeData[0].value+"K").transition().duration(1500).attr('opacity', 1);;
-         g.selectAll("#stat-mixed").text("Average Income: "+"$"+incomeData[1].value+"K").transition().duration(1500).attr('opacity', 1);;
+         g.selectAll("#stat-ph").text("Average Income: "+"$"+d3.format(",")(incomeData[0].value)).transition().duration(1500).attr('opacity', 1);;
+         g.selectAll("#stat-mixed").text("Average Income: "+"$"+d3.format(",")(incomeData[1].value)).transition().duration(1500).attr('opacity', 1);;
         
-         d3.selectAll("#incomeRaw-1").text(incomeData[1].value+"K");
-         d3.selectAll("#incomeRaw-2").text(incomeData[0].value+"K");
-         d3.selectAll("#incomeDiff").text(incomeDiff+"K");
+         d3.selectAll("#incomeRaw-1").text("$"+d3.format(",")(incomeData[1].value));
+         d3.selectAll("#incomeRaw-2").text("$"+d3.format(",")(incomeData[0].value));
+         d3.selectAll("#incomeDIFF-1").text("$"+d3.format(",")(incomeDiff));
+         d3.selectAll("#times").text(Math.round(incomeDiff/2000));
+         
+         
+      console.log(data);
    
       var use=g.selectAll('use')
              .data(data);
@@ -850,6 +947,8 @@ var pictogramScroll = function () {
     hideAxis(yAxisBarRace,'.y-axis-race');
     hideAxis(yAxisBarIncome,'.y-axis-income-treat');
     hideAxis(xAxisBarIncome,'.x-axis-income-treat');
+    hideAxis(yAxisBarRaceObs,'.y-axis-race-obs');
+    hideAxis(xAxisBarRaceObs,'.x-axis-race-obs');   
     hideAxis(yAxisBarRace,'.y-axis-race-treat');
     hideAxis(xAxisBarRace,'.x-axis-race-treat');
     
@@ -886,6 +985,24 @@ var pictogramScroll = function () {
       
   
    g.select('.y-label-race')
+      .transition()
+      //.delay(function (d, i) { return 300 * (i + 1);})
+      .duration(0)
+      .attr('opacity',0);
+      
+ /// additional observed race bar shown in last step
+   g.selectAll('.bar-race-obs')
+     .transition()
+     .duration(0)
+     .attr('opacity', 0);
+     
+   g.selectAll('.bar-text-race-obs')
+      .transition()
+      .duration(0)
+      .attr('opacity',0);
+      
+  
+   g.select('.y-label-race-obs')
       .transition()
       //.delay(function (d, i) { return 300 * (i + 1);})
       .duration(0)
@@ -1036,6 +1153,8 @@ var pictogramScroll = function () {
     hideAxis(yAxisBarRace,'.y-axis-race');
     hideAxis(yAxisBarIncome,'.y-axis-income-treat');
     hideAxis(xAxisBarIncome,'.x-axis-income-treat');
+    hideAxis(yAxisBarRaceObs,'.y-axis-race-obs');
+    hideAxis(xAxisBarRaceObs,'.x-axis-race-obs');   
     hideAxis(yAxisBarRace,'.y-axis-race-treat');
     hideAxis(xAxisBarRace,'.x-axis-race-treat');
     
@@ -1072,6 +1191,25 @@ var pictogramScroll = function () {
       
   
    g.select('.y-label-race')
+      .transition()
+      //.delay(function (d, i) { return 300 * (i + 1);})
+      .duration(0)
+      .attr('opacity',0);
+      
+  // additonal observed race bar shown in the last step   
+  
+    g.selectAll('.bar-race-obs')
+     .transition()
+     .duration(0)
+     .attr('opacity', 0);
+     
+   g.selectAll('.bar-text-race-obs')
+      .transition()
+      .duration(0)
+      .attr('opacity',0);
+      
+  
+   g.select('.y-label-race-obs')
       .transition()
       //.delay(function (d, i) { return 300 * (i + 1);})
       .duration(0)
@@ -1290,6 +1428,8 @@ var pictogramScroll = function () {
     hideAxis(yAxisBarRace,'.y-axis-race');
     hideAxis(yAxisBarIncome,'.y-axis-income-treat');
     hideAxis(xAxisBarIncome,'.x-axis-income-treat');
+    hideAxis(yAxisBarRaceObs,'.y-axis-race-obs');
+    hideAxis(xAxisBarRaceObs,'.x-axis-race-obs');   
     hideAxis(yAxisBarRace,'.y-axis-race-treat');
     hideAxis(xAxisBarRace,'.x-axis-race-treat');
     
@@ -1330,7 +1470,33 @@ var pictogramScroll = function () {
       //.delay(function (d, i) { return 300 * (i + 1);})
       .duration(0)
       .attr('opacity',0);
-
+  
+  
+  // additional observed race bar shown in the last step    
+      
+  
+   g.selectAll('.bar-race-obs')
+     .transition()
+     .duration(0)
+     .attr('opacity', 0);
+     
+   g.selectAll('.bar-text-race-obs')
+      .transition()
+      .duration(0)
+      .attr('opacity',0);
+      
+  
+   g.select('.y-label-race-obs')
+      .transition()
+      //.delay(function (d, i) { return 300 * (i + 1);})
+      .duration(0)
+      .attr('opacity',0);
+      
+      
+   g.select('.race-bar-plot-title-obs')
+    .transition()
+    .duration(0)
+    .attr('opacity',0);
 
   // hide all treatment bars and text elements
     // income treatment bars
@@ -1369,13 +1535,26 @@ var pictogramScroll = function () {
       //.delay(function (d, i) { return 300 * (i + 1);})
       .duration(0)
       .attr('opacity',0);   
+      
+        
+   g.select('.race-bar-plot-title-treat')
+    .transition()
+    .duration(0)
+    .attr('opacity',0);
+    
+   g.select('.race-bar-plot-subtitle-treat')
+    .transition()
+    .duration(0)
+    .attr('opacity',0);
 
 
 if (count===0){
 
-  d3.selectAll("#scroll-up-down").text("Scroll up to step 5");
+  d3.selectAll("#scroll-up-down").text("Scroll up to step 4");
   d3.selectAll("#scroll-reminder").text(" to randomize the assignment.");
   d3.selectAll("#recallEffectSen").text("");
+  d3.selectAll("#legend-canvas-treat-title").style('display','none');
+  d3.selectAll("#legend-canvas-treat").style('display','none');
   return null;
   
   }else if(count>0){
@@ -1398,7 +1577,7 @@ if (count===0){
     g.select('#txtValue-mixed')
      .transition().duration(0).attr('opacity', 1);
      
-    g.select(".income-color-scale")
+    g.select(".income-color-scale-treat")
      .transition().duration(1500).attr('opacity', 1);
      
       
@@ -1421,7 +1600,7 @@ if (count===0){
        var incomeDataTreat=d3.nest()
             .key(function(d){return d.treated})
             .rollup(function(v){
-              return d3.mean(v,function(d){return d.y_experiment;}).toFixed(1);
+              return d3.mean(v,function(d){return d.y_experiment;}).toFixed(0);
             })
             .entries(data);
             
@@ -1430,26 +1609,32 @@ if (count===0){
               return d;
             });
             
-      d3.selectAll("#stat-ph").text("Average Income: "+"$"+incomeDataTreat[0].value+"K").transition().duration(1500).attr('opacity',1);
+            
+            
+      d3.selectAll("#stat-ph").text("Average Income: "+"$"+d3.format(",")(incomeDataTreat[0].value)).transition().duration(1500).attr('opacity',1);
       
-      d3.selectAll("#stat-mixed").text("Average Income: "+"$"+incomeDataTreat[1].value+"K").transition().duration(1500).attr('opacity',1);
+      d3.selectAll("#stat-mixed").text("Average Income: "+"$"+d3.format(",")(incomeDataTreat[1].value)).transition().duration(1500).attr('opacity',1);
       
             
-       var incomeDiff=Math.abs(incomeDataTreat[0].value-incomeDataTreat[1].value).toFixed(2);
+       var incomeDiff=Math.abs(incomeDataTreat[0].value-incomeDataTreat[1].value).toFixed(0);
             
            /// change the section 5 html side text
-      
-      d3.selectAll("#incomeDIFF").text("$"+incomeDiff+"K");
+      d3.selectAll("#no-experiment").text("The difference in earnings between the two groups is now ");
+      d3.selectAll("#incomeDIFF-2").text("$"+d3.format(",")(incomeDiff));
+      d3.selectAll("#ending-period").text(".");
       d3.selectAll("#with-text").text("");
-      d3.selectAll("#recallEffect").text("Recall that the real causal effect in the simulation is")
-      d3.selectAll("#causalEffect").text(" $2K.");
-      d3.selectAll("#whyDIFF").text("Why does this randomized experiment work better than an observational comparison?");
+      d3.selectAll("#recallEffect-1").text("This experiment does a very good job of estimating the causal effect, which in this simulation is")
+      d3.selectAll("#causalEffect").text(" $2,000");
+      d3.selectAll("#recallEffect-2").text(". The small discrepancy is due to chance.")
+      
+      d3.selectAll("#whyDIFF-1").text("Why does this randomized experiment work better than an observational comparison?");
       
       d3.selectAll("#scroll-up-down").text("Scroll down");
-      d3.selectAll("#scroll-reminder").text(" to see why.");
- 
-      
-      
+      d3.selectAll("#scroll-reminder").text(" to find out.");
+      d3.selectAll("#legend-canvas-treat-title").style('display','block');
+      d3.selectAll("#legend-canvas-treat").style('display','block');
+    
+
       var use=g.selectAll('use')
              .data(data);
     
@@ -1634,7 +1819,7 @@ if (count===0){
   
   // showTreatBars
   
-  function showTreatBars(data){
+function showTreatBars(data){
     
    if (count===0){
     
@@ -1645,25 +1830,29 @@ if (count===0){
     // update treatment income data
   
   if (count>0){
+       
+       
+       
+       // observed race data
+       
+        raceData=d3.nest()
+        .key(function(d){return d.wakefield})
+        .rollup(function(v){
+          return (d3.mean(v,function(d){return d.black})*100).toFixed(1);
+        })
+        .entries(data);
         
-         var incomeDataTreat=d3.nest()
-            .key(function(d){return d.treated})
-            .rollup(function(v){
-              return d3.mean(v,function(d){return d.y_experiment;}).toFixed(1);
-            })
-            .entries(data);
+       raceData=raceData.map(function(d,i){
+         d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
+        return d;
+       }); 
+       
+        var raceDiffRaw=Math.abs(raceData[0].value-raceData[1].value).toFixed(2);
+      
+    
+     // treat race
             
-             incomeDataTreat=incomeDataTreat.map(function(d,i){
-              d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
-              return d;
-            });
-            
-            console.log("incomeDataTreat");
-            console.log(incomeDataTreat);
-            
-            var incomeDiff=Math.abs(incomeDataTreat[0].value-incomeDataTreat[1].value).toFixed(2);
-            
-         var raceDataTreat=d3.nest()
+        raceDataTreat=d3.nest()
             .key(function(d){return d.treated})
             .rollup(function(v){
               return (d3.mean(v,function(d){return d.black})*100).toFixed(1);
@@ -1682,10 +1871,14 @@ if (count===0){
         /// change the section 5 html side text
       
           d3.selectAll("#with-text").text("");
-          d3.selectAll("#whyDIFF").text("The lesson is that randomization ensures that the treatment and control groups are comparable, eliminating confounding.");
+          d3.selectAll("#whyDIFF-2").text("The lesson is that randomization ensures that the treatment and control groups are comparable, eliminating confounding.");
+          d3.selectAll("#whyDIFF-3").text("Randomization makes the two groups much more similar than in the initial observational comparison.");
+          
+          d3.selectAll("#no-experiment-2").text("The difference in racial composition is ")
           d3.selectAll("#only").text("only ");
           d3.selectAll("#raceDIFF").text(raceDiff);
-          d3.selectAll("#experimentReminder").text("repeat the experiment.");
+          d3.selectAll("#percentage-points").text(" percentage points.")
+          d3.selectAll("#experimentReminder").text("to repeat the experiment.");
      
      /// hide other visual elements
     
@@ -1695,8 +1888,6 @@ if (count===0){
     g.select('#stat-mixed').transition().duration(0).attr('opacity', 0);
     
     g.select(".income-color-scale").transition().duration(0).attr('opacity', 0);
-    
-    
     
     
     hideAxis(yAxisBarIncome,'.y-axis-income');
@@ -1753,73 +1944,61 @@ if (count===0){
       .attr('opacity',0)  
       
        /// update the range of yAxis
-    yAxisBarIncome.scale(yBarScaleIncome.range([drawHeight/2-20,0]));
-                   
+    //yAxisBarIncome.scale(yBarScaleIncome.range([drawHeight/2-20,0]));
+    
+    
+    yAxisBarRaceObs.scale(yBarScaleRaceObs.range([drawHeight/2-20,0]));               
     yAxisBarRace.scale(yBarScaleRace.range([drawHeight,drawHeight/2+20]));
                   
  
-      
-    // show treatment income bars
-      // ensure bar axis is set
-    showAxis(xAxisBarIncome,'.x-axis-income-treat');
-    showAxis(yAxisBarIncome,'.y-axis-income-treat');
+   // show observed race bars
+    showAxis(xAxisBarRaceObs,'.x-axis-race-obs');
+    showAxis(yAxisBarRaceObs,'.y-axis-race-obs');
     
-    var barsIncomeTreat=g.selectAll('.bar-income-treat')
-                         .data(incomeDataTreat);
-                         
-                         
-        barsIncomeTreat.enter()
-                       .append('rect')
-                       .attr('class','bar-income-treat')
-                       .merge(barsIncomeTreat)
-                       .attr('y', drawHeight/2-20)
-                        .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
-                        .attr('fill', function (d) { return barColors[d.group]; })
-                        .attr('height', 0)
-                        .attr('width', xBarScaleIncome.bandwidth()/2);  
+    
+     var barsRace=g.selectAll('.bar-race-obs')
+                        .data(raceData);
+      
+       barsRace.enter()
+                      .append('rect')
+                      .attr('class','bar-race-obs')
+                      .merge(barsRace)
+                      .attr('y', drawHeight/2-20)
+                      .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
+                      .attr('fill', function (d) { return barColors[d.group]; })
+                      .attr('height', 0)
+                      .attr('width', xBarScaleRace.bandwidth()/2);  
                       
-        barsIncomeTreat.exit().remove();  
-        
-        
-            
-    var barTextIncomeTreat = g.selectAll('.bar-text-income-treat').data(incomeDataTreat);
-   
-            barTextIncomeTreat.enter()
-              .append('text')
-              .attr('class', 'bar-text-income-treat')
-              .merge(barTextIncomeTreat)
-              .text(function (d) { return "$"+d.value+"k"; })
-              .attr('y', 0)
-              .attr('dy',function(d,i){return yBarScaleIncome(d.value)-10;})
-              .attr('x', function (d) { return xBarScaleIncome(d.group)+xBarScaleIncome.bandwidth()/4;})
-              .attr('dx', xBarScaleIncome.bandwidth() / 4)
-              .style('font-size', '16px')
-              .attr('fill', 'black')
-              .attr('opacity', 0);
-              
-        barTextIncomeTreat.exit().remove(); 
-        
-
-     g.selectAll('.bar-income-treat')
+        barsRace.exit().remove();              
+  
+     g.selectAll('.bar-race-obs')
       .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
       .duration(1500)
-      .attr('y',function(d,i){return yBarScaleIncome(d.value);})
-      .attr('height', function (d,i) { return (drawHeight/2-20) - yBarScaleIncome(d.value); })
+      .attr('y',function(d,i){return yBarScaleRaceObs(d.value);})
+      .attr('height', function (d,i) { return (drawHeight/2-20)  - yBarScaleRaceObs(d.value); })
       .attr('opacity',1);
       
-     g.selectAll('.bar-text-income-treat')
+     g.selectAll('.bar-text-race-obs')
       .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
       .duration(600)
       .attr('opacity',1)
      
      
-     g.select('.y-label-income-treat')
+     g.select('.y-label-race-obs')
       .transition()
       .delay(function (d, i) { return 300 * (i + 1);})
       .duration(600)
       .attr('opacity',1)
+      
+     g.select('.race-bar-plot-title-obs')
+      .transition()
+      .delay(function (d, i) { return 300 * (i + 1);})
+      .duration(600)
+      .attr('opacity',1)
+    
+ 
       
     // show treatment race bars
     
@@ -1886,6 +2065,18 @@ if (count===0){
       .attr('opacity',1)
       
       
+     g.select('.race-bar-plot-title-treat')
+      .transition()
+      .delay(function (d, i) { return 300 * (i + 1);})
+      .duration(600)
+      .attr('opacity',1)
+      
+     g.select('.race-bar-plot-subtitle-treat')
+      .transition()
+      .delay(function (d, i) { return 300 * (i + 1);})
+      .duration(600)
+      .attr('opacity',1)
+      
    }
     
   }
@@ -1906,6 +2097,42 @@ if (count===0){
       .style('opacity', 0);
   }
 
+ // function to wrap the text----------------------------
+ 
+ 
+ function wrap(text, width) {
+    text.each(function () {
+        var text = d3.select(this),
+            words = text.text().split(/\s+/).reverse(),
+            word,
+            line = [],
+            lineNumber = 0,
+            lineHeight = 1.1, // ems
+            x = text.attr("x"),
+            y = text.attr("y"),
+            dy = 0, //parseFloat(text.attr("dy")),
+            tspan = text.text(null)
+                        .append("tspan")
+                        .attr("x", x)
+                        .attr("y", y)
+                        .attr("dy", dy + "em");
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan")
+                            .attr("x", x)
+                            .attr("y", y)
+                            .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                            .text(word);
+            }
+        }
+    });
+}
+
   // function to activate chart--------------------------
   chart.activate = function (index, data) {
     activeIndex = index;
@@ -1920,7 +2147,7 @@ if (count===0){
 
  
  // updateData method of chart function------------------------------
-  chart.updateData = function (data,incomeDataTreat,raceDataTreat) {
+  chart.updateData = function (data,raceData,raceDataTreat) {
     
     var numRows = Math.ceil(data.length / numCols);
     
@@ -1991,59 +2218,70 @@ if (count===0){
     // Draw Treatment Income bars------------------
     
     /// update the range of yAxis
-    yAxisBarIncome.scale(yBarScaleIncome.range([drawHeight/2-20,0]));
-                
- 
+    //yAxisBarIncome.scale(yBarScaleIncome.range([drawHeight/2-20,0]));
+    
+    yAxisBarRaceObs.scale(yBarScaleRaceObs.range([drawHeight/2-20,0]));
+  
     yAxisBarRace.scale(yBarScaleRace.range([drawHeight,drawHeight/2+20]));
 
-  // draw the bars--------
+  // draw the observed bars--------
         
      g.select('.x-axis-income-treat').style('opacity',0);
      g.select('.y-axis-income-treat').style('opacity',0);
         
-      var barsIncome=g.selectAll('.bar-income')
-                          .data(incomeDataTreat);
+      var barsRace=g.selectAll('.bar-race-obs')
+                          .data(raceData);
       
-            barsIncome.enter()
+            barsRace.enter()
                       .append('rect')
-                      .attr('class','bar-income-treat')
-                      .merge(barsIncome)
+                      .attr('class','bar-race-obs')
+                      .merge(barsRace)
                       .attr('y', drawHeight/2-20)
-                      .attr('x', function (d) { return xBarScaleIncome(d.group)+ xBarScaleIncome.bandwidth()/4;})
+                      .attr('x', function (d) { return xBarScaleRace(d.group)+ xBarScaleRace.bandwidth()/4;})
                       .attr('fill', function (d) { return barColors[d.group]; })
                       .attr('height', 0)
-                      .attr('width', xBarScaleIncome.bandwidth()/2);  
+                      .attr('width', xBarScaleRace.bandwidth()/2);  
                       
-        barsIncome.exit().remove();              
+        barsRace.exit().remove();              
                       
                       
      
-   var barTextIncomeTreat = g.selectAll('.bar-text').data(incomeDataTreat);
+   var barTextRace = g.selectAll('.bar-text-obs').data(raceData);
    
-            barTextIncomeTreat.enter()
+            barTextRace.enter()
               .append('text')
-              .attr('class', 'bar-text-income-treat')
-              .merge(barTextIncomeTreat)
-              .text(function (d) { return "$"+d.value+"k"; })
+              .attr('class', 'bar-text-race-obs')
+              .merge(barTextRace)
+              .text(function (d) { return d.value+"%"; })
               .attr('y', 0)
-              .attr('dy',function(d,i){return yBarScaleIncome(d.value)-10;})
-              .attr('x', function (d) { return xBarScaleIncome(d.group)+xBarScaleIncome.bandwidth() / 4;})
-              .attr('dx', xBarScaleIncome.bandwidth() / 4)
+              .attr('dy',function(d,i){return yBarScaleRaceObs(d.value)-5;})
+              .attr('x', function (d) { return xBarScaleRace(d.group)+xBarScaleRace.bandwidth() / 4;})
+              .attr('dx', xBarScaleRace.bandwidth() / 4)
               .style('font-size', '16px')
               .attr('fill', 'black')
               .attr('opacity', 0);
               
-        barTextIncomeTreat.exit().remove();
+        barTextRace.exit().remove();
               
      g.append("text")
-    .attr("class", "y-label-income-treat")
+    .attr("class", "y-label-race-obs")
     .attr("text-anchor", "middle")
     .attr("x", -80)
     .attr("y", -50)
     .attr("transform", "rotate(-90)")
-    .text("Average Income")
+    .text("People of Color %")
     .attr('opacity',0); 
     
+    
+    g.append("text")
+    .attr('class','race-bar-plot-title-obs')
+    .attr('text-anchor','middle')
+    .attr('x',(drawWidth/2))
+    .attr('y',-margin.top)
+    .style("font-size", "16px") 
+    .style("text-decoration", "underline")  
+        .text("Observational Comparison")
+    .attr('opacity',0);
     
         // Draw Treatment Race bars
     
@@ -2076,7 +2314,7 @@ if (count===0){
               .merge(barTextRaceTreat)
               .text(function (d) { return d.value+"%"; })
               .attr('y', 0)
-              .attr('dy',function(d,i){return yBarScaleRace(d.value)-10;})
+              .attr('dy',function(d,i){return yBarScaleRace(d.value)-5;})
               .attr('x', function (d) { return xBarScaleRace(d.group);})
               .attr('dx', xBarScaleRace.bandwidth() / 4)
               .style('font-size', '16px')
@@ -2093,6 +2331,32 @@ if (count===0){
     .attr("transform", "rotate(-90)")
     .text("People of Color %")
     .attr('opacity',0); 
+    
+    
+    
+        
+    g.append("text")
+    .attr('class','race-bar-plot-title-treat')
+    .attr('text-anchor','middle')
+    .attr('x',(drawWidth/2))
+    .attr('y',(drawHeight/2+5))
+    .style("font-size", "16px") 
+    .style("text-decoration", "underline")  
+        .text("Experimental Comparison")
+        //.call(wrap, 120)
+    .attr('opacity',0);
+    
+    g.append("text")
+    .attr('class','race-bar-plot-subtitle-treat')
+    .attr('text-anchor','middle')
+    .attr('x',(drawWidth/2))
+    .attr('y',(drawHeight/2+20))
+    .style("font-size", "10px") 
+    //.style("text-decoration", "underline")  
+        .text("(with Random Assignment)")
+        //.call(wrap, 120)
+    .attr('opacity',0); 
+    
     
   };// end of updateData function
 

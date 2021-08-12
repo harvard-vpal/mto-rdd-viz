@@ -1,16 +1,15 @@
 $(function () {
   
     d3.csv("mto-data.csv",function(error,rawData){
-    console.log(rawData);
-    
-    console.log(count);
-    
-    
+  
       var data=rawData.map(function(d,i){
-                  d.treated = Math.round(Math.random());
-                  d.y_experiment = d.treated == 1 ? d.y1 : d.y0;
+                  d.y0= 1000*d.y0;
+                  d.y1= 1000*d.y1;
+                  d.y_obs=1000*d.y_obs;
                   d.wakefield=Number(d.wakefield);
                   d.black=Number(d.black);
+                  d.treated = Math.round(Math.random());
+                  d.y_experiment = d.treated == 1 ? d.y1 : d.y0; // this is for race percentage and income scale range convenience
                   return d;
           });
           
@@ -28,7 +27,8 @@ $(function () {
         return d;
        }); 
        
-     
+     console.log("VPAL");
+     console.log(raceData);
      
      var incomeData=d3.nest()
       .key(function(d){return d.wakefield})
@@ -49,24 +49,13 @@ $(function () {
       
       display(data);
       
+      
       Math.seedrandom('randomizeLocation');
     
       
-      
       $('#randomize').click(function(){
       
-          console.log('randomize');
-        
-          //data=rawData.map(function(d,i){
-                     // d.treated = Math.round(Math.random());
-                    //  d.y_experiment = d.treated == 1 ? d.y1 : d.y0;
-                     // d.wakefield=Number(d.wakefield);
-                     // d.black=Number(d.black);
-                     // return d;
-            //  });
-            
-        
-          temp=rawData.map(function(d,i){
+          temp=data.map(function(d,i){
             if (i<250){
               d.treated=0;
             }else{
@@ -133,7 +122,7 @@ $(function () {
          d3.selectAll("#race-ratio-mixed").text("People of Color in Mixed Income Neighborhood: "+raceDataTreat[1].value+"%");
         
           
-         plot.updateData(data,incomeDataTreat,raceDataTreat);
+         plot.updateData(data,raceData,raceDataTreat);
       
     });
     
