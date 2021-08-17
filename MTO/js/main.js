@@ -109,7 +109,7 @@ $(function () {
          var incomeDiff=Math.abs(incomeDataTreat[0].value-incomeDataTreat[1].value).toFixed(0);   
         
         
-        if(Math.abs(incomeDiff-2000)>100){
+        while (Math.abs(incomeDiff-2000)>100){
           
          shuffle(temp,"treated");
          
