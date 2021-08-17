@@ -119,7 +119,8 @@ var pictogramScroll = function () {
                   .scale(incomeColor)
                   .cells(7)
                   //.labelFormat(d3.format(","))
-                  .labelFormat(d3.format("$,.2r"));
+                  .labelFormat(d3.format("$,.2r"))
+                  .labelAlign('start');
    
                   
   var barColors = { "Public Housing Units": '#cccccc', "Mixed Income Neighborhood": '#737373' };
@@ -1107,6 +1108,7 @@ var pictogramScroll = function () {
        
        d3.select("#stat-ph").text("People of Color: "+raceData[0].value+"%").transition().duration(1500).attr('opacity',1);
        d3.select("#stat-mixed").text("People of Color: "+raceData[1].value+"%").transition().duration(1500).attr('opacity',1);
+       
        
       var use=g.selectAll('use')
              .data(data);

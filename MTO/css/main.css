@@ -170,3 +170,58 @@ text {
   color:#024453;
   
 }
+
+
+.income-color-scale {
+  font-size: 16px;
+}
+
+
+.income-color-scale .legendCells .cell:nth-of-type(2) > .label {
+  opacity: 0;
+}
+
+
+.income-color-scale .legendCells .cell:nth-of-type(3) > .label {
+  opacity: 0;
+}
+
+.income-color-scale .legendCells .cell:nth-of-type(4) > .label {
+  opacity: 0;
+}
+
+.income-color-scale .legendCells .cell:nth-of-type(5) > .label {
+  opacity: 0;
+}
+
+.income-color-scale .legendCells .cell:nth-of-type(6) > .label {
+  opacity: 0;
+}
+
+
+
+.income-color-scale-treat {
+  font-size: 16px;
+}
+
+
+.income-color-scale-treat .legendCells .cell:nth-of-type(2) > .label {
+  opacity: 0;
+}
+
+
+.income-color-scale-treat .legendCells .cell:nth-of-type(3) > .label {
+  opacity: 0;
+}
+
+.income-color-scale-treat .legendCells .cell:nth-of-type(4) > .label {
+  opacity: 0;
+}
+
+.income-color-scale-treat .legendCells .cell:nth-of-type(5) > .label {
+  opacity: 0;
+}
+
+.income-color-scale-treat .legendCells .cell:nth-of-type(6) > .label {
+  opacity: 0;
+}

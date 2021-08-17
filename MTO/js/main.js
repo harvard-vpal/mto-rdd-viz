@@ -46,8 +46,8 @@ $(function () {
       
       
       
-      d3.selectAll("#race-ratio-public-raw").text("People of Color in Public Housing Units: "+raceData[0].value+"%");
-      d3.selectAll("#race-ratio-mixed-raw").text("People of Color in Mixed Income Neighborhood: "+raceData[1].value+"%");
+      d3.selectAll("#race-ratio-public-raw").text(raceData[0].value+"%"+" People of Color in Public Housing Units");
+      d3.selectAll("#race-ratio-mixed-raw").text(raceData[1].value+"%"+" People of Color in Mixed Income Neighborhood");
        
           
       var plot = pictogramScroll();   
@@ -76,7 +76,9 @@ $(function () {
      
      
          shuffle(temp,"treated");
-              
+         
+         console.log(temp);
+          
          data=temp.map(function(d,i){
            d.y_experiment = d.treated == 1 ? d.y1 : d.y0;
            d.wakefield=Number(d.wakefield);
@@ -104,7 +106,46 @@ $(function () {
             console.log("incomeDataTreat");
             console.log(incomeDataTreat);
             
+         var incomeDiff=Math.abs(incomeDataTreat[0].value-incomeDataTreat[1].value).toFixed(0);   
+        
+        
+        if(Math.abs(incomeDiff-2000)>100){
+          
+         shuffle(temp,"treated");
+         
+         console.log(temp);
+          
+         data=temp.map(function(d,i){
+           d.y_experiment = d.treated == 1 ? d.y1 : d.y0;
+           d.wakefield=Number(d.wakefield);
+           d.black=Number(d.black);
+           return d;
+         });
+          
+          
+        // update treatment income data
+        
+         var incomeDataTreat=d3.nest()
+            .key(function(d){return d.treated})
+            .rollup(function(v){
+              return d3.mean(v,function(d){return d.y_experiment;}).toFixed(1);
+            })
+            .entries(data);
+            
+             incomeDataTreat=incomeDataTreat.map(function(d,i){
+              d.group=d.key=="0"? "Public Housing Units":"Mixed Income Neighborhood";
+              return d;
+            }).sort(function(a,b){
+              return a.key-b.key;
+            });
+            
+        incomeDiff=Math.abs(incomeDataTreat[0].value-incomeDataTreat[1].value).toFixed(0);
+        
+        }
       
+          
+            
+        
             
          var raceDataTreat=d3.nest()
             .key(function(d){return d.treated})
@@ -123,8 +164,8 @@ $(function () {
           console.log(raceDataTreat);
           
           
-         d3.selectAll("#race-ratio-public").text("People of Color in Public Housing Units: "+raceDataTreat[0].value+"%");
-         d3.selectAll("#race-ratio-mixed").text("People of Color in Mixed Income Neighborhood: "+raceDataTreat[1].value+"%");
+         d3.selectAll("#race-ratio-public").text(raceDataTreat[0].value+"%"+" People of Color in Public Housing Units");
+         d3.selectAll("#race-ratio-mixed").text(raceDataTreat[1].value+"%"+"People of Color in Mixed Income Neighborhood");
         
           
          plot.updateData(data,raceData,raceDataTreat);
@@ -140,6 +181,7 @@ $(function () {
     for(var i = 0; i < n; ++i) {
       r = getRandomIntInclusive(0, n - 1 - i);
       swap(data, i, i + r, attr);
+      
     }
   }
   
