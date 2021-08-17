@@ -43,6 +43,11 @@ $(function () {
       });
       
       console.log(incomeData);  
+      
+      
+      
+      d3.selectAll("#race-ratio-public-raw").text("People of Color in Public Housing Units: "+raceData[0].value+"%");
+      d3.selectAll("#race-ratio-mixed-raw").text("People of Color in Mixed Income Neighborhood: "+raceData[1].value+"%");
        
           
       var plot = pictogramScroll();   

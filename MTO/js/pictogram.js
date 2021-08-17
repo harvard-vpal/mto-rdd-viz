@@ -1107,8 +1107,7 @@ var pictogramScroll = function () {
        
        d3.select("#stat-ph").text("People of Color: "+raceData[0].value+"%").transition().duration(1500).attr('opacity',1);
        d3.select("#stat-mixed").text("People of Color: "+raceData[1].value+"%").transition().duration(1500).attr('opacity',1);
-      
-      
+       
       var use=g.selectAll('use')
              .data(data);
     

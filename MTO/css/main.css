@@ -1,6 +1,6 @@
 /* Main CSS file */
 
-.container {
+.container-fluid {
   width: 1000px;
 }
 
@@ -9,7 +9,6 @@
 #graphic {
   padding-top: -60px;
 }
-
 
 
 body {

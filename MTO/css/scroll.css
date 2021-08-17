@@ -1,13 +1,13 @@
 #sections {
   position: relative;
   display: inline-block;
-  width: 250px;
+  width: 300px;
   top: 10px;
   z-index: 90;
 }
 
 .step {
-  margin-bottom: 60px;
+  margin-bottom: 100px;
 }
 
 #vis {

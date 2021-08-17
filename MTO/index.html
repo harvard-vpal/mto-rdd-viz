@@ -17,11 +17,18 @@
   <script src="libraries/d3-tip.js"></script>
   
   
-  <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-  <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-  <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+  <!--- <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script> 
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>-->
+  
+  <script src="libraries/d3-color.js"></script>
+  <script src="libraries/d3-interpolate.js"></script>
+  <script src="libraries/d3-scale-chromatic.js"></script>
+  <script src="libraries/d3-legend.min.js"></script>
+
 
   <!-- scroller js-->
   <script src="js/scroller.js"></script>
@@ -117,6 +124,11 @@
                 <h3>Racial Composition</h3>
                 
                 <p>Not only are realized earnings different in the two neighborhoods, but racial composition is as well.</p>
+                 <span class='sr-only' aria-live='assertive' id="race-ratio-public-raw">People of Color in Public Housing Units: NA</span>
+                
+                <span class='sr-only' aria-live='assertive' id="race-ratio-mixed-raw">People of Color in Mixed Income Neighborhood: NA</span>
+
+                
                 <p>The observational comparison is picking up racial disparities in earnings, leading to an overestimate of the causal effect of place.</p>
                 <p>In this simulation, people of color earn <span class="notice">$10,000</span> less on average than whites, making race a confounding variable.</p>
                 <p>“Confounders” are factors that are both:</p>
