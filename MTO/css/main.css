@@ -5,7 +5,6 @@
 }
 
 
-
 #graphic {
   padding-top: -60px;
 }
@@ -31,10 +30,10 @@ p {
   font-size: 10pt;
 }
 
-.innerlink {
+/*.innerlink {
   font-size: 14px;
   color: #1d83af
-}
+}*/
 
 /* Main column widths */
 .column {
@@ -66,55 +65,6 @@ p {
   margin-top: 25px;
 }
 
-
-
-
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.x-axis line {
-  stroke: #141414;
-}
-
-.x-axis path {
-  stroke: #141414;
-;
-}
-
-.x-axis text {
-  fill: #141414;
-;
-}
-
-.y-axis line {
-  stroke: #141414;
-;
-}
-
-.y-axis path {
-  stroke: #141414;
-;
-}
-
-.y-axis text {
-  fill: #141414;
-
-}
-
-.axis-title text {
-  fill: #141414;
-}
-
-.sigmoid {
-  stroke-dasharray: 4px 4px;
-  stroke: #aaa;
-  fill: #121212;
-}
 
 /* style for pictogram */
 text {
@@ -148,11 +98,6 @@ text {
   width: 15px;
   padding-left: .5em;
 }
-
-.icon-tip {
-  z-index: 2;
-}
-
 
 
 .income-color-scale{
