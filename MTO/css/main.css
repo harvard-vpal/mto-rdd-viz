@@ -170,3 +170,28 @@ text {
 .income-color-scale-treat .legendCells .cell:nth-of-type(6) > .label {
   opacity: 0;
 }
+
+
+/* css to make the last bar graphs fit into the width*/
+
+/*
+.y-axis-race-obs .tick text{
+  font-size:8px;
+}
+
+.y-axis-race-treat .tick text{
+  font-size:8px;
+}
+
+.x-axis-race-treat .tick text{
+  font-size: 10px;
+}
+
+.y-label-race-obs {
+   font-size:10px;
+}
+
+.y-label-race-treat{
+   font-size:10px;
+}
+*/

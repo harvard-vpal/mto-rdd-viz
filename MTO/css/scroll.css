@@ -1,7 +1,7 @@
 #sections {
   position: relative;
   display: inline-block;
-  width: 300px;
+  width: 250px;
   top: 10px;
   z-index: 90;
 }
@@ -15,7 +15,6 @@
   position: fixed;
   top: 120px;
   z-index: 1;
-  margin-left: 0;
   height: 500px;
   width: 450px;
 }

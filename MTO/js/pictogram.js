@@ -3,10 +3,10 @@
 var pictogramScroll = function () {
   // size variable
   var height = 500,
-    width = 500;
+    width = 400;
   //Magrin: spaces saved in the svg for axes and titles
   var margin = {
-    left:100,
+    left:60,
     bottom: 100,
     top: 20,
     right: 50,
@@ -51,7 +51,7 @@ var pictogramScroll = function () {
 
   var yAxisBarIncome = d3.axisLeft()
                    .scale(yBarScaleIncome)
-                   .tickPadding([20])
+                   .tickPadding([15])
                    .tickFormat(function(d){
                      return d+"K";
                    });
@@ -80,7 +80,7 @@ var pictogramScroll = function () {
                     
    var yAxisBarRaceObs = d3.axisLeft()
                    .scale(yBarScaleRaceObs)
-                    .tickPadding([20])
+                    .tickPadding([15])
                    .tickFormat(function(d){
                      return d+"%";
                    });
@@ -88,7 +88,7 @@ var pictogramScroll = function () {
  
   var yAxisBarRace = d3.axisLeft()
                    .scale(yBarScaleRace)
-                    .tickPadding([20])
+                    .tickPadding([15])
                    .tickFormat(function(d){
                      return d+"%";
                    });
@@ -233,7 +233,7 @@ var pictogramScroll = function () {
         .enter()
         .append('svg')
         .attr("preserveAspectRatio", "xMinYMin meet")
-                 .attr("viewBox", [0, 0, width-50, height-50])
+                 .attr("viewBox", [0, 0, width, height])
                  .style("overflow", "visible")
                  .classed("svg-content", true);
   
@@ -279,34 +279,38 @@ var pictogramScroll = function () {
       g.append('text')
         .attr('id', 'txtValue-ph')
         .attr('class', 'initial-txtValue')
-        .attr('x', xPadding*8)
-        .attr('y', yPadding)
-        .attr('dy', -10)
-        .text('Public Housing Units: '+data.length/2);
+        .attr('x', xPadding*7)
+        .attr('y', yPadding*(-2))
+        //.attr('dy', -10)
+        .text('Public Housing Units: '+data.length/2)
+        .call(wrap, 120);
         
         
        g.append('text')
         .attr('id', 'txtValue-mixed')
         .attr('class', 'initial-txtValue')
-        .attr('x', xPadding*8+width/2)
-        .attr('y', yPadding)
-        .attr('dy', -10)
-        .text('Mixed Income Neighborhood: '+data.length/2);
+        .attr('x', xPadding*7+width/2)
+        .attr('y', yPadding*(-2))
+        //.attr('dy', -10)
+        .text('Mixed Income Neighborhood: '+data.length/2)
+        .call(wrap, 120);
         
       // text element holding the summary stats
        g.append('text')
         .attr('id','stat-ph')
-        .attr('x', xPadding*8)
-        .attr('y', yPadding)
-        .attr('dy', 400)
-        .attr('opacity',0);
+        .attr('x', xPadding*7)
+        .attr('y', 400)
+        .attr('opacity',0)
+        .text("")
+        .call(wrap, 120);
   
        g.append('text')
         .attr('id','stat-mixed')
-        .attr('x', xPadding*8+width/2)
-        .attr('y', yPadding)
-        .attr('dy', 400)
-        .attr('opacity',0);;
+        .attr('x', xPadding*7+width/2)
+        .attr('y', 400)
+        .attr('opacity',0)
+        .text("")
+        .call(wrap, 120);
 
       // g.call(icon_tip);
 
@@ -423,7 +427,7 @@ var pictogramScroll = function () {
     .attr("class", "y-label-income")
     .attr("text-anchor", "middle")
     .attr("x", -80)
-    .attr("y", -50)
+    .attr("y", -40)
     .attr("transform", "rotate(-90)")
     .text("Average Income")
     .attr('opacity',0); 
@@ -472,7 +476,7 @@ var pictogramScroll = function () {
     .attr("class", "y-label-race")
     .attr("text-anchor", "middle")
     .attr("x", -280)
-    .attr("y", -50)
+    .attr("y", -40)
     .attr("transform", "rotate(-90)")
     .text("People of Color %")
     .attr('opacity',0);     
@@ -897,8 +901,8 @@ var pictogramScroll = function () {
             
         var incomeDiff=Math.abs(incomeData[0].value-incomeData[1].value).toFixed(0);
         
-         g.selectAll("#stat-ph").text("Average Income: "+"$"+d3.format(",")(incomeData[0].value)).transition().duration(1500).attr('opacity', 1);;
-         g.selectAll("#stat-mixed").text("Average Income: "+"$"+d3.format(",")(incomeData[1].value)).transition().duration(1500).attr('opacity', 1);;
+         g.selectAll("#stat-ph").text("Average Income: "+"$"+d3.format(",")(incomeData[0].value)).call(wrap,120).transition().duration(1500).attr('opacity', 1);
+         g.selectAll("#stat-mixed").text("Average Income: "+"$"+d3.format(",")(incomeData[1].value)).call(wrap,120).transition().duration(1500).attr('opacity', 1);
         
          d3.selectAll("#incomeRaw-1").text("$"+d3.format(",")(incomeData[1].value));
          d3.selectAll("#incomeRaw-2").text("$"+d3.format(",")(incomeData[0].value));
@@ -1612,9 +1616,9 @@ if (count===0){
             
             
             
-      d3.selectAll("#stat-ph").text("Average Income: "+"$"+d3.format(",")(incomeDataTreat[0].value)).transition().duration(1500).attr('opacity',1);
+      d3.selectAll("#stat-ph").text("Average Income: "+"$"+d3.format(",")(incomeDataTreat[0].value)).call(wrap,120).transition().duration(1500).attr('opacity',1);
       
-      d3.selectAll("#stat-mixed").text("Average Income: "+"$"+d3.format(",")(incomeDataTreat[1].value)).transition().duration(1500).attr('opacity',1);
+      d3.selectAll("#stat-mixed").text("Average Income: "+"$"+d3.format(",")(incomeDataTreat[1].value)).call(wrap,120).transition().duration(1500).attr('opacity',1);
       
             
        var incomeDiff=Math.abs(incomeDataTreat[0].value-incomeDataTreat[1].value).toFixed(0);
@@ -1831,8 +1835,53 @@ function showTreatBars(data){
     // update treatment income data
   
   if (count>0){
-       
-       
+    
+      // redefine the scale
+      
+   var margin = {
+    left:100,
+    bottom: 100,
+    top: 20,
+    right: 0,
+  };
+  
+   drawWidth = width - margin.left - margin.right;
+   
+   
+   var gEnter = svg
+        .enter()
+        .append('svg')
+        .attr("preserveAspectRatio", "xMinYMin meet")
+                 .attr("viewBox", [0, 0, width, height])
+                 .style("overflow", "visible")
+                 .classed("svg-content", true);
+  
+  
+      gEnter
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        .attr('height', drawHeight)
+        .attr('width', drawWidth)
+        .attr('class', 'symbol-g');
+
+      // Re-select G for symbols
+      g = div.select('.symbol-g');
+  
+    
+   xBarScaleRace = d3.scaleBand()
+                    .paddingInner(0.08)
+                    .range([0,drawWidth])
+                    .domain(["Public Housing Units","Mixed Income Neighborhood"]);
+                    
+    xAxisBarRace= d3.axisBottom()
+                      .scale(xBarScaleRace);
+                  
+    xAxisBarRaceObs= d3.axisBottom()
+                         .scale(xBarScaleRace)
+                         .tickFormat(""); 
+    
+    
+    
        
        // observed race data
        
@@ -1970,7 +2019,26 @@ function showTreatBars(data){
                       .attr('height', 0)
                       .attr('width', xBarScaleRace.bandwidth()/2);  
                       
-        barsRace.exit().remove();              
+        barsRace.exit().remove();  
+        
+        
+      var barTextRace = g.selectAll('.bar-text-race-obs').data(raceData);
+   
+            barTextRace.enter()
+              .append('text')
+              .attr('class', 'bar-text-race-obs')
+              .merge(barTextRace)
+              .text(function (d) { return d.value+"%"; })
+              .attr('y', 0)
+              .attr('dy',function(d,i){return yBarScaleRaceObs(d.value)-10;})
+              .attr('x', function (d) { return xBarScaleRace(d.group)+xBarScaleRace.bandwidth()/4;})
+              .attr('dx', xBarScaleRace.bandwidth()/4)
+              .style('font-size', '16px')
+              .attr('fill', 'black')
+              .attr('opacity', 0);
+              
+        barTextRace.exit().remove();  
+     
   
      g.selectAll('.bar-race-obs')
       .transition()
@@ -2268,7 +2336,7 @@ function showTreatBars(data){
     .attr("class", "y-label-race-obs")
     .attr("text-anchor", "middle")
     .attr("x", -80)
-    .attr("y", -50)
+    .attr("y", -40)
     .attr("transform", "rotate(-90)")
     .text("People of Color %")
     .attr('opacity',0); 
@@ -2328,7 +2396,7 @@ function showTreatBars(data){
     .attr("class", "y-label-race-treat")
     .attr("text-anchor", "middle")
     .attr("x", -280)
-    .attr("y", -50)
+    .attr("y", -40)
     .attr("transform", "rotate(-90)")
     .text("People of Color %")
     .attr('opacity',0); 
