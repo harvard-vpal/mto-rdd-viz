@@ -13,7 +13,8 @@
 #vis {
   display: inline-block;
   position: fixed;
-  top: 18vw;
+  top: 15vw;
+  left:35vw;
   z-index: 1;
   height: 100vw;
   width: 50vw;
