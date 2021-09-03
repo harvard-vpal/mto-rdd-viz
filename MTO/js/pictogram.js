@@ -2,7 +2,7 @@
 
 var pictogramScroll = function () {
   // size variable
-  var height = 500,
+  var height = 600,
     width = 400;
   //Magrin: spaces saved in the svg for axes and titles
   var margin = {
@@ -2335,7 +2335,7 @@ function showTreatBars(data){
      g.append("text")
     .attr("class", "y-label-race-obs")
     .attr("text-anchor", "middle")
-    .attr("x", -80)
+    .attr("x", -90)
     .attr("y", -40)
     .attr("transform", "rotate(-90)")
     .text("People of Color %")
@@ -2395,7 +2395,7 @@ function showTreatBars(data){
      g.append("text")
     .attr("class", "y-label-race-treat")
     .attr("text-anchor", "middle")
-    .attr("x", -290)
+    .attr("x", -350)
     .attr("y", -40)
     .attr("transform", "rotate(-90)")
     .text("People of Color %")

@@ -1,8 +1,8 @@
 #sections {
   position: relative;
   display: inline-block;
-  width: 250px;
-  top: 10px;
+  width: 30vw;
+  top: 2vw;
   z-index: 90;
 }
 
@@ -13,11 +13,13 @@
 #vis {
   display: inline-block;
   position: fixed;
-  top: 120px;
+  top: 18vw;
   z-index: 1;
-  height: 500px;
-  width: 450px;
+  height: 100vw;
+  width: 50vw;
 }
+
+
 
 .step:last-child {
   margin-bottom:calc(100vh - 100px);
