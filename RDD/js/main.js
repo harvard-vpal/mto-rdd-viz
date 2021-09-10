@@ -1,0 +1,316 @@
+$(function () {
+  
+    const button = document.getElementById('btn');
+
+    var height=500, width=800;
+    var margin={left:100,bottom:30,top:50,right:100};
+    
+    var drawHeight=height-margin.top-margin.bottom;
+    var drawWidth= width-margin.left-margin.right;
+    
+    // define the svg for all visual elements
+    var svg=d3.select("#my-draw")
+              .append("svg")
+              .attr('id',"main-svg")
+             //.attr('height',height)
+              //.attr('width',width)
+              .attr("preserveAspectRatio", "xMinYMin meet")
+              .attr("viewBox", [0, 0, width, height])
+              .style("overflow", "visible")
+              .on("click", mousedown)
+              .on('dblclick',mouseup)
+              .classed("svg-content", true);
+              
+   // attach a g-element as the draw canvas
+   
+    var canvas=svg.append("g")
+                  .attr('transform','translate('+margin.left+','+margin.top+')')
+                  .attr('id','can');
+                  //.on('click',mousedown);
+                  //.attr('fill-opacity',0.5);
+                  
+                  
+   var circle;
+   var line;
+   var lineData=[];
+   var m;
+
+   function mousedown(){
+      m = d3.mouse(this);
+      
+      currX=m[0];
+      currY=m[1];
+      
+      console.log(m);
+      
+      circle = svg.append("circle")
+                    .attr('class','user-point')
+                    .attr('cx',m[0])
+                    .attr('cy',m[1])
+                    .attr('r',5)
+                    .attr('stroke','#737373')
+                    .attr('fill',"#737373");
+                    
+                    
+     line = svg.append("line")
+        .attr("class","user-line")
+        .attr("x1", m[0])
+        .attr("y1", m[1])
+        .attr("x2", m[0])
+        .attr("y2", m[1]);
+        
+     svg.on("mousemove",mousemove);
+     
+     lineData.push({ x: m[0],y:m[1]});
+     
+     
+     
+     return(lineData);
+  
+   }
+      
+   console.log(lineData);
+  
+  
+   function mousemove(){
+     var m=d3.mouse(this);
+     line.attr("x1", m[0])
+         .attr("y1", m[1])
+         .attr('stroke-dasharray','4')
+         .style("stroke", "#737373")
+         .style('stroke-width',2);
+   }
+   
+  function mouseup() {
+    svg.on("mousemove", null);
+    button.disabled = false;
+}
+       
+d3.csv('data/rd_dataset1.csv',function(error,data){
+      
+       if(error) {console.log(error);}
+       
+      // formating variables
+      
+      data=data.map (function(d,i){
+           d.x=Number(d.x);
+           d.y=Number(d.y);
+           d.yhat_1=Number(d.yhat_1);
+           d.yhat_2=Number(d.yhat_2);
+           d.yhat_3=Number(d.yhat_3);
+           d.yhat_4=Number(d.yhat_4);
+        return d;   
+       });
+       
+       
+       console.log(data);
+       // x-axis and y-axis
+    
+    var ymax=Math.max(d3.max(data,function(d){return d.y}),
+                      d3.max(data,function(d){return d.yhat_1}),
+                      d3.max(data,function(d){return d.yhat_2}),
+                      d3.max(data,function(d){return d.yhat_3}),
+                      d3.max(data,function(d){return d.yhat_4}))+10;
+                      
+    console.log(ymax);
+    var x=d3.scaleLinear()
+            .range([0,drawWidth])
+            .domain([0,d3.max(data,function(d){return d.x;})]);
+            
+    var y=d3.scaleLinear()
+            .range([drawHeight,0])
+            .domain([0,ymax]);
+    
+    svg.append("g")
+       .attr("transform","translate("+margin.left+","+(drawHeight+margin.top)+")")
+       .attr("class","x-axis")
+       .call(d3.axisBottom(x));
+    
+    svg.append("g")
+       .attr("transform","translate("+margin.left+","+margin.top+")")
+       .attr("class","y-axis")
+       .call(d3.axisLeft(y));
+      
+   // axis title
+   
+    canvas.append("text")
+    .attr("class", "y-title")
+    .attr("text-anchor", "middle")
+    .attr("x", -(drawHeight/2))
+    .attr("y", -40)
+    .attr("transform", "rotate(-90)")
+    .text("Class Size");
+    
+    canvas.append("text")
+    .attr("class", "x-title")
+    .attr("text-anchor", "middle")
+    .attr("x", drawWidth/2)
+    .attr("y", drawHeight+40)
+    //.attr("transform", "rotate(-90)")
+    .text("School Enrollment"); 
+    
+       
+       
+       
+   // adding vertical lines
+   
+   canvas.append('line')
+         .attr('class','vline-1')
+         .attr('x1',x(30))
+         .attr('y1',y(0))
+         .attr('x2',x(30))
+         .attr('y2',y(40))
+         .attr('stroke-dasharray',4)
+         .style("stroke", "#00a454");
+         
+         
+    canvas.append('line')
+         .attr('class','vline-2')
+         .attr('x1',x(60))
+         .attr('y1',y(0))
+         .attr('x2',x(60))
+         .attr('y2',y(40))
+         .attr('stroke-dasharray',4)
+         .style("stroke", "#00a454");
+         
+         
+    canvas.append('line')
+         .attr('class','vline-3')
+         .attr('x1',x(90))
+         .attr('y1',y(0))
+         .attr('x2',x(90))
+         .attr('y2',y(40))
+         .attr('stroke-dasharray',4)
+         .style("stroke", "#00a454");
+         
+    canvas.append('line')
+         .attr('class','vline-4')
+         .attr('x1',x(120))
+         .attr('y1',y(0))
+         .attr('x2',x(120))
+         .attr('y2',y(40))
+         .attr('stroke-dasharray',4)
+         .style("stroke", "#00a454");
+         
+    canvas.append('circle')
+          .attr('class','start-point')
+          .attr('cx',x(1))
+          .attr('cy',y(1))
+          .attr('r',5)
+          .attr('stroke','red')
+          .attr('fill',"none");
+          
+    
+          
+          
+  // Click and retain the points and connect the points
+  
+  // Clear button
+  
+  $("#clr").click(function(){
+    
+    var userDot=d3.select('.user-point:last-of-type');
+    var userLine=d3.select('.user-line:last-of-type');
+        userDot.remove();
+        userLine.remove();
+        
+    button.disabled=true;
+  });
+          
+  // I am done button        
+   $("#btn").click(function(){
+     
+     var filterData=data.filter(function(d){
+       return d.x!=0 && d.y!=0;
+     });
+     
+     console.log(filterData);
+     
+     canvas.append('g')
+      .selectAll("dot")
+      .data(filterData)
+      .enter()
+      .append("circle")
+        .attr("class","my-dots")
+        .attr("cx", function (d) { return x(d.x); } )
+        .attr("cy", function (d) { return y(d.y); } )
+        .attr("r", 5)
+        .attr("opacity",1)
+        .style("fill", "none")
+        .style("stroke","#00a454");
+        
+      d3.selectAll('.user-point').style('opacity',0.3);
+      d3.selectAll('.user-line').style('opacity',0.3);
+     
+     
+    canvas.append("path")
+          .datum(data.filter(function(d){return d.yhat_1>0}))
+          .attr("class","model-line")
+          .attr("fill", "none")
+          .attr("stroke", "#00a454")
+          .attr("stroke-width", 3)
+          .attr("d", d3.line()
+            .x(function(d) { return x(d.x) })
+            .y(function(d) { return y(d.yhat_1) })
+            );
+            
+     canvas.append("path")
+          .datum(data.filter(function(d){return d.yhat_2>0}))
+          .attr("class","model-line")
+          .attr("fill", "none")
+          .attr("stroke", "#00a454")
+          .attr("stroke-width", 3)
+          .attr("d", d3.line()
+            .x(function(d) { return x(d.x) })
+            .y(function(d) { return y(d.yhat_2) })
+            );          
+            
+       canvas.append("path")
+          .datum(data.filter(function(d){return d.yhat_3>0}))
+          .attr("class","model-line")
+          .attr("fill", "none")
+          .attr("stroke", "#00a454")
+          .attr("stroke-width", 3)
+          .attr("d", d3.line()
+            .x(function(d) { return x(d.x) })
+            .y(function(d) { return y(d.yhat_3) })
+            );        
+     
+       canvas.append("path")
+          .datum(data.filter(function(d){return d.yhat_4>0}))
+          .attr("class","model-line")
+          .attr("fill", "none")
+          .attr("stroke", "#00a454")
+          .attr("stroke-width", 3)
+          .attr("d", d3.line()
+            .x(function(d) { return x(d.x) })
+            .y(function(d) { return y(d.yhat_4) })
+            ); 
+     
+   });
+   
+  // Start Over button 
+   $("#nul").click(function(){
+    //var polylines=d3.select("#my-polyline");
+    var dots=d3.selectAll(".my-dots");
+    var userDots=d3.selectAll('.user-point');
+    var userLines=d3.selectAll('.user-line');
+    var modelLines=d3.selectAll('.model-line');
+        //polylines.remove();
+        dots.remove();
+        userDots.remove();
+        userLines.remove();
+        modelLines.remove();
+        
+    button.disabled=true;
+  });  
+   
+   
+          
+
+    }); // end of d3.csv
+   
+   
+   
+  
+});

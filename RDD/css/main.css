@@ -1,0 +1,27 @@
+/* Main CSS file */
+
+
+body {
+  
+  font-size: 3vw;
+  line-height: 1.5;
+  background-color: #fafafa;
+}
+
+h1 {
+  color: #024453;
+}
+
+h2 {
+  color: #024453;
+}
+
+.y-axis{
+  font-size:2vw;
+}
+
+.x-axis{
+  font-size:2vw;
+}
+
+

@@ -1,0 +1,72 @@
+<!doctype HTML>
+
+<HTML>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interactive Prototype for RDD</title>
+  <!-- Libraries -->
+
+  <script src="libraries/jquery-3.4.1.min.js"></script>
+  <link href="libraries/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <script src="libraries/bootstrap.min.js"></script>
+  <script src="libraries/d3.v4.min.js"></script>
+  <script src="libraries/d3-format.v1.min.js"></script>
+  <script src="libraries/d3-tip.js"></script>
+  
+  <script src="libraries/d3-color.js"></script>
+  <script src="libraries/d3-interpolate.js"></script>
+  <script src="libraries/d3-scale-chromatic.js"></script>
+  <script src="libraries/d3-legend.min.js"></script>
+<!--  <script src="libraries/svg.js"></script>
+  <script src="libraries/svg.draw.js"></script> -->
+
+
+
+
+  <!-- your script file -->
+  <script src="js/main.js"></script>
+ 
+
+  <!-- Custom files -->
+  <link rel="stylesheet" href="css/main.css" />
+
+</head>
+
+
+<body>
+<div class="container-fluid" >
+ <div id="intro">
+   <h1>You Draw It</h1>
+   <h2>How Maximum Class Size Rules Affect Class Sizes and Earnings</h2>
+   
+ </div> 
+  
+ <div id="my-draw">
+   
+ </div>
+ 
+
+ <input type="button" value="Clear" id="clr"  style="position:relative;bottom:25%;left:20%;font-size:2vw; background-color:#FFF831;color:Black;">
+ 
+ <input type="button" value="Start Over " id="nul" style="position:relative;top:25%;left:30%;font-size:2vw; background-color:#FFF831;color:Black;">
+ 
+<input type="button" value="I'm Done" id="btn"  style="position:relative;top:25%;left:40%;font-size:2vw; background-color:green;color:White;" disabled="true">
+ 
+ 
+ 
+</div>
+<!--<script>
+ var drawing = SVG ("can")
+  drawing.rect().draw()	// Here we init a rectangle and start drawing it
+  
+</script>-->
+
+
+
+</body>
+
+
+</html>
