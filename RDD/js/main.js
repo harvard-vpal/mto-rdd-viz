@@ -1,6 +1,7 @@
 $(function () {
   
-    const button = document.getElementById('btn');
+    const doneButton = document.getElementById('btn');
+    const clrButton= document.getElementById('clr');
 
     var height=500, width=800;
     var margin={left:100,bottom:80,top:50,right:100};
@@ -89,7 +90,7 @@ $(function () {
    
   function mouseup() {
     svg.on("mousemove", null);
-    button.disabled = false;
+    doneButton.disabled = false;
 }
        
 d3.csv('data/rd_dataset1.csv',function(error,data){
@@ -226,7 +227,7 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
         userDot.remove();
         userLine.remove();
         
-    button.disabled=true;
+    doneButton.disabled=true;
    if(d3.select('.user-point').empty()){
      d3.selectAll(".start-point").attr("opacity",1);
      d3.selectAll("#start-reminder").attr("opacity",1);
@@ -237,7 +238,7 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
           
   // I am done button        
    $("#btn").click(function(){
-     
+    
      var filterData=data.filter(function(d){
        return d.x!=0 && d.y!=0;
      });
@@ -305,6 +306,8 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
             .y(function(d) { return y(d.yhat_4) })
             ); 
      
+     clrButton.disabled=true; 
+     
    });
    
   // Start Over button 
@@ -321,7 +324,8 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
         userLines.remove();
         modelLines.remove();
         
-    button.disabled=true;
+    doneButton.disabled=true;
+    clrButton.disabled=false;
   });  
    
    

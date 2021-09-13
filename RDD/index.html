@@ -43,6 +43,7 @@
    <h2>How Maximum Class Size Rules Affect Class Sizes and Earnings</h2>
    <h3>Instructions</h3>
    <p>Click to start. Move the mouse to draw the line. When you are done, double click to stop.</p>
+   <p class='sr-only' aria-live='assertive'>It is a canvas defined by x and y axis. The size of school enrollment is on the x axis, ranging from 0 to 120; and the size of a classroom on the y axis, from 0 to 35. There is a verticl line at school enrollment equals 30,60,90, and 120, repectively. Therefore, the canvas has four panels, school enrollment 0-30, school enrollment 30-60, school enrollment 60-90, and school enrollment 90-120. There are three buttons below the canvas, which would enable users to clear the drawing or to start over, and submit the answer when it is done.</p>
    
  </div> 
   
@@ -51,11 +52,11 @@
  </div>
  
 
- <input type="button" value="Clear" id="clr"  style="position:relative;bottom:25%;left:20%;font-size:2vw; background-color:#FFF831;color:Black;">
+ <input type="button" title="clear-last-drawing-button" value="Clear" id="clr"  style="position:relative;bottom:25%;left:20%;font-size:2vw; background-color:#FFF831;color:Black;" disabled="false">
  
- <input type="button" value="Start Over " id="nul" style="position:relative;top:25%;left:30%;font-size:2vw; background-color:#FFF831;color:Black;">
+ <input type="button" title="start-over-button" value="Start Over " id="nul" style="position:relative;top:25%;left:30%;font-size:2vw; background-color:#FFF831;color:Black;">
  
-<input type="button" value="I'm Done" id="btn"  style="position:relative;top:25%;left:40%;font-size:2vw; background-color:green;color:White;" disabled="true">
+<input type="button" title="I-am-done-button" value="I'm Done" id="btn"  style="position:relative;top:25%;left:40%;font-size:2vw; background-color:green;color:White;" disabled="true">
  
  
  
