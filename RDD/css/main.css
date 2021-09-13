@@ -2,8 +2,7 @@
 
 
 body {
-  
-  font-size: 3vw;
+
   line-height: 1.5;
   background-color: #fafafa;
 }
@@ -16,12 +15,23 @@ h2 {
   color: #024453;
 }
 
+.y-title{
+   font-size:3vw;
+}
 .y-axis{
   font-size:2vw;
 }
 
+
+.x-title{
+   font-size:3vw;
+}
 .x-axis{
   font-size:2vw;
 }
 
 
+#start-reminder{
+  font-size:2vw;
+  fill:#F21C51;
+}

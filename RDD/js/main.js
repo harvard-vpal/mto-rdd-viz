@@ -3,7 +3,7 @@ $(function () {
     const button = document.getElementById('btn');
 
     var height=500, width=800;
-    var margin={left:100,bottom:30,top:50,right:100};
+    var margin={left:100,bottom:80,top:50,right:100};
     
     var drawHeight=height-margin.top-margin.bottom;
     var drawWidth= width-margin.left-margin.right;
@@ -36,6 +36,10 @@ $(function () {
    var m;
 
    function mousedown(){
+     
+      d3.selectAll('#start-reminder').attr('opacity',0);
+      d3.selectAll('.start-point').attr('opacity',0);
+     
       m = d3.mouse(this);
       
       currX=m[0];
@@ -60,6 +64,8 @@ $(function () {
         .attr("y2", m[1]);
         
      svg.on("mousemove",mousemove);
+     
+     
      
      lineData.push({ x: m[0],y:m[1]});
      
@@ -145,7 +151,7 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
     .attr("class", "x-title")
     .attr("text-anchor", "middle")
     .attr("x", drawWidth/2)
-    .attr("y", drawHeight+40)
+    .attr("y", drawHeight+50)
     //.attr("transform", "rotate(-90)")
     .text("School Enrollment"); 
     
@@ -200,6 +206,12 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
           .attr('stroke','red')
           .attr('fill',"none");
           
+    canvas.append('text')
+          .attr("id",'start-reminder')
+          .attr('x',x(1))
+          .attr('y',y(1.5))
+          .text("Start here!");
+          
     
           
           
@@ -215,6 +227,12 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
         userLine.remove();
         
     button.disabled=true;
+   if(d3.select('.user-point').empty()){
+     d3.selectAll(".start-point").attr("opacity",1);
+     d3.selectAll("#start-reminder").attr("opacity",1);
+   }
+   
+   
   });
           
   // I am done button        
@@ -291,7 +309,8 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
    
   // Start Over button 
    $("#nul").click(function(){
-    //var polylines=d3.select("#my-polyline");
+    d3.selectAll('#start-reminder').attr('opacity',1);
+    d3.selectAll('.start-point').attr('opacity',1);
     var dots=d3.selectAll(".my-dots");
     var userDots=d3.selectAll('.user-point');
     var userLines=d3.selectAll('.user-line');
