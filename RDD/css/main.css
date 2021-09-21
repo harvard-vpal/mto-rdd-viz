@@ -35,3 +35,30 @@ h2 {
   font-size:2vw;
   fill:#F21C51;
 }
+
+
+#keyboard_controls {
+  position: relative;
+  top: -40px;
+  left: -1%;
+  width: 72%;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-around;
+}
+
+#keyboard_controls input {
+  width: 4em;
+}
+
+#keyboard_controls label {
+  /* For screen readers only */
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
