@@ -13,18 +13,6 @@
   <link href="libraries/bootstrap.min.css" rel="stylesheet" type="text/css" />
   <script src="libraries/bootstrap.min.js"></script>
   <script src="libraries/d3.v4.min.js"></script>
-  <script src="libraries/d3-format.v1.min.js"></script>
-  <script src="libraries/d3-tip.js"></script>
-  
-  <script src="libraries/d3-color.js"></script>
-  <script src="libraries/d3-interpolate.js"></script>
-  <script src="libraries/d3-scale-chromatic.js"></script>
-  <script src="libraries/d3-legend.min.js"></script>
-<!--  <script src="libraries/svg.js"></script>
-  <script src="libraries/svg.draw.js"></script> -->
-
-
-
 
   <!-- your script file -->
   <script src="js/main.js"></script>
@@ -39,10 +27,8 @@
 <body>
 <div class="container-fluid" >
  <div id="intro">
-   <h1>You Draw It</h1>
-   <h2>How Maximum Class Size Rules Affect Class Sizes and Earnings</h2>
    <h3>Instructions</h3>
-   <p>Click to start. Move the mouse to draw the line. When you are done, double click to stop.</p>
+   <p>Click to add the point of the school enrollment and classroom size you estimate. Move the mouse to connect the points with a line. When you are done, double click to stop.</p>
    <p class='sr-only' aria-live='assertive'>It is a canvas defined by x and y axis. The size of school enrollment is on the x axis, ranging from 0 to 120; and the size of a classroom on the y axis, from 0 to 35. There is a verticl line at school enrollment equals 30,60,90, and 120, repectively. Therefore, the canvas has four panels, school enrollment 0-30, school enrollment 30-60, school enrollment 60-90, and school enrollment 90-120. There are three buttons below the canvas, which would enable users to clear the drawing or to start over, and submit the answer when it is done.</p>
    
  </div> 
@@ -52,11 +38,11 @@
  </div>
  
 
- <input type="button" title="clear-last-drawing-button" value="Clear" id="clr"  style="position:relative;bottom:25%;left:20%;font-size:2vw; background-color:#FFF831;color:Black;" disabled="false">
+ <input type="button" title="clear-last-drawing-button" value="Clear" id="clr"  style="position:relative;bottom:25%;left:20%;font-size:2vw; background-color:#FFF831;color:Black;" disabled="false" class="btn btn-warning">
  
- <input type="button" title="start-over-button" value="Start Over " id="nul" style="position:relative;top:25%;left:30%;font-size:2vw; background-color:#FFF831;color:Black;">
+ <input type="button" title="start-over-button" value="Start Over " id="nul" style="position:relative;top:25%;left:30%;font-size:2vw; background-color:#FFF831;color:Black;" class="btn btn-warning">
  
-<input type="button" title="I-am-done-button" value="I'm Done" id="btn"  style="position:relative;top:25%;left:40%;font-size:2vw; background-color:green;color:White;" disabled="true">
+<input type="button" title="I-am-done-button" value="I'm Done" id="btn"  style="position:relative;top:25%;left:40%;font-size:2vw; background-color:green;color:White;" disabled="true" class="btn btn-success">
  
  
  

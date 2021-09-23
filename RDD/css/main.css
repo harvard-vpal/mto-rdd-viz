@@ -2,36 +2,57 @@
 
 
 body {
-
+  font:helvetica;
   line-height: 1.5;
   background-color: #fafafa;
 }
 
 h1 {
+  font:helvetica bold;
+  font-size: 3vw;
   color: #024453;
 }
 
 h2 {
+  font:helvetica bold;
+  font-size:2.5vw;
   color: #024453;
 }
 
+h3 {
+  font:helvetica bold;
+  font-size:2vw;
+  color: #024453;
+}
+
+
+p{
+  font-size:2vw;
+  opacity: 0.7;
+}
+
+
 .y-title{
-   font-size:3vw;
+   font-size:2vw;
+   opacity: 0.7;
 }
 .y-axis{
   font-size:2vw;
+  opacity: 0.7;
 }
 
 
 .x-title{
-   font-size:3vw;
+   font-size:2vw;
+   opacity: 0.7;
 }
 .x-axis{
   font-size:2vw;
+  opacity: 0.7;
 }
 
 
 #start-reminder{
-  font-size:2vw;
-  fill:#F21C51;
+  font-size:1.5vw;
+  fill:orange;
 }

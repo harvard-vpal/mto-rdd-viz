@@ -1,5 +1,26 @@
 $(function () {
+       
+d3.csv('data/rd_dataset1.csv',function(error,data){
   
+
+       if(error) {console.log(error);}
+       
+      // formating variables
+      
+      data=data.map (function(d,i){
+           d.x=Number(d.x);
+           d.y=Number(d.y);
+           d.yhat_1=Number(d.yhat_1);
+           d.yhat_2=Number(d.yhat_2);
+           d.yhat_3=Number(d.yhat_3);
+           d.yhat_4=Number(d.yhat_4);
+        return d;   
+       });
+       
+       
+       console.log(data);
+       
+       
     const doneButton = document.getElementById('btn');
     const clrButton= document.getElementById('clr');
 
@@ -13,7 +34,7 @@ $(function () {
     var svg=d3.select("#my-draw")
               .append("svg")
               .attr('id',"main-svg")
-             //.attr('height',height)
+              //.attr('height',height)
               //.attr('width',width)
               .attr("preserveAspectRatio", "xMinYMin meet")
               .attr("viewBox", [0, 0, width, height])
@@ -26,10 +47,34 @@ $(function () {
    
     var canvas=svg.append("g")
                   .attr('transform','translate('+margin.left+','+margin.top+')')
+                 // .on("mousedown",function(){
+                 //    console.log(d3.mouse(this));
+                 //  })
+                 //  .on("click", mousedown)
+                 //  .on('dblclick',mouseup)
                   .attr('id','can');
-                  //.on('click',mousedown);
-                  //.attr('fill-opacity',0.5);
-                  
+       
+       
+       
+       // x-axis and y-axis
+       
+     var ymax=Math.max(d3.max(data,function(d){return d.y}),
+                      d3.max(data,function(d){return d.yhat_1}),
+                      d3.max(data,function(d){return d.yhat_2}),
+                      d3.max(data,function(d){return d.yhat_3}),
+                      d3.max(data,function(d){return d.yhat_4}))+10;
+                      
+    console.log(ymax);
+    var x=d3.scaleLinear()
+            .range([0,drawWidth])
+            .domain([0,d3.max(data,function(d){return d.x;})]);
+            
+    var y=d3.scaleLinear()
+            .range([drawHeight,0])
+            .domain([0,ymax]);
+       
+    
+  
                   
    var circle;
    var line;
@@ -41,7 +86,7 @@ $(function () {
       d3.selectAll('#start-reminder').attr('opacity',0);
       d3.selectAll('.start-point').attr('opacity',0);
      
-      m = d3.mouse(this);
+      m=d3.mouse(this);
       
       currX=m[0];
       currY=m[1];
@@ -69,9 +114,7 @@ $(function () {
      
      
      lineData.push({ x: m[0],y:m[1]});
-     
-     
-     
+  
      return(lineData);
   
    }
@@ -80,7 +123,7 @@ $(function () {
   
   
    function mousemove(){
-     var m=d3.mouse(this);
+     m=d3.mouse(this);
      line.attr("x1", m[0])
          .attr("y1", m[1])
          .attr('stroke-dasharray','4')
@@ -92,41 +135,11 @@ $(function () {
     svg.on("mousemove", null);
     doneButton.disabled = false;
 }
-       
-d3.csv('data/rd_dataset1.csv',function(error,data){
-      
-       if(error) {console.log(error);}
-       
-      // formating variables
-      
-      data=data.map (function(d,i){
-           d.x=Number(d.x);
-           d.y=Number(d.y);
-           d.yhat_1=Number(d.yhat_1);
-           d.yhat_2=Number(d.yhat_2);
-           d.yhat_3=Number(d.yhat_3);
-           d.yhat_4=Number(d.yhat_4);
-        return d;   
-       });
-       
-       
-       console.log(data);
-       // x-axis and y-axis
     
-    var ymax=Math.max(d3.max(data,function(d){return d.y}),
-                      d3.max(data,function(d){return d.yhat_1}),
-                      d3.max(data,function(d){return d.yhat_2}),
-                      d3.max(data,function(d){return d.yhat_3}),
-                      d3.max(data,function(d){return d.yhat_4}))+10;
-                      
-    console.log(ymax);
-    var x=d3.scaleLinear()
-            .range([0,drawWidth])
-            .domain([0,d3.max(data,function(d){return d.x;})]);
-            
-    var y=d3.scaleLinear()
-            .range([drawHeight,0])
-            .domain([0,ymax]);
+    
+    
+    
+   
     
     svg.append("g")
        .attr("transform","translate("+margin.left+","+(drawHeight+margin.top)+")")
@@ -204,14 +217,16 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
           .attr('cx',x(1))
           .attr('cy',y(1))
           .attr('r',5)
-          .attr('stroke','red')
-          .attr('fill',"none");
+          .attr('stroke','orange')
+          .attr('fill',"orange")
+          .attr('opacity',0.7);
           
     canvas.append('text')
           .attr("id",'start-reminder')
           .attr('x',x(1))
           .attr('y',y(1.5))
-          .text("Start here!");
+          .text("Start here!")
+          .attr('opacity',0.7);
           
     
           
@@ -229,8 +244,8 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
         
     doneButton.disabled=true;
    if(d3.select('.user-point').empty()){
-     d3.selectAll(".start-point").attr("opacity",1);
-     d3.selectAll("#start-reminder").attr("opacity",1);
+     d3.selectAll(".start-point").attr("opacity",0.7);
+     d3.selectAll("#start-reminder").attr("opacity",0.7);
    }
    
    
@@ -254,8 +269,8 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
         .attr("cx", function (d) { return x(d.x); } )
         .attr("cy", function (d) { return y(d.y); } )
         .attr("r", 5)
-        .attr("opacity",1)
-        .style("fill", "none")
+        .attr("opacity",0.7)
+        .style("fill", "#00A454")
         .style("stroke","#00a454");
         
       d3.selectAll('.user-point').style('opacity',0.3);
@@ -268,6 +283,7 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
           .attr("fill", "none")
           .attr("stroke", "#00a454")
           .attr("stroke-width", 3)
+          .attr("opacity",0.7)
           .attr("d", d3.line()
             .x(function(d) { return x(d.x) })
             .y(function(d) { return y(d.yhat_1) })
@@ -312,8 +328,9 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
    
   // Start Over button 
    $("#nul").click(function(){
-    d3.selectAll('#start-reminder').attr('opacity',1);
-    d3.selectAll('.start-point').attr('opacity',1);
+    lineData=[];
+    d3.selectAll('#start-reminder').attr('opacity',0.7);
+    d3.selectAll('.start-point').attr('opacity',0.7);
     var dots=d3.selectAll(".my-dots");
     var userDots=d3.selectAll('.user-point');
     var userLines=d3.selectAll('.user-line');
