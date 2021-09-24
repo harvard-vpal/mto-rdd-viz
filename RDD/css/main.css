@@ -53,6 +53,35 @@ p{
 
 
 #start-reminder{
+
   font-size:1.5vw;
   fill:orange;
 }
+
+
+#keyboard_controls {
+  position: relative;
+  top: -40px;
+  left: -1%;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-around;
+}
+
+#keyboard_controls input {
+  width: 4em;
+}
+
+#keyboard_controls label {
+  /* For screen readers only */
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
