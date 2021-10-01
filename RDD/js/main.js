@@ -1,4 +1,11 @@
 $(function () {
+  
+  // disable the accessible keyboard controls at first
+$('#keyboard_controls input').prop('disabled',true);
+
+$("#keyboard_controls").on("click", function(){
+  $('#keyboard_controls input').prop('disabled',false);
+}); 
        
 d3.csv('data/rd_dataset1.csv',function(error,data){
   
@@ -15,19 +22,23 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
            d.yhat_3=Number(d.yhat_3);
            d.yhat_4=Number(d.yhat_4);
         return d;   
-       });
+       }).map(function(d){
+          d.yhat=d3.sum([d.yhat_1,d.yhat_2,d.yhat_3,d.yhat_4]);
+          d.defined=0;
+          return d;
+       }).filter(function(d,i){return i<120}); // remove the data points after row 120 (included)
        
        
        console.log(data);
        
     const doneButton = document.getElementById('btn');
-    const clrButton= document.getElementById('clr');
 
     var height=500, width=800;
     var margin={left:100,bottom:80,top:50,right:100};
 
     var drawHeight=height-margin.top-margin.bottom;
     var drawWidth= width-margin.left-margin.right;
+    
     console.log(drawHeight, drawWidth);
 
     // define the svg for all visual elements
@@ -39,19 +50,14 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
               .attr("preserveAspectRatio", "xMinYMin meet")
               .attr("viewBox", [0, 0, width, height])
               .style("overflow", "visible")
-              .on("click", mousedown)
-              .on('dblclick',mouseup)
+              //.on("click", mousedown)
+              //.on('dblclick',mouseup)
               .classed("svg-content", true);
 
    // attach a g-element as the draw canvas
 
     var canvas=svg.append("g")
                   .attr('transform','translate('+margin.left+','+margin.top+')')
-                 // .on("mousedown",function(){
-                 //    console.log(d3.mouse(this));
-                 //  })
-                 //  .on("click", mousedown)
-                 //  .on('dblclick',mouseup)
                   .attr('id','can');
        
        // x-axis and y-axis
@@ -70,11 +76,72 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
     var y=d3.scaleLinear()
             .range([drawHeight,0])
             .domain([0,ymax]);
-       
-   var circle;
-   var line;
-   var lineData=[];
-   var m;
+      
+   
+// drag and draw the line
+ var filterData=data;
+ var completed=false;
+
+ var drag = d3.drag()
+  .on('drag', function(){
+    
+    d3.selectAll('#start-reminder').attr('opacity',0);
+    d3.selectAll('.start-point').attr('opacity',0);
+    
+    var pos = d3.mouse(this);
+    pos[0] -= margin.left; 
+    pos[1] -= margin.top;
+    var enroll = clamp(0, 120, x.invert(pos[0]));
+    var classSize = clamp(0, y.domain()[1], y.invert(pos[1]));
+    
+    filterData.forEach(function(d){
+      if (Math.abs(d.x - enroll) < 1){
+        d.defined=1;
+        d.ydraw = classSize;// create a new cloumn to store the mouse-drag generated/updated yhat
+      }
+      return;
+    });
+    
+    // draw the line
+    
+    var path=canvas.selectAll("path")
+                    .data([filterData]);
+                    
+      path.enter()
+          .append('path')
+          .merge(path)
+          .transition()
+          .duration(0)
+          .attr("class","draw-line")
+          .attr("fill", "none")
+          .attr("stroke", "#737373")
+          .attr('stroke-dasharray','4')
+          .attr("stroke-width",4 )
+          .attr("opacity",0.9)
+          .attr("d", d3.line()
+            .x(function(d) { return x(d.x) })
+            .y(function(d) { return y(d.ydraw) })
+            .defined(function(d){
+              return d.defined==1;
+            })
+            );
+          
+            
+     path.exit().remove();
+     
+      if (!completed && 1== d3.mean(filterData.map(function(d){
+        return d.defined;}))){
+        completed = true;
+        console.log("huan");
+        console.log(completed);
+         doneButton.disabled=false;
+    }
+    
+  });
+
+svg.call(drag);
+
+function clamp(a, b, c){ return Math.max(a, Math.min(b, c)) }
 
 
 
@@ -94,35 +161,49 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
      let allX = [1,30,31,60,61,90,91,120];
      let allY = $('#keyboard_controls input')
                   .map((i, e) => Number(e.value))
-                  .toArray();
+                  .toArray().map(function(d){
+                    d.defined=0;
+                    return d;
+                   });
+                   
+        console.log(allY);
 
       circle = svg.append("circle")
                     .attr('class','user-point keyboard')
-                    .attr('cx',getX(1))
-                    .attr('cy',getY(1))
+                    .attr('cx',x(1)+margin.left)
+                    .attr('cy',y(1)+margin.top)
                     .attr('r',5)
                     .attr('stroke','#737373')
                     .attr('fill',"#737373");
 
      for(let j = 1; j < allX.length; j++){
+       
+       allY.filter(function(d){
+                     return d.defined!==0;
+                   });
 
        // As soon as we type in a value, let us claim to be done.
        doneButton.disabled = false;
-       clrButton.disabled = false;
 
        prevX = allX[j-1];
        prevY = allY[j-1];
        currX = allX[j];
        currY = allY[j];
 
-       circle = svg.append("circle")
+
+if(currY!==0){
+  circle = svg.append("circle")
                      .attr('class','user-point keyboard')
                      .attr('cx',getX(currX))
                      .attr('cy',getY(currY))
                      .attr('r',5)
                      .attr('stroke','#737373')
                      .attr('fill',"#737373");
+}
 
+       
+                     
+if(prevY!==0 && currY!==0){
       line = svg.append("line")
          .attr("class","user-line keyboard")
          .attr("x1", getX(prevX))
@@ -132,66 +213,11 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
          .attr('stroke-dasharray','4')
          .style("stroke", "#737373")
          .style('stroke-width',2);
+}
 
      }
 
   });
-
-   function mousedown(){
-
-      d3.selectAll('#start-reminder').attr('opacity',0);
-      d3.selectAll('.start-point').attr('opacity',0);
-
-     
-      m= d3.mouse(this);
-      
-      currX=m[0];
-      currY=m[1];
-
-      console.log(m);
-
-      circle = svg.append("circle")
-                    .attr('class','user-point')
-                    .attr('cx',m[0])
-                    .attr('cy',m[1])
-                    .attr('r',5)
-                    .attr('stroke','#737373')
-                    .attr('fill',"#737373");
-
-
-     line = svg.append("line")
-        .attr("class","user-line")
-        .attr("x1", m[0])
-        .attr("y1", m[1])
-        .attr("x2", m[0])
-        .attr("y2", m[1]);
-
-     svg.on("mousemove",mousemove);
-
-
-
-     lineData.push({ x: m[0],y:m[1]});
-
-     return(lineData);
-
-   }
-
-   console.log(lineData);
-
-
-   function mousemove(){
-     m=d3.mouse(this);
-     line.attr("x1", m[0])
-         .attr("y1", m[1])
-         .attr('stroke-dasharray','4')
-         .style("stroke", "#737373")
-         .style('stroke-width',2);
-   }
-
-  function mouseup() {
-    svg.on("mousemove", null);
-    doneButton.disabled = false;
-}
 
     svg.append("g")
        .attr("transform","translate("+margin.left+","+(drawHeight+margin.top)+")")
@@ -221,9 +247,6 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
     //.attr("transform", "rotate(-90)")
     .text("School Enrollment");
 
-
-
-
    // adding vertical lines
 
    canvas.append('line')
@@ -231,17 +254,17 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
          .attr('x1',x(30))
          .attr('y1',y(0))
          .attr('x2',x(30))
-         .attr('y2',y(40))
+         .attr('y2',y(ymax))
          .attr('stroke-dasharray',4)
          .style("stroke", "#00a454");
-
-
+    
+    
     canvas.append('line')
          .attr('class','vline-2')
          .attr('x1',x(60))
          .attr('y1',y(0))
          .attr('x2',x(60))
-         .attr('y2',y(40))
+         .attr('y2',y(ymax))
          .attr('stroke-dasharray',4)
          .style("stroke", "#00a454");
 
@@ -251,7 +274,7 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
          .attr('x1',x(90))
          .attr('y1',y(0))
          .attr('x2',x(90))
-         .attr('y2',y(40))
+         .attr('y2',y(ymax))
          .attr('stroke-dasharray',4)
          .style("stroke", "#00a454");
 
@@ -260,7 +283,7 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
          .attr('x1',x(120))
          .attr('y1',y(0))
          .attr('x2',x(120))
-         .attr('y2',y(40))
+         .attr('y2',y(ymax))
          .attr('stroke-dasharray',4)
          .style("stroke", "#00a454");
 
@@ -281,50 +304,39 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
           .text("Start here!")
           .attr('opacity',0.7);
           
-  // Click and retain the points and connect the points
 
-  // Clear button
-
-  $("#clr").click(function(){
-
-    var userDot=d3.select('.user-point:last-of-type');
-    var userLine=d3.select('.user-line:last-of-type');
-        userDot.remove();
-        userLine.remove();
-
-    doneButton.disabled=true;
-   if(d3.select('.user-point').empty()){
-     d3.selectAll(".start-point").attr("opacity",0.7);
-     d3.selectAll("#start-reminder").attr("opacity",0.7);
-   }
-
-
-  });
 
   // I am done button
    $("#btn").click(function(){
+     
+      doneButton.disabled=true;
 
      var filterData=data.filter(function(d){
        return d.x!=0 && d.y!=0;
      });
 
      console.log(filterData);
+     
+     var scatter=canvas.selectAll('circle')
+                       .data(filterData);
+                       
+    scatter.enter()
+           .merge(scatter)
+           .append('circle')
+           .transition()
+           .duration(0)
+          .attr("class","my-dots")
+          .attr("cx", function (d) { return x(d.x); } )
+          .attr("cy", function (d) { return y(d.y); } )
+          .attr("r", 5)
+          .attr("opacity",0.7)
+          .style("fill", "#00A454")
+          .style("stroke","#00a454");
+          
+    scatter.exit().remove();
 
-     canvas.append('g')
-      .selectAll("dot")
-      .data(filterData)
-      .enter()
-      .append("circle")
-        .attr("class","my-dots")
-        .attr("cx", function (d) { return x(d.x); } )
-        .attr("cy", function (d) { return y(d.y); } )
-        .attr("r", 5)
-        .attr("opacity",0.7)
-        .style("fill", "#00A454")
-        .style("stroke","#00a454");
-
-      d3.selectAll('.user-point').style('opacity',0.3);
-      d3.selectAll('.user-line').style('opacity',0.3);
+     // d3.selectAll('.user-point').style('opacity',0.3);
+      d3.selectAll('.draw-line').style('opacity',0.3);
 
 
     canvas.append("path")
@@ -372,35 +384,36 @@ d3.csv('data/rd_dataset1.csv',function(error,data){
             .y(function(d) { return y(d.yhat_4) })
             );
 
-     clrButton.disabled=true;
-
    });
 
   // Start Over button
    $("#nul").click(function(){
-    lineData=[];
+    
+    filterData.map(function(d){return d.defined=0;})
     d3.selectAll('#start-reminder').attr('opacity',0.7);
     d3.selectAll('.start-point').attr('opacity',0.7);
+  
     var dots=d3.selectAll(".my-dots");
     var userDots=d3.selectAll('.user-point');
     var userLines=d3.selectAll('.user-line');
     var modelLines=d3.selectAll('.model-line');
+    var drawLines=d3.selectAll('.draw-line');
+    
+  
+  
         //polylines.remove();
         dots.remove();
         userDots.remove();
         userLines.remove();
         modelLines.remove();
+        drawLines.remove();
 
     doneButton.disabled=true;
-    clrButton.disabled=false;
+    
+    completed=false;
+
   });
 
-
-
-
     }); // end of d3.csv
-
-
-
 
 });
