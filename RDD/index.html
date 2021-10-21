@@ -13,18 +13,6 @@
   <link href="libraries/bootstrap.min.css" rel="stylesheet" type="text/css" />
   <script src="libraries/bootstrap.min.js"></script>
   <script src="libraries/d3.v4.min.js"></script>
-  <script src="libraries/d3-format.v1.min.js"></script>
-  <script src="libraries/d3-tip.js"></script>
-
-  <script src="libraries/d3-color.js"></script>
-  <script src="libraries/d3-interpolate.js"></script>
-  <script src="libraries/d3-scale-chromatic.js"></script>
-  <script src="libraries/d3-legend.min.js"></script>
-<!--  <script src="libraries/svg.js"></script>
-  <script src="libraries/svg.draw.js"></script> -->
-
-
-
 
   <!-- your script file -->
   <script src="js/main.js"></script>
@@ -39,11 +27,7 @@
 <body>
 <div class="container-fluid" >
  <div id="intro">
-   <h1>You Draw It</h1>
-   <h2>How Maximum Class Size Rules Affect Class Sizes and Earnings</h2>
-   <h3>Instructions</h3>
-   <p>Click to start. Move the mouse to draw the line. When you are done, double click to stop.</p>
-   <p class='sr-only' aria-live='assertive'>It is a canvas defined by x and y axis. The size of school enrollment is on the x axis, ranging from 0 to 120; and the size of a classroom on the y axis, from 0 to 35. There is a verticl line at school enrollment equals 30,60,90, and 120, repectively. Therefore, the canvas has four panels, school enrollment 0-30, school enrollment 30-60, school enrollment 60-90, and school enrollment 90-120. There are three buttons below the canvas, which would enable users to clear the drawing or to start over, and submit the answer when it is done.</p>
+   <p class='sr-only' aria-live='assertive'>It is a canvas defined by x and y axis. The size of school enrollment is on the x axis, ranging from 0 to 120; and the size of a classroom on the y axis, from 0 to 35. There is a verticle line at school enrollment equals 30,60,90, and 120, repectively. Therefore, the canvas has four panels, school enrollment 0-30, school enrollment 30-60, school enrollment 60-90, and school enrollment 90-120. There are two buttons below the canvas, which would enable users to start over, and submit the answer when it is done.</p>
 
  </div>
 
@@ -51,40 +35,39 @@
 
  </div>
 
- <div id="keyboard_controls">
+<br>
+
+ <div id="keyboard_controls" class="alert alert-success" role="alert">
+   <h4 class="alert-heading" aria-live='assertive'>Click to activate accessible input boxes.</h4>
+   
    <label for="enroll_1">N=1 class size</label>
    <input id="enroll_1" type="number" min="1" max="40" name="class_size_for_1" value="1" disabled>
    <div>
      <label for="enroll_30">N=30 class size</label>
-     <input id="enroll_30" type="number" min="1" max="40" name="class_size_for_1">
+     <input class= "input-box" id="enroll_30" type="number" min="1" max="40" name="class_size_for_30">
      <label for="enroll_31">N=31 class size</label>
-     <input id="enroll_31" type="number" min="1" max="40" name="class_size_for_1">
+     <input class= "input-box" id="enroll_31" type="number" min="1" max="40" name="class_size_for_31">
    </div>
    <div>
      <label for="enroll_60">N=60 class size</label>
-     <input id="enroll_60" type="number" min="1" max="40" name="class_size_for_1">
+     <input  class= "input-box" id="enroll_60" type="number" min="1" max="40" name="class_size_for_60">
      <label for="enroll_61">N=61 class size</label>
-     <input id="enroll_61" type="number" min="1" max="40" name="class_size_for_1">
+     <input  class= "input-box" id="enroll_61" type="number" min="1" max="40" name="class_size_for_61">
    </div>
    <div>
      <label for="enroll_90">N=90 class size</label>
-     <input id="enroll_90" type="number" min="1" max="40" name="class_size_for_1">
+     <input  class= "input-box" id="enroll_90" type="number" min="1" max="40" name="class_size_for_90">
      <label for="enroll_91">N=91 class size</label>
-     <input id="enroll_91" type="number" min="1" max="40" name="class_size_for_1">
+     <input  class= "input-box" id="enroll_91" type="number" min="1" max="40" name="class_size_for_91">
    </div>
    <label for="enroll_120">N=120 class size</label>
-   <input id="enroll_120" type="number" min="1" max="40" name="class_size_for_1">
+   <input  class= "input-box" id="enroll_120" type="number" min="1" max="40" name="class_size_for_120">
  </div>
-
-
- <input type="button" title="clear-last-drawing-button" value="Clear" id="clr"  style="position:relative;bottom:25%;left:20%;font-size:2vw; background-color:#FFF831;color:Black;" disabled="false">
-
- <input type="button" title="start-over-button" value="Start Over " id="nul" style="position:relative;top:25%;left:30%;font-size:2vw; background-color:#FFF831;color:Black;">
-
-<input type="button" title="I-am-done-button" value="I'm Done" id="btn"  style="position:relative;top:25%;left:40%;font-size:2vw; background-color:green;color:White;" disabled="true">
-
-
-
+ 
+ <input type="button" title="start-over-button" value="Start Over " id="nul" style="position:relative;top:25%;left:30%;font-size:2vw; background-color:#FFF831;color:Black;" class="btn btn-warning">
+ 
+<input type="button" title="I-am-done-button" value="I'm Done" id="btn"  style="position:relative;top:25%;left:40%;font-size:2vw; background-color:green;color:White;" disabled="true" class="btn btn-success">
+ 
 </div>
 <!--<script>
  var drawing = SVG ("can")
