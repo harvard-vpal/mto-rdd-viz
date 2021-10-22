@@ -61,11 +61,7 @@ p{
 #input_choice {
   position: relative;
   top: 40px;
-  left: -1%;
-  width: 75%;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
+  margin-left: 6em;
 }
 
 #input_choice input {
@@ -75,17 +71,25 @@ p{
 #keyboard_controls {
   position: relative;
   top: 40px;
-  left: 2%;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 0px;
-  display: flex;
-  justify-content: space-around;
+  left: 0%;
+  width: 78%;
+  margin: 0.5em auto 0 auto;
+  display: grid;
+  grid: 2em / 1fr 2fr 2fr 2fr 1fr;
+  justify-items: center;
+}
+
+#keyboard_controls > :first-child{
+  justify-self: start;
+  padding-left: 1em;
+}
+
+#keyboard_controls > :last-child{
+  justify-self: end;
 }
 
 #keyboard_controls input {
   width: 4em;
 }
 
-/* There's an .sr-only class in Bootstrap you can use. */
+/* There's an .visually-hidden class in Bootstrap you can use. */

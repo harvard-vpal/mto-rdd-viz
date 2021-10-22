@@ -27,26 +27,31 @@
 <body>
 <div class="container-fluid" >
  <div id="intro">
-   <p class='sr-only' aria-live='assertive'>
-     Below is a canvas defined by x and y axis.
+   <p class='visually-hidden' aria-live='assertive'>
+     Below is a graph defined by x and y axes.
      The size of school enrollment is on the x axis, ranging from 0 to 120;
      and the size of a classroom on the y axis, from 0 to 35.
      There are vertical lines where school enrollment equals 30,60,90, and 120.
      Therefore, the canvas has four panels, school enrollment 0 to 30,
      30 to 60, 60 to 90, and 90 to 120.
      There are two buttons below the canvas: one lets you start over,
-     and the other submits the answer when it is done.</p>
-
+     and the other submits the answer when it is done.
+   </p>
  </div>
 
-<div id="input_choice">
-  <input type="button" value="Mouse interface" id="use_mouse" class="btn btn-primary">
-  <input type="button" value="Keyboard interface" id="use_keyboard" class="btn btn-outline-primary">
+ <div class="visually-hidden" id="before_controls"></div>
+
+<div id="input_choice" class="btn-group" role="group">
+  <input type="radio" value="mouse" class="btn-check use_mouse" name="select_input" id="btnradio1" autocomplete="off" checked>
+  <label class="btn btn-outline-primary use_mouse" for="btnradio1">Mouse interface</label>
+
+  <input type="radio" value="keyboard" class="btn-check use_keyboard" name="select_input" id="btnradio2" autocomplete="off">
+  <label class="btn btn-outline-primary use_keyboard" for="btnradio2">Keyboard interface</label>
 </div>
 
  <div id="keyboard_controls" style="display:none;">
    <div>
-     <span><span class="sr-only">Class size for N=1: </span>1</span>
+     <span><span class="visually-hidden">Class size for N=1: </span>1</span>
      <input aria-hidden="true" id="enroll_1" type="number" min="1" max="40" name="class_size_for_1" value="1" style="display:none;" disabled>
    </div>
    <div>
@@ -66,14 +71,20 @@
 
 </div>
 
+<div class="visually-hidden"><a href="#after_plot">Skip to after graph</a></div>
+
+
 <div id="my-draw">
 
 </div>
+
+<div class="visually-hidden" id="after_plot"></div>
 
 <input type="button" title="start-over-button" value="Start Over " id="nul" style="position:relative;top:25%;left:30%;font-size:2vw; background-color:#FFF831;color:Black;" class="btn btn-warning">
 
 <input type="button" title="I-am-done-button" value="I'm Done" id="btn"  style="position:relative;top:25%;left:40%;font-size:2vw; background-color:green;color:White;" disabled="true" class="btn btn-success">
 
+<div class="visually-hidden"><a href="#before_controls">Back to controls</a></div>
 
 </body>
 

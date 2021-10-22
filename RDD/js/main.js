@@ -248,7 +248,7 @@ $(function () {
     }
 
     // Handle keyboard entry to input boxes
-    $('input').on('input', function () {
+    $('#keyboard_controls input').on('input', function () {
 
       // Clear old items
       d3.selectAll('.keyboard_marks').remove();
@@ -509,29 +509,25 @@ $(function () {
       completed = false;
     });
 
-    $('#use_keyboard').on('click', function () {
-      current_interface = 'keyboard';
-      $('#keyboard_controls').show();
-      $('.draw-line').hide();
-      $('.keyboard_marks').show();
-      $('#use_keyboard').removeClass('btn-outline-primary');
-      $('#use_keyboard').addClass('btn-primary');
-      $('#use_mouse').removeClass('btn-primary');
-      $('#use_mouse').addClass('btn-outline-primary');
-      drawKeyboardLines();
-    });
+    // Toggling between keyboard and mouse input.
+    $('#input_choice input').on('change', function(){
+      console.log(this.value);
 
-    $('#use_mouse').on('click', function () {
-      current_interface = 'mouse';
-      $('#keyboard_controls').hide();
-      $('.keyboard_marks').hide();
-      $('.draw-line').show();
-      $('#use_keyboard').removeClass('btn-primary');
-      $('#use_keyboard').addClass('btn-outline-primary');
-      $('#use_mouse').removeClass('btn-outline-primary');
-      $('#use_mouse').addClass('btn-primary');
-    });
+      $('#keyboard_controls').toggle();
+      $('.draw-line').toggle();
+      $('.keyboard_marks').toggle();
 
+      $('#use_keyboard').toggleClass('btn-outline-primary');
+      $('#use_keyboard').toggleClass('btn-primary');
+      $('#use_mouse').toggleClass('btn-primary');
+      $('#use_mouse').toggleClass('btn-outline-primary');
+
+      if(this.value === 'mouse'){
+
+      }else{
+        drawKeyboardLines();
+      }
+    });
 
   }); // end of d3.csv
 });
