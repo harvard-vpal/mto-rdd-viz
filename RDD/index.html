@@ -1,92 +1,189 @@
-<!doctype HTML>
+<!DOCTYPE html>
 
-<HTML>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Interactive Prototype for RDD</title>
+    <!-- Libraries -->
 
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Interactive Prototype for RDD</title>
-  <!-- Libraries -->
+    <script src="libraries/jquery-3.4.1.min.js"></script>
+    <link href="libraries/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="libraries/bootstrap.min.js"></script>
+    <script src="libraries/d3.v4.min.js"></script>
 
-  <script src="libraries/jquery-3.4.1.min.js"></script>
-  <link href="libraries/bootstrap.min.css" rel="stylesheet" type="text/css" />
-  <script src="libraries/bootstrap.min.js"></script>
-  <script src="libraries/d3.v4.min.js"></script>
+    <!-- your script file -->
+    <script src="js/main.js"></script>
 
-  <!-- your script file -->
-  <script src="js/main.js"></script>
+    <!-- Custom files -->
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
 
+  <body>
+    <div class="container-fluid">
+      <div id="intro">
+        <p class="visually-hidden" aria-live="assertive">
+          Below is a graph defined by x and y axes. The size of school
+          enrollment is on the x axis, ranging from 0 to 120; and the size of a
+          classroom on the y axis, from 0 to 35. There are vertical lines where
+          school enrollment equals 30,60,90, and 120. Therefore, the canvas has
+          four panels, school enrollment 0 to 30, 30 to 60, 60 to 90, and 90 to
+          120. There are two buttons below the canvas: one lets you start over,
+          and the other submits the answer when it is done.
+        </p>
+      </div>
 
-  <!-- Custom files -->
-  <link rel="stylesheet" href="css/main.css" />
+      <div class="visually-hidden" id="before_controls"></div>
 
-</head>
+      <div id="input_choice" class="btn-group" role="group">
+        <input
+          type="radio"
+          value="mouse"
+          class="btn-check use_mouse"
+          name="select_input"
+          id="btnradio1"
+          autocomplete="off"
+          checked
+        />
+        <label class="btn btn-outline-primary use_mouse" for="btnradio1"
+          >Mouse interface</label
+        >
 
+        <input
+          type="radio"
+          value="keyboard"
+          class="btn-check use_keyboard"
+          name="select_input"
+          id="btnradio2"
+          autocomplete="off"
+        />
+        <label class="btn btn-outline-primary use_keyboard" for="btnradio2"
+          >Keyboard interface</label
+        >
+      </div>
 
-<body>
-<div class="container-fluid" >
- <div id="intro">
-   <p class='visually-hidden' aria-live='assertive'>
-     Below is a graph defined by x and y axes.
-     The size of school enrollment is on the x axis, ranging from 0 to 120;
-     and the size of a classroom on the y axis, from 0 to 35.
-     There are vertical lines where school enrollment equals 30,60,90, and 120.
-     Therefore, the canvas has four panels, school enrollment 0 to 30,
-     30 to 60, 60 to 90, and 90 to 120.
-     There are two buttons below the canvas: one lets you start over,
-     and the other submits the answer when it is done.
-   </p>
- </div>
+      <div id="keyboard_controls" style="display: none;">
+        <div>
+          <span
+            ><span class="visually-hidden">Class size for N=1: </span>1</span
+          >
+          <input
+            aria-hidden="true"
+            id="enroll_1"
+            type="number"
+            min="1"
+            max="40"
+            name="class_size_for_1"
+            value="1"
+            style="display: none;"
+            disabled
+          />
+        </div>
+        <div>
+          <input
+            aria-label="N=30 class size"
+            class="input-box"
+            id="enroll_30"
+            type="number"
+            min="1"
+            max="40"
+            name="class_size_for_30"
+          />
+          <input
+            aria-label="N=31 class size"
+            class="input-box"
+            id="enroll_31"
+            type="number"
+            min="1"
+            max="40"
+            name="class_size_for_31"
+          />
+        </div>
+        <div>
+          <input
+            aria-label="N=60 class size"
+            class="input-box"
+            id="enroll_60"
+            type="number"
+            min="1"
+            max="40"
+            name="class_size_for_60"
+          />
+          <input
+            aria-label="N=61 class size"
+            class="input-box"
+            id="enroll_61"
+            type="number"
+            min="1"
+            max="40"
+            name="class_size_for_61"
+          />
+        </div>
+        <div>
+          <input
+            aria-label="N=90 class size"
+            class="input-box"
+            id="enroll_90"
+            type="number"
+            min="1"
+            max="40"
+            name="class_size_for_90"
+          />
+          <input
+            aria-label="N=91 class size"
+            class="input-box"
+            id="enroll_91"
+            type="number"
+            min="1"
+            max="40"
+            name="class_size_for_91"
+          />
+        </div>
+        <input
+          aria-label="N=120 class size"
+          class="input-box"
+          id="enroll_120"
+          type="number"
+          min="1"
+          max="40"
+          name="class_size_for_120"
+        />
+      </div>
+    </div>
 
- <div class="visually-hidden" id="before_controls"></div>
+    <div class="visually-hidden">
+      <a href="#after_plot">Skip to after graph</a>
+    </div>
 
-<div id="input_choice" class="btn-group" role="group">
-  <input type="radio" value="mouse" class="btn-check use_mouse" name="select_input" id="btnradio1" autocomplete="off" checked>
-  <label class="btn btn-outline-primary use_mouse" for="btnradio1">Mouse interface</label>
+    <div id="my-draw"></div>
 
-  <input type="radio" value="keyboard" class="btn-check use_keyboard" name="select_input" id="btnradio2" autocomplete="off">
-  <label class="btn btn-outline-primary use_keyboard" for="btnradio2">Keyboard interface</label>
-</div>
+    <div class="visually-hidden" id="after_plot"></div>
 
- <div id="keyboard_controls" style="display:none;">
-   <div>
-     <span><span class="visually-hidden">Class size for N=1: </span>1</span>
-     <input aria-hidden="true" id="enroll_1" type="number" min="1" max="40" name="class_size_for_1" value="1" style="display:none;" disabled>
-   </div>
-   <div>
-     <input aria-label="N=30 class size" class= "input-box" id="enroll_30" type="number" min="1" max="40" name="class_size_for_30">
-     <input aria-label="N=31 class size" class= "input-box" id="enroll_31" type="number" min="1" max="40" name="class_size_for_31">
-   </div>
-   <div>
-     <input aria-label="N=60 class size"  class= "input-box" id="enroll_60" type="number" min="1" max="40" name="class_size_for_60">
-     <input aria-label="N=61 class size"  class= "input-box" id="enroll_61" type="number" min="1" max="40" name="class_size_for_61">
-   </div>
-   <div>
-     <input aria-label="N=90 class size"  class= "input-box" id="enroll_90" type="number" min="1" max="40" name="class_size_for_90">
-     <input aria-label="N=91 class size"  class= "input-box" id="enroll_91" type="number" min="1" max="40" name="class_size_for_91">
-   </div>
-   <input aria-label="N=120 class size"  class= "input-box" id="enroll_120" type="number" min="1" max="40" name="class_size_for_120">
- </div>
+    <div id="bottom_controls">
+    <input
+      type="button"
+      title="start-over-button"
+      value="Start Over "
+      id="nul"
+      class="btn btn-secondary"
+    />
 
-</div>
+    <input
+      type="button"
+      title="I-am-done-button"
+      value="I'm Done"
+      id="done"
+      disabled="true"
+      class="btn btn-success"
+    />
 
-<div class="visually-hidden"><a href="#after_plot">Skip to after graph</a></div>
+    <div class="visually-hidden">
+      <a href="#before_controls">Back to controls</a>
+    </div>
 
+    <p id="finished_message" aria-live="polite">
+    </p>
 
-<div id="my-draw">
-
-</div>
-
-<div class="visually-hidden" id="after_plot"></div>
-
-<input type="button" title="start-over-button" value="Start Over " id="nul" style="position:relative;top:25%;left:30%;font-size:2vw; background-color:#FFF831;color:Black;" class="btn btn-warning">
-
-<input type="button" title="I-am-done-button" value="I'm Done" id="btn"  style="position:relative;top:25%;left:40%;font-size:2vw; background-color:green;color:White;" disabled="true" class="btn btn-success">
-
-<div class="visually-hidden"><a href="#before_controls">Back to controls</a></div>
-
-</body>
-
-
+  </body>
 </html>
