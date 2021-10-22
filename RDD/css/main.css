@@ -58,10 +58,23 @@ p{
   fill:orange;
 }
 
+#input_choice {
+  position: relative;
+  top: 40px;
+  left: -1%;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+}
+
+#input_choice input {
+  margin: 0 5px 2px 0;
+}
 
 #keyboard_controls {
   position: relative;
-  top: -40px;
+  top: 40px;
   left: -1%;
   width: 75%;
   margin-left: auto;
@@ -84,4 +97,3 @@ p{
   height:1px;
   overflow:hidden;
 }
-

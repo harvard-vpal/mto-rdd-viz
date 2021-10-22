@@ -1,10 +1,6 @@
 $(function () {
-  // disable the accessible keyboard controls at first
-  $('#keyboard_controls input').prop('disabled', true);
 
-  $('#keyboard_controls').on('click', function () {
-    $('#keyboard_controls input').prop('disabled', false);
-  });
+  let current_interface = 'mouse';
 
   d3.csv('data/rd_dataset1.csv', function (error, data) {
     if (error) {
@@ -105,6 +101,9 @@ $(function () {
     var completed = false;
 
     var drag = d3.drag().on('drag', function () {
+      if(current_interface !== 'mouse'){
+        return;
+      }
       d3.selectAll('#start-reminder').attr('opacity', 0);
       d3.selectAll('.start-point').attr('opacity', 0);
 
@@ -177,19 +176,15 @@ $(function () {
       return Math.max(a, Math.min(b, c));
     }
 
-    // Handle keyboard entry to input boxes
-    $('input').on('input', function () {
-      // Coordinate transforms
-      function getX(x) {
-        return (drawWidth * x) / 125 + 100;
-      }
-      function getY(y) {
-        return drawHeight * (1 - y / 40) + 50;
-      }
+    // Coordinate transforms
+    function getX(x) {
+      return (drawWidth * x) / 120 + 101;
+    }
+    function getY(y) {
+      return drawHeight * (1 - y / 40) + 50;
+    }
 
-      // Clear old items
-      d3.selectAll('.keyboard').remove();
-
+    function drawKeyboardLines(){
       let allX = [1, 30, 31, 60, 61, 90, 91, 120];
       let allY = $('#keyboard_controls input')
         .map((i, e) => Number(e.value))
@@ -203,7 +198,7 @@ $(function () {
 
       circle = svg
         .append('circle')
-        .attr('class', 'user-point keyboard')
+        .attr('class', 'user-point keyboard_marks')
         .attr('cx', x(1) + margin.left)
         .attr('cy', y(1) + margin.top)
         .attr('r', 5)
@@ -229,7 +224,7 @@ $(function () {
         if (currY !== 0) {
           circle = svg
             .append('circle')
-            .attr('class', 'user-point keyboard')
+            .attr('class', 'user-point keyboard_marks')
             .attr('cx', getX(currX))
             .attr('cy', getY(currY))
             .attr('r', 5)
@@ -240,7 +235,7 @@ $(function () {
         if (prevY !== 0 && currY !== 0) {
           line = svg
             .append('line')
-            .attr('class', 'user-line keyboard')
+            .attr('class', 'user-line keyboard_marks')
             .attr('x1', getX(prevX))
             .attr('y1', getY(prevY))
             .attr('x2', getX(currX))
@@ -250,6 +245,16 @@ $(function () {
             .style('stroke-width', 2);
         }
       }
+    }
+
+    // Handle keyboard entry to input boxes
+    $('input').on('input', function () {
+
+      // Clear old items
+      d3.selectAll('.keyboard_marks').remove();
+
+      drawKeyboardLines();
+
     });
 
     svg
@@ -501,5 +506,28 @@ $(function () {
 
       completed = false;
     });
+
+    $('#use_keyboard').on('click', function () {
+      $('#keyboard_controls').show();
+      $('.draw-line').remove();
+      $('#use_keyboard').removeClass('btn-outline-primary');
+      $('#use_keyboard').addClass('btn-primary');
+      $('#use_mouse').removeClass('btn-primary');
+      $('#use_mouse').addClass('btn-outline-primary');
+      drawKeyboardLines();
+      current_interface = 'keyboard';
+    });
+
+    $('#use_mouse').on('click', function () {
+      $('#keyboard_controls').hide();
+      $('.keyboard_marks').remove();
+      $('#use_keyboard').removeClass('btn-primary');
+      $('#use_keyboard').addClass('btn-outline-primary');
+      $('#use_mouse').removeClass('btn-outline-primary');
+      $('#use_mouse').addClass('btn-primary');
+      current_interface = 'mouse';
+    });
+
+
   }); // end of d3.csv
 });
