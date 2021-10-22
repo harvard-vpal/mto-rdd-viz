@@ -7,8 +7,6 @@ $(function () {
       console.log(error);
     }
 
-    // formating variables
-
     data = data
       .map(function (d, i) {
         d.x = Number(d.x);
@@ -101,9 +99,12 @@ $(function () {
     var completed = false;
 
     var drag = d3.drag().on('drag', function () {
+
+      // Only do things we're in mouse interface
       if(current_interface !== 'mouse'){
         return;
       }
+
       d3.selectAll('#start-reminder').attr('opacity', 0);
       d3.selectAll('.start-point').attr('opacity', 0);
 
@@ -154,15 +155,14 @@ $(function () {
 
       path.exit().remove();
 
-      if (
-        !completed &&
-        1 ==
-          d3.mean(
-            filterData.map(function (d) {
-              return d.defined;
-            })
-          )
-      ) {
+      console.log(filterData);
+      // Mark completed if 80% of the data is defined.
+      total_points = filterData.length;
+      // Trust me this counts up all the defined data.
+      current_points = filterData
+        .map(x => x.defined)
+        .reduce((a,b) => a+b);
+      if (current_points / total_points > 0.8) {
         completed = true;
         console.log('huan');
         console.log(completed);
@@ -256,6 +256,8 @@ $(function () {
       drawKeyboardLines();
 
     });
+
+    // Create axes, titles, lines, and labels
 
     svg
       .append('g')
