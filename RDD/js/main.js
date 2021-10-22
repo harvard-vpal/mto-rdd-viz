@@ -384,8 +384,13 @@ $(function () {
 
       scatter.exit().remove();
 
+      // Fade mouse-drawn points and lines
       // d3.selectAll('.user-point').style('opacity',0.3);
       d3.selectAll('.draw-line').style('opacity', 0.3);
+
+      // Fade keyboard-drawn points and lines
+      d3.selectAll('.keyboard_marks').attr('opacity', 0.3);
+
 
       canvas
         .append('path')
@@ -489,43 +494,42 @@ $(function () {
       d3.selectAll('#start-reminder').attr('opacity', 0.7);
       d3.selectAll('.start-point').attr('opacity', 0.7);
 
-      var dots = d3.selectAll('.my-dots');
-      var userDots = d3.selectAll('.user-point');
-      var userLines = d3.selectAll('.user-line');
-      var modelLines = d3.selectAll('.model-line');
-      var drawLines = d3.selectAll('.draw-line');
+      d3.selectAll('.my-dots').remove();
+      d3.selectAll('.user-point').remove();
+      d3.selectAll('.user-line').remove();
+      d3.selectAll('.model-line').remove();
+      d3.selectAll('.draw-line').remove();
 
-      //polylines.remove();
-      dots.remove();
-      userDots.remove();
-      userLines.remove();
-      modelLines.remove();
-      drawLines.remove();
+      // Clear the keyboard input
+      $('#keyboard_controls .input-box').each((i, item) => {
+        $(item).val('');
+      });
 
       doneButton.disabled = true;
-
       completed = false;
     });
 
     $('#use_keyboard').on('click', function () {
+      current_interface = 'keyboard';
       $('#keyboard_controls').show();
-      $('.draw-line').remove();
+      $('.draw-line').hide();
+      $('.keyboard_marks').show();
       $('#use_keyboard').removeClass('btn-outline-primary');
       $('#use_keyboard').addClass('btn-primary');
       $('#use_mouse').removeClass('btn-primary');
       $('#use_mouse').addClass('btn-outline-primary');
       drawKeyboardLines();
-      current_interface = 'keyboard';
     });
 
     $('#use_mouse').on('click', function () {
+      current_interface = 'mouse';
       $('#keyboard_controls').hide();
-      $('.keyboard_marks').remove();
+      $('.keyboard_marks').hide();
+      $('.draw-line').show();
       $('#use_keyboard').removeClass('btn-primary');
       $('#use_keyboard').addClass('btn-outline-primary');
       $('#use_mouse').removeClass('btn-outline-primary');
       $('#use_mouse').addClass('btn-primary');
-      current_interface = 'mouse';
     });
 
 
