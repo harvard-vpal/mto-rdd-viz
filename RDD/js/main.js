@@ -28,7 +28,7 @@ $(function () {
 
     console.log(data);
 
-    const doneButton = document.getElementById('btn');
+    const doneButton = document.getElementById('done');
 
     var height = 500,
       width = 800;
@@ -342,8 +342,8 @@ $(function () {
       .attr('cx', x(1))
       .attr('cy', y(1))
       .attr('r', 5)
-      .attr('stroke', 'orange')
-      .attr('fill', 'orange')
+      .attr('stroke', 'brown')
+      .attr('fill', 'brown')
       .attr('opacity', 0.7);
 
     canvas
@@ -355,7 +355,7 @@ $(function () {
       .attr('opacity', 0.7);
 
     // I am done button
-    $('#btn').click(function () {
+    $('#done').click(function () {
       doneButton.disabled = true;
 
       var filterData = data.filter(function (d) {

@@ -2,7 +2,7 @@
 
 
 body {
-  font:helvetica;
+  font-family: "Helvetica Neue", "Helvetica", sans-serif;
   line-height: 1.5;
   background-color: #fafafa;
 }
@@ -53,9 +53,8 @@ p{
 
 
 #start-reminder{
-
   font-size:1.5vw;
-  fill:orange;
+  fill:brown;
 }
 
 #input_choice {
@@ -81,7 +80,12 @@ p{
 
 #keyboard_controls > :first-child{
   justify-self: start;
+  padding: 3px 1em 0 1em;
   padding-left: 1em;
+  padding-top: 3px;
+  border: 1px solid #aaa;
+  background-color: #ddd;
+  cursor: not-allowed;
 }
 
 #keyboard_controls > :last-child{
@@ -90,6 +94,19 @@ p{
 
 #keyboard_controls input {
   width: 4em;
+  border: 1px solid #aaa;
+  padding: 1px 1px 1px 5px;
+}
+
+#bottom_controls{
+  display: flex;
+  justify-content: center;
+}
+
+#bottom_controls input {
+  width: 30%;
+  margin: 4px;
+  font-weight: bold;
 }
 
 /* There's an .visually-hidden class in Bootstrap you can use. */
