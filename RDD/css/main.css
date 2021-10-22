@@ -75,11 +75,11 @@ p{
 #keyboard_controls {
   position: relative;
   top: 40px;
-  left: -1%;
-  width: 75%;
+  left: 2%;
+  width: 80%;
   margin-left: auto;
   margin-right: auto;
-  border: 1px solid black;
+  margin-bottom: 0px;
   display: flex;
   justify-content: space-around;
 }
@@ -88,12 +88,4 @@ p{
   width: 4em;
 }
 
-#keyboard_controls label {
-  /* For screen readers only */
-  position:absolute;
-  left:-10000px;
-  top:auto;
-  width:1px;
-  height:1px;
-  overflow:hidden;
-}
+/* There's an .sr-only class in Bootstrap you can use. */
