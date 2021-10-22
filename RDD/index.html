@@ -44,29 +44,24 @@
   <input type="button" value="Keyboard interface" id="use_keyboard" class="btn btn-outline-primary">
 </div>
 
- <div id="keyboard_controls" style="display:none;" class="alert alert-success" role="alert">
-   <label for="enroll_1">N=1 class size</label>
-   <input id="enroll_1" type="number" min="1" max="40" name="class_size_for_1" value="1" disabled>
+ <div id="keyboard_controls" style="display:none;">
    <div>
-     <label for="enroll_30">N=30 class size</label>
-     <input class= "input-box" id="enroll_30" type="number" min="1" max="40" name="class_size_for_30">
-     <label for="enroll_31">N=31 class size</label>
-     <input class= "input-box" id="enroll_31" type="number" min="1" max="40" name="class_size_for_31">
+     <span><span class="sr-only">Class size for N=1: </span>1</span>
+     <input aria-hidden="true" id="enroll_1" type="number" min="1" max="40" name="class_size_for_1" value="1" style="display:none;" disabled>
    </div>
    <div>
-     <label for="enroll_60">N=60 class size</label>
-     <input  class= "input-box" id="enroll_60" type="number" min="1" max="40" name="class_size_for_60">
-     <label for="enroll_61">N=61 class size</label>
-     <input  class= "input-box" id="enroll_61" type="number" min="1" max="40" name="class_size_for_61">
+     <input aria-label="N=30 class size" class= "input-box" id="enroll_30" type="number" min="1" max="40" name="class_size_for_30">
+     <input aria-label="N=31 class size" class= "input-box" id="enroll_31" type="number" min="1" max="40" name="class_size_for_31">
    </div>
    <div>
-     <label for="enroll_90">N=90 class size</label>
-     <input  class= "input-box" id="enroll_90" type="number" min="1" max="40" name="class_size_for_90">
-     <label for="enroll_91">N=91 class size</label>
-     <input  class= "input-box" id="enroll_91" type="number" min="1" max="40" name="class_size_for_91">
+     <input aria-label="N=60 class size"  class= "input-box" id="enroll_60" type="number" min="1" max="40" name="class_size_for_60">
+     <input aria-label="N=61 class size"  class= "input-box" id="enroll_61" type="number" min="1" max="40" name="class_size_for_61">
    </div>
-   <label for="enroll_120">N=120 class size</label>
-   <input  class= "input-box" id="enroll_120" type="number" min="1" max="40" name="class_size_for_120">
+   <div>
+     <input aria-label="N=90 class size"  class= "input-box" id="enroll_90" type="number" min="1" max="40" name="class_size_for_90">
+     <input aria-label="N=91 class size"  class= "input-box" id="enroll_91" type="number" min="1" max="40" name="class_size_for_91">
+   </div>
+   <input aria-label="N=120 class size"  class= "input-box" id="enroll_120" type="number" min="1" max="40" name="class_size_for_120">
  </div>
 
 </div>
