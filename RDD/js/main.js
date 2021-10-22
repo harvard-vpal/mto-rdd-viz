@@ -177,6 +177,7 @@ $(function () {
       return Math.max(a, Math.min(b, c));
     }
 
+    // Handle keyboard entry to input boxes
     $('input').on('input', function () {
       // Coordinate transforms
       function getX(x) {
@@ -207,7 +208,10 @@ $(function () {
         .attr('cy', y(1) + margin.top)
         .attr('r', 5)
         .attr('stroke', '#737373')
-        .attr('fill', '#737373');
+        .attr('stroke-width', 4)
+        .attr('stroke-dasharray', '4')
+        .attr('fill', '#737373')
+        .attr('opacity', 0.9);
 
       for (let j = 1; j < allX.length; j++) {
         allY.filter(function (d) {
