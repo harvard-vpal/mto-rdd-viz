@@ -309,7 +309,7 @@ if(prevY!==0 && currY!==0){
   // I am done button
    $("#btn").click(function(){
      
-      doneButton.disabled=true;
+      doneButton.disabled=true;// Disable the button to avoid append the lines multiple times.
 
      var filterData=data.filter(function(d){
        return d.x!=0 && d.y!=0;
