@@ -2,7 +2,7 @@
 
 
 body {
-  font:helvetica;
+  font-family: "Helvetica Neue", "Helvetica", sans-serif;
   line-height: 1.5;
   background-color: #fafafa;
 }
@@ -53,35 +53,60 @@ p{
 
 
 #start-reminder{
-
   font-size:1.5vw;
-  fill:orange;
+  fill:brown;
 }
 
+#input_choice {
+  position: relative;
+  top: 40px;
+  margin-left: 6em;
+}
+
+#input_choice input {
+  margin: 0 5px 2px 0;
+}
 
 #keyboard_controls {
   position: relative;
-  top: -40px;
-  left: -1%;
-  width: 75%;
-  margin-left: auto;
-  margin-right: auto;
-  border: 1px solid black;
-  display: flex;
-  justify-content: space-around;
+  top: 40px;
+  left: 0%;
+  width: 78%;
+  margin: 0.5em auto 0 auto;
+  display: grid;
+  grid: 2em / 1fr 2fr 2fr 2fr 1fr;
+  justify-items: center;
+}
+
+#keyboard_controls > :first-child{
+  justify-self: start;
+  padding: 3px 1em 0 1em;
+  padding-left: 1em;
+  padding-top: 3px;
+  border: 1px solid #aaa;
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+#keyboard_controls > :last-child{
+  justify-self: end;
 }
 
 #keyboard_controls input {
   width: 4em;
+  border: 1px solid #aaa;
+  padding: 1px 1px 1px 5px;
 }
 
-#keyboard_controls label {
-  /* For screen readers only */
-  position:absolute;
-  left:-10000px;
-  top:auto;
-  width:1px;
-  height:1px;
-  overflow:hidden;
+#bottom_controls{
+  display: flex;
+  justify-content: center;
 }
 
+#bottom_controls input {
+  width: 30%;
+  margin: 4px;
+  font-weight: bold;
+}
+
+/* There's an .visually-hidden class in Bootstrap you can use. */
