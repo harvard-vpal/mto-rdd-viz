@@ -256,7 +256,6 @@ $(function () {
       drawKeyboardLines();
 
     });
-
     // Create axes, titles, lines, and labels
 
     svg
@@ -530,6 +529,5 @@ $(function () {
         drawKeyboardLines();
       }
     });
-
   }); // end of d3.csv
 });
