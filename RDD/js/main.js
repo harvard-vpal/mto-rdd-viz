@@ -61,6 +61,11 @@ $(function () {
       .attr('id', 'can');
 
     // x-axis and y-axis
+    
+    
+    var xmax=d3.max(data, function (d) {
+          return d.x;
+        });
 
     var ymax =
       Math.max(
@@ -85,12 +90,7 @@ $(function () {
     var x = d3
       .scaleLinear()
       .range([0, drawWidth])
-      .domain([
-        0,
-        d3.max(data, function (d) {
-          return d.x;
-        }),
-      ]);
+      .domain([0,xmax]);
 
     var y = d3.scaleLinear().range([drawHeight, 0]).domain([0, ymax]);
 
@@ -178,10 +178,10 @@ $(function () {
 
     // Coordinate transforms
     function getX(x) {
-      return (drawWidth * x) / 120 + 101;
+      return (drawWidth * x) / xmax + margin.left-1;
     }
     function getY(y) {
-      return drawHeight * (1 - y / 40) + 50;
+      return drawHeight * (1 - y / ymax) + margin.top;
     }
 
     function drawKeyboardLines(){
@@ -301,7 +301,7 @@ $(function () {
         .attr('x', 60)
         .attr('y', drawHeight + 35)
         //.attr("transform", "rotate(-90)")
-        .text('←Small Schools');
+        .text('← Small Schools');
         
     canvas
         .append('text')
