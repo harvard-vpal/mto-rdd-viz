@@ -300,7 +300,7 @@ $(function () {
         .attr('x', 60)
         .attr('y', drawHeight + 35)
         //.attr("transform", "rotate(-90)")
-        .text('←Small Schools');
+        .text('← Small Schools');
         
     canvas
         .append('text')
