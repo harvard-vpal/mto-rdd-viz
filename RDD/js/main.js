@@ -23,7 +23,7 @@ $(function () {
         return d;
       })
       .filter(function (d, i) {
-        return i < 120;
+        return i <=110;
       }); // remove the data points after row 120 (included)
 
     console.log(data);
@@ -256,8 +256,8 @@ $(function () {
       drawKeyboardLines();
 
     });
+    
     // Create axes, titles, lines, and labels
-
     svg
       .append('g')
       .attr(
@@ -282,7 +282,7 @@ $(function () {
       .attr('x', -(drawHeight / 2))
       .attr('y', -40)
       .attr('transform', 'rotate(-90)')
-      .text('Class Size');
+      .text('Average Number of Students per Class');
 
     canvas
       .append('text')
@@ -291,7 +291,26 @@ $(function () {
       .attr('x', drawWidth / 2)
       .attr('y', drawHeight + 50)
       //.attr("transform", "rotate(-90)")
-      .text('School Enrollment');
+      .text('Total Number of Students Enrolled in Grade');
+      
+    // Adding Small Schools and Large Schools 
+    canvas
+        .append('text')
+        .attr('class', 'small-schools')
+        .attr('text-anchor', 'middle')
+        .attr('x', 60)
+        .attr('y', drawHeight + 35)
+        //.attr("transform", "rotate(-90)")
+        .text('←S mall Schools');
+        
+    canvas
+        .append('text')
+        .attr('class', 'large-schools')
+        .attr('text-anchor', 'middle')
+        .attr('x', drawWidth-60)
+        .attr('y', drawHeight + 35)
+        //.attr("transform", "rotate(-90)")
+        .text('Large Schools → ');
 
     // adding vertical lines
 
@@ -325,15 +344,15 @@ $(function () {
       .attr('stroke-dasharray', 4)
       .style('stroke', '#00a454');
 
-    canvas
-      .append('line')
-      .attr('class', 'vline-4')
-      .attr('x1', x(120))
-      .attr('y1', y(0))
-      .attr('x2', x(120))
-      .attr('y2', y(ymax))
-      .attr('stroke-dasharray', 4)
-      .style('stroke', '#00a454');
+    //canvas
+      //.append('line')
+      //.attr('class', 'vline-4')
+      //.attr('x1', x(120))
+      //.attr('y1', y(0))
+      //.attr('x2', x(120))
+      //.attr('y2', y(ymax))
+      //.attr('stroke-dasharray', 4)
+      //.style('stroke', '#00a454');
 
     canvas
       .append('circle')
