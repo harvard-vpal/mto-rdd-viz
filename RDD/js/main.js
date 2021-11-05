@@ -185,7 +185,7 @@ $(function () {
     }
 
     function drawKeyboardLines(){
-      let allX = [1, 30, 31, 60, 61, 90, 91, 120];
+      let allX = [1, 30, 31, 60, 61, 90, 91, 110];
       let allY = $('#keyboard_controls input')
         .map((i, e) => Number(e.value))
         .toArray()
@@ -301,7 +301,7 @@ $(function () {
         .attr('x', 60)
         .attr('y', drawHeight + 35)
         //.attr("transform", "rotate(-90)")
-        .text('←S mall Schools');
+        .text('←Small Schools');
         
     canvas
         .append('text')
