@@ -24,14 +24,20 @@
 <body>
   <div class="container-fluid">
     <div id="intro">
-      <p class="visually-hidden" aria-live="assertive">
-        Below is a graph defined by x and y axes. The total number of students enrolled in Grade
- is on the x axis, ranging from 0 to 110; and the average number of students per class
- on the y axis, from 0 to 35. There are vertical lines where
-        school enrollment equals 30,60, and 90. Therefore, the canvas has
-        four panels, school enrollment 0 to 30, 30 to 60, 60 to 90, and 90 to
-        110. There are two buttons below the canvas: one lets you start over,
-        and the other submits the answer when it is done.
+      <p class="visually-hidden">
+        Below is a graph defined by x and y axes. The total number of
+        students enrolled in each grade is on the x axis, ranging from 0 to
+        110; and the average number of students per class on the y axis,
+        from 0 to 35. There are vertical lines where school enrollment equals
+        30, 60, and 90. Therefore, the canvas has four panels: school enrollment
+        0 to 30, 31 to 60, 61 to 90, and 91 to 110. There are two buttons below
+        the canvas: one lets you start over, and the other submits the answer
+        when it is done.
+      </p>
+      <p class="visually-hidden">
+        The next item on the page lets you set the interface to use either mouse
+        or keybord input. Select which one you like and then continue. When you're
+        done, use the "I'm done" button at the bottom of the page.
       </p>
     </div>
 
@@ -78,15 +84,26 @@
     <input type="button" title="start-over-button" value="Start Over " id="nul" class="btn btn-secondary" />
 
     <input type="button" title="I-am-done-button" value="I'm Done" id="done" disabled="true" class="btn btn-success" />
-    
+
   </div>
 
     <div class="visually-hidden">
       <a href="#before_controls">Back to controls</a>
     </div>
 
-    <p id="finished_message" aria-live="polite">
-    </p>
+    <div id="finished_message" aria-live="polite" style="display:none;">
+      <p>
+        The real data starts at 1 and then moves upward
+        until the maximum class size is reached, around
+        30 students. Then the data drops back down to about 20, as schools divide the students
+        into 2, 3, or more classes. Each time the data
+        climbs to near 30, the class is split again and
+        the average class size drops to about 20.
+      </p>
+      <p>
+        How closely did your guess match the real data?
+      </p>
+    </div>
 
 </body>
 

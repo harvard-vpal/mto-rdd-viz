@@ -76,7 +76,7 @@ p{
 
 .large-schools{
  font-size:1.8vw;
-   opacity: 0.7; 
+   opacity: 0.7;
 }
 
 
@@ -135,6 +135,10 @@ p{
   width: 30%;
   margin: 4px;
   font-weight: bold;
+}
+
+#finished_message{
+  padding: 1em;
 }
 
 /* There's an .visually-hidden class in Bootstrap you can use. */

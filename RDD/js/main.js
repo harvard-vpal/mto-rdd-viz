@@ -61,8 +61,8 @@ $(function () {
       .attr('id', 'can');
 
     // x-axis and y-axis
-    
-    
+
+
     var xmax=d3.max(data, function (d) {
           return d.x;
         });
@@ -256,7 +256,7 @@ $(function () {
       drawKeyboardLines();
 
     });
-    
+
     // Create axes, titles, lines, and labels
     svg
       .append('g')
@@ -292,8 +292,8 @@ $(function () {
       .attr('y', drawHeight + 50)
       //.attr("transform", "rotate(-90)")
       .text('Total Number of Students Enrolled in Grade');
-      
-    // Adding Small Schools and Large Schools 
+
+    // Adding Small Schools and Large Schools
     canvas
         .append('text')
         .attr('class', 'small-schools')
@@ -302,7 +302,7 @@ $(function () {
         .attr('y', drawHeight + 35)
         //.attr("transform", "rotate(-90)")
         .text('← Small Schools');
-        
+
     canvas
         .append('text')
         .attr('class', 'large-schools')
@@ -375,6 +375,7 @@ $(function () {
     // I am done button
     $('#done').click(function () {
       doneButton.disabled = true;
+      $('#finished_message').show();
 
       var filterData = data.filter(function (d) {
         return d.x != 0 && d.y != 0;
