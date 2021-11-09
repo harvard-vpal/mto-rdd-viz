@@ -24,9 +24,12 @@
 <body>
   <div class="container-fluid">
     <div id="intro">
-      <p class="visually-hidden" aria-live="assertive">
-        Below is a graph defined by x and y axes. The total number of students enrolled in grade is on the x axis, ranging from 0 to 110; and the parental education level (average number of years) on the y axis, from 0 to 20. There are vertical lines where
-        school enrollment equals 30,60,90. Therefore, the canvas has
+      <p class="visually-hidden">
+        Below is a graph defined by x and y axes. The total number of students
+        enrolled in grade is on the x axis, ranging from 0 to 110; and the
+        parental education level (average number of years) is on the y axis,
+        from 0 to 20. There are vertical lines where
+        school enrollment equals 30, 60, 90. Therefore, the canvas has
         four panels, school enrollment 0 to 30, 30 to 60, 60 to 90, and 90 to
         110. There are two buttons below the canvas: one lets you start over,
         and the other submits the answer when it is done.
@@ -45,22 +48,22 @@
 
     <div id="keyboard_controls" style="display: none;">
       <div>
-        <span><span class="visually-hidden">Class size for N=1: </span>1</span>
+        <span><span class="visually-hidden">Average parent education level for N=1: </span>1</span>
         <input aria-hidden="true" id="enroll_1" type="number" min="1" max="20" name="parent_edu_for_13" value="13" style="display: none;" disabled />
       </div>
       <div>
-        <input aria-label="N=30 parent edu" class="input-box" id="enroll_30" type="number" min="1" max="20" name="class_size_for_30" />
-        <input aria-label="N=31 parent edu" class="input-box" id="enroll_31" type="number" min="1" max="20" name="class_size_for_31" />
+        <input aria-label="N=30 parent education" class="input-box" id="enroll_30" type="number" min="1" max="20" name="class_size_for_30" />
+        <input aria-label="N=31 parent education" class="input-box" id="enroll_31" type="number" min="1" max="20" name="class_size_for_31" />
       </div>
       <div>
-        <input aria-label="N=60 parent edu" class="input-box" id="enroll_60" type="number" min="1" max="20" name="class_size_for_60" />
-        <input aria-label="N=61 parent edu" class="input-box" id="enroll_61" type="number" min="1" max="20" name="class_size_for_61" />
+        <input aria-label="N=60 parent education" class="input-box" id="enroll_60" type="number" min="1" max="20" name="class_size_for_60" />
+        <input aria-label="N=61 parent education" class="input-box" id="enroll_61" type="number" min="1" max="20" name="class_size_for_61" />
       </div>
       <div>
-        <input aria-label="N=90 parent edu" class="input-box" id="enroll_90" type="number" min="1" max="20" name="class_size_for_90" />
-        <input aria-label="N=91 parent edu" class="input-box" id="enroll_91" type="number" min="1" max="20" name="class_size_for_91" />
+        <input aria-label="N=90 parent education" class="input-box" id="enroll_90" type="number" min="1" max="20" name="class_size_for_90" />
+        <input aria-label="N=91 parent education" class="input-box" id="enroll_91" type="number" min="1" max="20" name="class_size_for_91" />
       </div>
-      <input aria-label="N=110 parent edu" class="input-box" id="enroll_110" type="number" min="1" max="20" name="class_size_for_110" />
+      <input aria-label="N=110 parent education" class="input-box" id="enroll_110" type="number" min="1" max="20" name="class_size_for_110" />
     </div>
   </div>
 
@@ -80,9 +83,19 @@
     <div class="visually-hidden">
       <a href="#before_controls">Back to controls</a>
     </div>
+  </div>
 
-    <p id="finished_message" aria-live="polite">
+  <div id="finished_message" aria-live="polite" style="display:none;">
+    <p>
+      The real data starts at 13 and then moves down to about 11 when the
+      number of students is 30, but then stays at about 11 from then on,
+      usually between 10 and 12, no matter how many students are enrolled
+      in the school.
     </p>
+    <p>
+      How closely did your guess match the real data?
+    </p>
+  </div>
 
 </body>
 
